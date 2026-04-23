@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EasyCart SME Customer Dashboard" />
+  <title>Dashboard — EasyCart SME</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation">
+  <div class="navbar-inner container">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-mark">EC</div>
+      <span class="brand-name">Easy<span>Cart</span> <small style="font-size:.65rem;font-weight:500;opacity:.8">SME</small></span>
+    </a>
+    <div class="navbar-links" id="nav-links">
+      <span id="nav-user-name" style="color:rgba(255,255,255,.8);font-size:.9rem;margin-right:8px"></span>
+      <span id="nav-user-role" class="badge badge-customer" style="margin-right:12px"></span>
+      <button class="btn btn-outline-white btn-sm" onclick="handleLogout()">Sign Out</button>
+    </div>
+    <button class="navbar-burger" id="burger-btn" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Menu</div>
+      <a href="#" class="sidebar-link active" data-view="overview" onclick="showView('overview',this)">
+        <span class="icon">🏠</span> Overview
+      </a>
+      <a href="#" class="sidebar-link" data-view="services" onclick="showView('services',this)">
+        <span class="icon">💼</span> Browse Services
+      </a>
+      <a href="#" class="sidebar-link" data-view="requests" onclick="showView('requests',this)">
+        <span class="icon">📋</span> My Requests
+      </a>
+      <a href="#" class="sidebar-link" data-view="invites" onclick="showView('invites',this)">
+        <span class="icon">📬</span> My Invites
+        <span class="badge badge-pending" id="invite-badge" style="display:none;margin-left:auto"></span>
+      </a>
+    </div>
+    <div class="sidebar-section" style="margin-top:auto;padding:20px">
+      <div style="background:var(--blue-subtle);border-radius:var(--radius);padding:16px;">
+        <div style="font-size:.8rem;font-weight:700;color:var(--blue);margin-bottom:4px">Need Help?</div>
+        <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:10px">Contact your admin to manage subscriptions.</div>
+        <a href="mailto:admin@easycart.co.zm" class="btn btn-outline btn-sm w-full">Contact Admin</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ======= OVERVIEW VIEW ======= -->
+    <div id="view-overview" class="fade-in">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Welcome back, <span id="hero-name">—</span> 👋</div>
+          <div class="page-subtitle">Here's a summary of your EasyCart SME activity</div>
+        </div>
+      </div>
+
+      <div class="stats-grid mb-6">
+        <div class="stat-card">
+          <div class="stat-card-icon">📋</div>
+          <div class="stat-card-value" id="stat-requests">—</div>
+          <div class="stat-card-label">Service Requests</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">📬</div>
+          <div class="stat-card-value" id="stat-invites">—</div>
+          <div class="stat-card-label">Invitations</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">✅</div>
+          <div class="stat-card-value" id="stat-active">—</div>
+          <div class="stat-card-label">Active Memberships</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-icon">⏳</div>
+          <div class="stat-card-value" id="stat-pending">—</div>
+          <div class="stat-card-label">Pending Invites</div>
+        </div>
+      </div>
+
+      <!-- Pending invites callout -->
+      <div id="pending-invites-callout" style="display:none" class="mb-6">
+        <div class="alert alert-warning" style="font-size:.9rem">
+          📬 You have <strong id="pending-count">0</strong> pending invite(s) waiting for your response.
+          <a href="#" onclick="showView('invites')" style="color:var(--blue);font-weight:700;margin-left:8px">View Invites →</a>
+        </div>
+      </div>
+
+      <!-- Recent requests -->
+      <div class="card mb-6">
+        <div class="card-header">
+          <div class="card-title">Recent Service Requests</div>
+          <a href="#" class="btn btn-primary btn-sm" onclick="showView('services')">+ New Request</a>
+        </div>
+        <div id="overview-requests-list">
+          <div class="loading-row"><div class="spinner"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= SERVICES VIEW ======= -->
+    <div id="view-services" class="fade-in" style="display:none">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Available Services</div>
+          <div class="page-subtitle">Browse all plans and request access</div>
+        </div>
+      </div>
+      <div id="services-grid-dash" class="services-grid">
+        <div class="loading-row"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+    <!-- ======= REQUESTS VIEW ======= -->
+    <div id="view-requests" class="fade-in" style="display:none">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Service Requests</div>
+          <div class="page-subtitle">Track all your service access requests</div>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Message</th>
+              <th>Status</th>
+              <th>Admin Note</th>
+              <th>Submitted</th>
+            </tr>
+          </thead>
+          <tbody id="requests-table-body">
+            <tr><td colspan="5" class="loading-row"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ======= INVITES VIEW ======= -->
+    <div id="view-invites" class="fade-in" style="display:none">
+      <div class="page-header">
+        <div>
+          <div class="page-title">My Invitations</div>
+          <div class="page-subtitle">Review and respond to family membership invites</div>
+        </div>
+      </div>
+      <div id="invites-list">
+        <div class="loading-row"><div class="spinner"></div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- REQUEST SERVICE MODAL -->
+<div class="modal-overlay" id="request-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Request Service Access</div>
+      <button class="modal-close" onclick="closeModal('request-modal')">✕</button>
+    </div>
+    <div id="request-modal-service" style="background:var(--blue-subtle);border-radius:var(--radius);padding:16px;margin-bottom:20px">
+      <div style="font-weight:700;color:var(--blue)" id="request-service-name"></div>
+      <div style="font-size:.85rem;color:var(--text-muted)" id="request-service-price"></div>
+    </div>
+    <form id="request-form" novalidate>
+      <div class="form-group">
+        <label class="form-label" for="request-message">Message (optional)</label>
+        <textarea id="request-message" class="form-control" rows="3"
+          placeholder="Tell the admin why you need this service…"
+          style="resize:vertical"></textarea>
+      </div>
+      <div id="request-alert" class="alert" style="display:none"></div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+        <button type="button" class="btn btn-outline" onclick="closeModal('request-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="request-submit-btn">Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>

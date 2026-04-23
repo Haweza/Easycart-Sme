@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EasyCart SME Admin Control Panel" />
+  <title>Admin Panel — EasyCart SME</title>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar" role="navigation">
+  <div class="navbar-inner container">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-mark">EC</div>
+      <span class="brand-name">Easy<span>Cart</span> <small style="font-size:.65rem;opacity:.8">Admin</small></span>
+    </a>
+    <div class="navbar-links" id="nav-links">
+      <span style="color:rgba(255,255,255,.8);font-size:.9rem;margin-right:10px" id="nav-admin-name"></span>
+      <span class="badge badge-admin" style="margin-right:14px">ADMIN</span>
+      <button class="btn btn-outline-white btn-sm" onclick="handleLogout()">Sign Out</button>
+    </div>
+    <button class="navbar-burger" id="burger-btn">☰</button>
+  </div>
+</nav>
+
+<!-- APP LAYOUT -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">Admin Panel</div>
+      <a href="#" class="sidebar-link active" data-view="overview"  onclick="showView('overview',this)">
+        <span class="icon">📊</span> Overview
+      </a>
+      <a href="#" class="sidebar-link" data-view="users"     onclick="showView('users',this)">
+        <span class="icon">👤</span> Users
+        <span class="badge badge-pending" id="unapproved-badge" style="display:none;margin-left:auto"></span>
+      </a>
+      <a href="#" class="sidebar-link" data-view="requests"  onclick="showView('requests',this)">
+        <span class="icon">📋</span> Service Requests
+        <span class="badge badge-pending" id="pending-req-badge" style="display:none;margin-left:auto"></span>
+      </a>
+      <a href="#" class="sidebar-link" data-view="families"  onclick="showView('families',this)">
+        <span class="icon">🏠</span> Families
+      </a>
+      <a href="#" class="sidebar-link" data-view="invites"   onclick="showView('invites',this)">
+        <span class="icon">📬</span> Invites
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- ======= OVERVIEW ======= -->
+    <div id="view-overview" class="fade-in">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Admin Overview</div>
+          <div class="page-subtitle">EasyCart SME system at a glance</div>
+        </div>
+      </div>
+      <div class="stats-grid mb-6">
+        <div class="stat-card"><div class="stat-card-icon">👤</div><div class="stat-card-value" id="s-users">—</div><div class="stat-card-label">Total Users</div></div>
+        <div class="stat-card"><div class="stat-card-icon">🏠</div><div class="stat-card-value" id="s-families">—</div><div class="stat-card-label">Families</div></div>
+        <div class="stat-card"><div class="stat-card-icon">📋</div><div class="stat-card-value" id="s-req-pending">—</div><div class="stat-card-label">Pending Requests</div></div>
+        <div class="stat-card"><div class="stat-card-icon">📬</div><div class="stat-card-value" id="s-inv-pending">—</div><div class="stat-card-label">Pending Invites</div></div>
+      </div>
+      <div class="card" style="background:linear-gradient(135deg,var(--blue),var(--blue-light));color:white;border:none">
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:8px">⚡ Quick Actions</div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:16px">
+          <button class="btn btn-primary btn-sm" onclick="showView('invites');openCreateInviteModal()">📬 Send Invite</button>
+          <button class="btn btn-outline-white btn-sm" onclick="showView('families');openCreateFamilyModal()">🏠 New Family</button>
+          <button class="btn btn-outline-white btn-sm" onclick="showView('requests')">📋 Review Requests</button>
+          <button class="btn btn-outline-white btn-sm" onclick="showView('users')">👤 Manage Users</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======= USERS VIEW ======= -->
+    <div id="view-users" style="display:none" class="fade-in">
+      <div class="page-header">
+        <div>
+          <div class="page-title">All Users</div>
+          <div class="page-subtitle">Manage roles and approvals</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <input type="text" class="form-control" id="user-search" placeholder="Search by name or email…"
+            style="width:220px" oninput="filterUsers()">
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th><th>Email</th><th>Role</th><th>Approved</th><th>Joined</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody">
+            <tr><td colspan="6" class="loading-row"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ======= SERVICE REQUESTS VIEW ======= -->
+    <div id="view-requests" style="display:none" class="fade-in">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Service Requests</div>
+          <div class="page-subtitle">Review and respond to customer requests</div>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>User</th><th>Service</th><th>Message</th><th>Status</th><th>Date</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="requests-tbody">
+            <tr><td colspan="6" class="loading-row"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ======= FAMILIES VIEW ======= -->
+    <div id="view-families" style="display:none" class="fade-in">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Families</div>
+          <div class="page-subtitle">Create and manage subscription family groups</div>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateFamilyModal()">+ New Family</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Name</th><th>Organizer</th><th>Max Members</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+          </thead>
+          <tbody id="families-tbody">
+            <tr><td colspan="6" class="loading-row"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ======= INVITES VIEW ======= -->
+    <div id="view-invites" style="display:none" class="fade-in">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Invitations</div>
+          <div class="page-subtitle">Create and monitor all user invitations</div>
+        </div>
+        <button class="btn btn-primary" onclick="openCreateInviteModal()">+ Send Invite</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Recipient</th><th>Family</th><th>Service</th><th>Status</th><th>Expires</th><th>Responded</th></tr>
+          </thead>
+          <tbody id="invites-tbody">
+            <tr><td colspan="6" class="loading-row"><div class="spinner"></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ================================================
+     MODAL: Create Family
+     ================================================ -->
+<div class="modal-overlay" id="family-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🏠 Create New Family</div>
+      <button class="modal-close" onclick="closeModal('family-modal')">✕</button>
+    </div>
+    <form id="family-form" novalidate>
+      <div class="form-group">
+        <label class="form-label">Family Name *</label>
+        <input type="text" id="family-name" class="form-control" placeholder="e.g. Banda Household" required />
+        <div class="form-error" id="family-name-err">Family name is required</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Description</label>
+        <textarea id="family-desc" class="form-control" rows="2" placeholder="Optional description…" style="resize:vertical"></textarea>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Organizer</label>
+        <select id="family-organizer" class="form-control">
+          <option value="">— Assign later —</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Max Members</label>
+        <input type="number" id="family-max" class="form-control" value="10" min="1" max="100" />
+      </div>
+      <div id="family-alert" class="alert" style="display:none"></div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+        <button type="button" class="btn btn-outline" onclick="closeModal('family-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="family-submit-btn">Create Family</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================================================
+     MODAL: Create Invite
+     ================================================ -->
+<div class="modal-overlay" id="invite-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">📬 Send Invitation</div>
+      <button class="modal-close" onclick="closeModal('invite-modal')">✕</button>
+    </div>
+    <div class="alert alert-info mb-4" style="font-size:.82rem">
+      ⚠️ Invites are <strong>single-use</strong> and tied to ONE user, family, and service. No duplicates allowed.
+    </div>
+    <form id="invite-form" novalidate>
+      <div class="form-group">
+        <label class="form-label">Recipient (User) *</label>
+        <select id="invite-recipient" class="form-control" required>
+          <option value="">— Select a customer —</option>
+        </select>
+        <div class="form-error" id="invite-recipient-err">Recipient is required</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Family *</label>
+        <select id="invite-family" class="form-control" required>
+          <option value="">— Select a family —</option>
+        </select>
+        <div class="form-error" id="invite-family-err">Family is required</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Service *</label>
+        <select id="invite-service" class="form-control" required>
+          <option value="">— Select a service —</option>
+        </select>
+        <div class="form-error" id="invite-service-err">Service is required</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Personal Message (optional)</label>
+        <textarea id="invite-message" class="form-control" rows="2"
+          placeholder="Welcome to the family!" style="resize:vertical"></textarea>
+      </div>
+      <div id="invite-alert" class="alert" style="display:none"></div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+        <button type="button" class="btn btn-outline" onclick="closeModal('invite-modal')">Cancel</button>
+        <button type="submit" class="btn btn-primary" id="invite-submit-btn">Send Invite</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================================================
+     MODAL: Review Request
+     ================================================ -->
+<div class="modal-overlay" id="review-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="review-modal-title">Review Request</div>
+      <button class="modal-close" onclick="closeModal('review-modal')">✕</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Admin Note (optional)</label>
+      <textarea id="review-note" class="form-control" rows="3" placeholder="Leave a note for the customer…" style="resize:vertical"></textarea>
+    </div>
+    <div id="review-alert" class="alert" style="display:none"></div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+      <button type="button" class="btn btn-outline" onclick="closeModal('review-modal')">Cancel</button>
+      <button class="btn btn-danger btn-sm" id="review-reject-btn">✕ Reject</button>
+      <button class="btn btn-primary" id="review-approve-btn">✅ Approve</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container" class="toast-container"></div>
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

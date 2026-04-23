@@ -1,0 +1,237 @@
+You are a senior full-stack engineer and system architect.
+
+Your task is to design and generate a **production-minded MVP** for a **Subscription Management System (EasyCart SME)** with strict role control, structured onboarding, and a clean, responsive branded interface.
+
+---
+
+## 🎨 BRANDING REQUIREMENTS (STRICT)
+
+Use the EasyCart visual identity consistently across the UI:
+
+* Primary Color (Authority / Headers / Buttons):
+
+  * Deep Blue → #1E2A78 (or closest match)
+
+* Accent Color (Highlights / CTA / Active states):
+
+  * Bright Yellow → #F4C430 (or closest match)
+
+* Background:
+
+  * White / Light neutral tones (#FFFFFF, #F8F9FB)
+
+* Text:
+
+  * Dark gray / near black for readability (#1A1A1A)
+
+### UI Expectations:
+
+* Clean, modern SaaS dashboard feel
+* Strong contrast between blue and yellow
+* Use yellow ONLY for emphasis (buttons, alerts, highlights)
+* Blue should dominate structure (navbars, headers, sections)
+
+---
+
+## ⚔️ CORE SYSTEM LOGIC (MANDATORY)
+
+1. **Public Access**
+
+   * Landing page is fully accessible without authentication
+   * Users can view all available services freely
+
+2. **User Model**
+
+   * Every new user is a **CUSTOMER by default**
+   * No elevated privileges without admin action
+
+3. **Service Request Flow**
+
+   * Users can request access to services
+   * Requests are reviewed by ADMIN
+
+4. **Admin Authority**
+
+   * ADMIN has full control:
+
+     * Approves users
+     * Assigns users into families
+     * Sends invites
+     * Assigns ORGANIZER role
+
+5. **Organizer Role**
+
+   * Limited scope:
+
+     * Can only manage assigned families
+     * Can request new families/services
+     * Cannot override admin decisions
+
+6. **Invite System (STRICT ENFORCEMENT)**
+
+   * Invites must:
+
+     * Be assigned to ONE specific user
+     * Be created ONLY by ADMIN
+     * Be linked to a family and a service
+     * Be **single-use only**
+
+   * Invite lifecycle:
+
+     * PENDING → ACCEPTED / DECLINED / EXPIRED
+     * Once ACCEPTED → cannot be reused or modified
+
+   * Must prevent:
+
+     * Duplicate active invites
+     * Inviting users already in a family
+
+7. **Membership Activation**
+
+   * A user becomes an active member ONLY after:
+
+     * Accepting an invite
+     * Being assigned to a family
+
+---
+
+## 🏗️ TECH STACK (STRICT)
+
+* Backend Database & Auth: Supabase (PostgreSQL + RLS)
+* Application Layer: Spring Boot (REST API)
+* Hosting: Vercel (Frontend deployment)
+* Frontend:
+
+  * HTML (semantic structure)
+  * CSS (custom styling + animations)
+  * Tailwind CSS (utility styling)
+  * JavaScript (vanilla, Fetch API)
+
+---
+
+## 🎨 UI/UX REQUIREMENTS
+
+* Fully responsive (mobile, tablet, desktop)
+* Clean dashboard layout using EasyCart color palette
+* CSS animations for a “live” feel:
+
+  * Button hover transitions (yellow highlights)
+  * Smooth page fades
+  * Card hover elevation
+* Role-based UI separation:
+
+  * Public landing page
+  * Customer dashboard
+  * Admin panel
+  * Organizer panel
+
+---
+
+## 📦 REQUIRED OUTPUT
+
+### 1. 🧭 Implementation Plan
+
+* Step-by-step roadmap:
+
+  * Supabase setup
+  * Spring Boot backend
+  * Frontend build
+  * Deployment (Vercel)
+
+---
+
+### 2. 🗄️ Database Schema (Supabase SQL)
+
+* Full SQL with:
+
+  * All tables
+  * Constraints (PK, FK, UNIQUE, CHECK)
+  * Invite system enforcement
+
+---
+
+### 3. 🔐 Supabase Setup
+
+* Authentication configuration
+* Row-Level Security (RLS)
+* Role-based access policies
+
+---
+
+### 4. ⚙️ Spring Boot Backend
+
+* Clean architecture
+* Controllers, services, repositories
+* API endpoints:
+
+  * Auth integration
+  * Service requests
+  * Invite lifecycle
+  * Admin controls
+
+---
+
+### 5. 🌐 Frontend (HTML + CSS + JS)
+
+Provide:
+
+* Pages:
+
+  * Landing page (branded)
+  * Login/Register
+  * Dashboard (role-based)
+  * Admin panel
+  * Organizer panel
+
+* Must include:
+
+  * Tailwind + custom CSS using EasyCart colors
+  * Responsive layouts
+  * Animations and transitions
+  * JavaScript API integration
+
+---
+
+### 6. 🔄 System Flows
+
+* User journey (visitor → customer → member)
+* Invite lifecycle
+* Admin control flow
+
+---
+
+### 7. 📁 Project Structure (Download-Ready)
+
+/frontend
+/backend
+/database
+/docs
+
+Include:
+
+* Key files with code
+* Setup instructions
+* Run locally guide
+* Deployment steps (Supabase + Vercel)
+
+---
+
+## ⚠️ RULES
+
+* Do NOT simplify the invite system
+* Enforce strict constraints
+* Follow branding strictly (no random colors)
+* Keep code modular and production-ready
+* Avoid unnecessary frameworks
+
+---
+
+## 🎯 GOAL
+
+Deliver a fully structured MVP blueprint that is:
+
+* Functional
+* Visually consistent with EasyCart branding
+* Ready to build and deploy
+
+No vague explanations. No shortcuts. Build like this is going live.

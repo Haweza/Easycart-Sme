@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EasyCart SME — Africa's smart subscription management platform for families and SMEs." />
+  <title>EasyCart SME — Subscription Management Made Simple</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { brand: '#1E2A78', accent: '#F4C430' } } },
+      corePlugins: { preflight: false }
+    }
+  </script>
+</head>
+<body>
+
+<!-- ========================================================
+     NAVBAR
+     ======================================================== -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-inner container">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-mark">EC</div>
+      <span class="brand-name">Easy<span>Cart</span> <small style="font-size:.65rem;font-weight:500;opacity:.8">SME</small></span>
+    </a>
+
+    <div class="navbar-links" id="nav-links">
+      <a href="#services" class="active">Services</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="login.html" id="nav-login" class="btn btn-outline-white btn-sm" style="margin-left:8px">Sign In</a>
+      <a href="login.html#register" id="nav-register" class="btn btn-primary btn-sm" style="margin-left:4px">Get Started</a>
+    </div>
+
+    <button class="navbar-burger" id="burger-btn" aria-label="Menu">☰</button>
+  </div>
+</nav>
+
+<!-- ========================================================
+     HERO
+     ======================================================== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text fade-in">
+        <div class="hero-badge">🇿🇲 Built for Zambian SMEs</div>
+        <h1 class="hero-title">
+          Subscription Management<br />
+          <span>Made Effortless</span>
+        </h1>
+        <p class="hero-desc">
+          EasyCart SME gives businesses a complete platform to manage service subscriptions,
+          family groups, invite members, and control access — all from one clean dashboard.
+        </p>
+        <div class="hero-actions">
+          <a href="login.html#register" class="btn btn-primary btn-lg">
+            🚀 Start Free Today
+          </a>
+          <a href="#services" class="btn btn-outline-white btn-lg">
+            View Services
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual fade-in" style="animation-delay:.2s">
+        <div class="hero-card">
+          <div class="hero-card-label">✅ Active Subscriptions</div>
+          <div class="hero-card-value">247 active families</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-label">📬 Invites Sent This Week</div>
+          <div class="hero-card-value">1,083 invitations</div>
+        </div>
+        <div class="hero-card">
+          <div class="hero-card-label">💰 Services Available</div>
+          <div class="hero-card-value">4 plans from ZMW 150/mo</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     TRUST STRIP
+     ======================================================== -->
+<div style="background:var(--white);border-bottom:1px solid var(--border);padding:16px 0;">
+  <div class="container" style="display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;">
+    <span style="font-size:.85rem;color:var(--text-muted);font-weight:500;">Trusted by SMEs across Zambia</span>
+    <span style="font-size:.9rem;font-weight:700;color:var(--blue)">🔒 Secure Auth</span>
+    <span style="font-size:.9rem;font-weight:700;color:var(--blue)">🏠 Family Groups</span>
+    <span style="font-size:.9rem;font-weight:700;color:var(--blue)">📋 Role-Based Access</span>
+    <span style="font-size:.9rem;font-weight:700;color:var(--blue)">📧 Smart Invites</span>
+  </div>
+</div>
+
+<!-- ========================================================
+     SERVICES SECTION
+     ======================================================== -->
+<section class="services-section" id="services">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-tag">💼 Our Plans</div>
+      <h2 class="section-title">Choose the Right Subscription</h2>
+      <p class="section-desc">Flexible plans for every business size. No hidden fees. Cancel anytime.</p>
+    </div>
+
+    <div class="services-grid" id="services-grid">
+      <!-- Loaded by JS or fallback below -->
+      <div class="loading-row"><div class="spinner"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     HOW IT WORKS
+     ======================================================== -->
+<section id="how-it-works" style="padding:80px 0;background:var(--blue)">
+  <div class="container">
+    <div class="section-header" style="color:white">
+      <div class="section-tag" style="background:rgba(244,196,48,.2);color:var(--yellow)">📖 Process</div>
+      <h2 class="section-title" style="color:white">How EasyCart SME Works</h2>
+      <p class="section-desc" style="color:rgba(255,255,255,.7)">From sign up to active membership in four simple steps.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:24px">
+      <div class="how-step" style="background:rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:28px;border:1px solid rgba(255,255,255,.15)">
+        <div style="width:48px;height:48px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:var(--blue);margin-bottom:16px">1</div>
+        <h3 style="color:white;font-size:1rem;font-weight:700;margin-bottom:8px">Register</h3>
+        <p style="color:rgba(255,255,255,.7);font-size:.875rem;line-height:1.6">Create your account — you're automatically a Customer. Browse all available services freely.</p>
+      </div>
+      <div class="how-step" style="background:rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:28px;border:1px solid rgba(255,255,255,.15)">
+        <div style="width:48px;height:48px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:var(--blue);margin-bottom:16px">2</div>
+        <h3 style="color:white;font-size:1rem;font-weight:700;margin-bottom:8px">Request a Service</h3>
+        <p style="color:rgba(255,255,255,.7);font-size:.875rem;line-height:1.6">Submit a request for any service plan. Your request goes directly to the Admin for review.</p>
+      </div>
+      <div class="how-step" style="background:rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:28px;border:1px solid rgba(255,255,255,.15)">
+        <div style="width:48px;height:48px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:var(--blue);margin-bottom:16px">3</div>
+        <h3 style="color:white;font-size:1rem;font-weight:700;margin-bottom:8px">Receive Invite</h3>
+        <p style="color:rgba(255,255,255,.7);font-size:.875rem;line-height:1.6">Admin creates a personal invite linked to your account, a family, and your chosen service.</p>
+      </div>
+      <div class="how-step" style="background:rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:28px;border:1px solid rgba(255,255,255,.15)">
+        <div style="width:48px;height:48px;background:var(--yellow);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:900;color:var(--blue);margin-bottom:16px">4</div>
+        <h3 style="color:white;font-size:1rem;font-weight:700;margin-bottom:8px">Activate Membership</h3>
+        <p style="color:rgba(255,255,255,.7);font-size:.875rem;line-height:1.6">Accept your invite and you're instantly an active family member with full service access.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     FOOTER
+     ======================================================== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h3>Easy<span>Cart</span> SME</h3>
+        <p>Africa's smart subscription management platform for modern SMEs and family groups. Powered by Supabase + Spring Boot.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Platform</h4>
+        <a href="#services">Services</a>
+        <a href="login.html">Sign In</a>
+        <a href="login.html#register">Register</a>
+        <a href="#how-it-works">How It Works</a>
+      </div>
+      <div class="footer-links">
+        <h4>Support</h4>
+        <a href="#">Documentation</a>
+        <a href="#">API Reference</a>
+        <a href="#">Contact Admin</a>
+        <a href="#">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 EasyCart SME. All rights reserved.</span>
+      <span style="color:var(--yellow)">🇿🇲 Made in Zambia</span>
+    </div>
+  </div>
+</footer>
+
+<!-- Toast container -->
+<div id="toast-container" class="toast-container"></div>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+// ---- Navbar auth state ------------------------------------
+(function() {
+  if (isLoggedIn()) {
+    document.getElementById('nav-login').style.display = 'none';
+    document.getElementById('nav-register').textContent = 'My Dashboard';
+    document.getElementById('nav-register').href = '#';
+    document.getElementById('nav-register').addEventListener('click', (e) => {
+      e.preventDefault(); redirectByRole();
+    });
+  }
+})();
+
+// ---- Mobile burger ----------------------------------------
+document.getElementById('burger-btn').addEventListener('click', () => {
+  document.getElementById('nav-links').style.display =
+    document.getElementById('nav-links').style.display === 'flex' ? 'none' : 'flex';
+});
+
+// ---- Load services via API --------------------------------
+(async function loadServices() {
+  const icons = ['📦', '⚡', '🚀', '🏆'];
+  const grid  = document.getElementById('services-grid');
+  try {
+    const services = await Services.listActive();
+    if (!services || services.length === 0) {
+      grid.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📭</div><h3>No services available yet</h3></div>`;
+      return;
+    }
+    grid.innerHTML = services.map((s, i) => `
+      <div class="service-card fade-in" style="animation-delay:${i * .08}s">
+        <div class="service-card-icon">${icons[i % icons.length]}</div>
+        <div class="service-card-name">${s.name}</div>
+        <div class="service-card-desc">${s.description || 'Subscription service plan'}</div>
+        <div class="service-card-price">
+          ${s.currency} ${Number(s.price).toLocaleString()}
+          <span>/ ${s.billingCycle?.toLowerCase() || 'month'}</span>
+        </div>
+        <div class="service-card-footer">
+          <span class="badge badge-active">Active</span>
+          <a href="login.html#register" class="btn btn-primary btn-sm">Request Access</a>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    // Fallback static cards in case API is not running
+    grid.innerHTML = `
+      <div class="service-card"><div class="service-card-icon">📦</div>
+        <div class="service-card-name">EasyCart Basic</div>
+        <div class="service-card-desc">Essential subscription management features for individuals and small teams.</div>
+        <div class="service-card-price">ZMW 150<span>/ month</span></div>
+        <div class="service-card-footer"><span class="badge badge-active">Active</span>
+          <a href="login.html#register" class="btn btn-primary btn-sm">Request Access</a></div>
+      </div>
+      <div class="service-card"><div class="service-card-icon">⚡</div>
+        <div class="service-card-name">EasyCart Standard</div>
+        <div class="service-card-desc">Advanced features with analytics and enhanced family group management.</div>
+        <div class="service-card-price">ZMW 300<span>/ month</span></div>
+        <div class="service-card-footer"><span class="badge badge-active">Active</span>
+          <a href="login.html#register" class="btn btn-primary btn-sm">Request Access</a></div>
+      </div>
+      <div class="service-card"><div class="service-card-icon">🚀</div>
+        <div class="service-card-name">EasyCart Premium</div>
+        <div class="service-card-desc">Full suite with priority support, unlimited families, and custom branding.</div>
+        <div class="service-card-price">ZMW 550<span>/ month</span></div>
+        <div class="service-card-footer"><span class="badge badge-active">Active</span>
+          <a href="login.html#register" class="btn btn-primary btn-sm">Request Access</a></div>
+      </div>
+      <div class="service-card"><div class="service-card-icon">🏆</div>
+        <div class="service-card-name">EasyCart Annual</div>
+        <div class="service-card-desc">Best value — 12 months of full access with a 2-month discount included.</div>
+        <div class="service-card-price">ZMW 3,000<span>/ year</span></div>
+        <div class="service-card-footer"><span class="badge badge-active">Active</span>
+          <a href="login.html#register" class="btn btn-primary btn-sm">Request Access</a></div>
+      </div>
+    `;
+  }
+})();
+</script>
+</body>
+</html>
