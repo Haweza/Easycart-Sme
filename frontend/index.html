@@ -6,6 +6,7 @@
   <meta name="description" content="EasyCart SME — Africa's smart subscription management platform for families and SMEs." />
   <title>EasyCart SME — Subscription Management Made Simple</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 </head>
 <body>
 
@@ -165,10 +166,10 @@
 
   // ---- Slideshow Logic ------------------------------------
   const slideshowData = [
-    { icon: '📺', name: 'Netflix Premium', price: 'ZMW 100' },
-    { icon: '🎵', name: 'Apple Music', price: 'ZMW 32' },
-    { icon: '🎧', name: 'Spotify Family', price: 'ZMW 70' },
-    { icon: '🎮', name: 'Crunchyroll', price: 'ZMW 45' }
+    { icon: '<i class="fab fa-netflix" style="color:#E50914"></i>', name: 'Netflix Premium', price: 'ZMW 100' },
+    { icon: '<i class="fab fa-apple" style="color:#000000"></i>',   name: 'Apple Music',     price: 'ZMW 32' },
+    { icon: '<i class="fab fa-spotify" style="color:#1DB954"></i>', name: 'Spotify Family',  price: 'ZMW 70' },
+    { icon: '<i class="fas fa-play" style="color:#F47521"></i>',    name: 'Crunchyroll',     price: 'ZMW 45' }
   ];
 
   let currentSlide = 0;
@@ -205,7 +206,9 @@
           : '...';
         return `
           <div class="card">
-            <div style="font-size: 2.5rem; margin-bottom: 1rem;">📦</div>
+            <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--accent);">
+              <i class="fas fa-box-open"></i>
+            </div>
             <h3 style="margin-bottom: 0.5rem;">${s.name}</h3>
             <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">${s.description || 'Premium subscription service.'}</p>
             <div style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem;">

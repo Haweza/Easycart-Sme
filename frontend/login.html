@@ -6,6 +6,7 @@
   <meta name="description" content="Sign in or create an EasyCart SME account." />
   <title>Sign In — EasyCart SME</title>
   <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
   <style>
     body {
       display: flex;
@@ -23,7 +24,7 @@
   <!-- Logo -->
   <div style="text-align: center; margin-bottom: 2rem;">
     <a href="index.html" class="navbar-brand" style="justify-content: center;">
-      <div class="logo-icon">🛒</div>
+      <div class="logo-icon"><i class="fas fa-shopping-cart"></i></div>
       <span class="brand-name">Easy<span>Cart</span></span>
     </a>
     <p id="auth-tagline" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">Sign in to your account</p>
@@ -109,10 +110,11 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
   try {
     const res = await Auth.login({ email, password });
     setAuth(res.token, res.user);
-    window.location.href = 'index.html';
+    window.location.replace('index.html');
   } catch (err) {
     const alert = document.getElementById('auth-alert');
-    alert.textContent = err.message; alert.className = 'alert alert-danger'; alert.style.display = 'block';
+    alert.textContent = err.message || 'Login failed. Check your credentials.'; 
+    alert.className = 'alert alert-danger'; alert.style.display = 'block';
     btn.disabled = false; btn.textContent = 'Sign In';
   }
 });
@@ -127,10 +129,11 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
   try {
     const res = await Auth.register({ fullName: name, email, password });
     setAuth(res.token, res.user);
-    window.location.href = 'index.html';
+    window.location.replace('index.html');
   } catch (err) {
     const alert = document.getElementById('auth-alert');
-    alert.textContent = err.message; alert.className = 'alert alert-danger'; alert.style.display = 'block';
+    alert.textContent = err.message || 'Registration failed.'; 
+    alert.className = 'alert alert-danger'; alert.style.display = 'block';
     btn.disabled = false; btn.textContent = 'Create Account';
   }
 });
