@@ -1,6 +1,8 @@
 package com.easycart.sme.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -40,7 +42,10 @@ public class Invite {
     @JoinColumn(name = "created_by", nullable = false)
     private Profile createdBy;
 
+
+
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     @Builder.Default
     private InviteStatus status = InviteStatus.PENDING;
