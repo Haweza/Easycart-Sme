@@ -15,6 +15,8 @@ public class ProfileResponse {
     private String email;
     private String phone;
     private String role;
+    
+    @com.fasterxml.jackson.annotation.JsonProperty("isApproved")
     private boolean isApproved;
     private String avatarUrl;
     private Instant createdAt;

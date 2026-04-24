@@ -10,7 +10,11 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "families")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Family {
 
     @Id
@@ -42,4 +46,8 @@ public class Family {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
 }

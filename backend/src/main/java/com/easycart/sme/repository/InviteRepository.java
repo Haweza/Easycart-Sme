@@ -24,8 +24,8 @@ public interface InviteRepository extends JpaRepository<Invite, UUID> {
     List<Invite> findByFamilyId(UUID familyId);
 
     /** Check for existing active (PENDING) invite to prevent duplicates */
-    boolean existsByRecipientIdAndFamilyIdAndServiceIdAndStatus(
-            UUID recipientId, UUID familyId, UUID serviceId, Invite.InviteStatus status);
+    boolean existsByRecipientIdAndFamilyIdAndPlanIdAndStatus(
+            UUID recipientId, UUID familyId, UUID planId, Invite.InviteStatus status);
 
     /** Expire all pending invites past their expiry date (called by scheduler) */
     @Modifying

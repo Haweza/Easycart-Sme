@@ -11,7 +11,7 @@ public class InviteCreateRequest {
     private UUID recipientId;
     @NotNull(message = "familyId is required")
     private UUID familyId;
-    @NotNull(message = "serviceId is required")
-    private UUID serviceId;
+    @NotNull(message = "planId is required")
+    private UUID planId;
     private String message;
 }

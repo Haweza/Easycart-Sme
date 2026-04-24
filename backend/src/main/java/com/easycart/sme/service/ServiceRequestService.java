@@ -26,6 +26,7 @@ public class ServiceRequestService {
     private final ServiceRequestRepository requestRepository;
     private final ProfileRepository profileRepository;
     private final ServiceRepository serviceRepository;
+    private final com.easycart.sme.repository.PlanRepository planRepository;
 
     /** Customer submits a new service request */
     @Transactional
@@ -40,15 +41,29 @@ public class ServiceRequestService {
         com.easycart.sme.entity.Service service = serviceRepository.findById(dto.getServiceId())
                 .orElseThrow(() -> new NotFoundException("Service not found"));
 
+        com.easycart.sme.entity.Plan plan = null;
+        if (dto.getPlanId() != null) {
+            plan = planRepository.findById(dto.getPlanId())
+                    .orElseThrow(() -> new NotFoundException("Plan not found"));
+        }
+
         // Block duplicate PENDING requests
-        if (requestRepository.existsByUserIdAndServiceIdAndStatus(
-                userId, service.getId(), ServiceRequest.RequestStatus.PENDING)) {
-            throw new ConflictException("You already have a pending request for this service");
+        if (plan != null) {
+            if (requestRepository.existsByUserIdAndServiceIdAndPlanIdAndStatus(
+                    userId, service.getId(), plan.getId(), ServiceRequest.RequestStatus.PENDING)) {
+                throw new ConflictException("You already have a pending request for this specific plan");
+            }
+        } else {
+            if (requestRepository.existsByUserIdAndServiceIdAndStatus(
+                    userId, service.getId(), ServiceRequest.RequestStatus.PENDING)) {
+                throw new ConflictException("You already have a pending request for this service");
+            }
         }
 
         ServiceRequest req = ServiceRequest.builder()
                 .user(user)
                 .service(service)
+                .plan(plan)
                 .message(dto.getMessage())
                 .status(ServiceRequest.RequestStatus.PENDING)
                 .build();

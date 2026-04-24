@@ -10,5 +10,6 @@ public class CreateFamilyDto {
     private String name;
     private String description;
     private UUID organizerId;
+    private UUID planId;
     private Integer maxMembers;
 }

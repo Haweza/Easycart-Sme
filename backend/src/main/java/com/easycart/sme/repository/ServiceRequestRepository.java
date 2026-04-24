@@ -13,4 +13,6 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
     List<ServiceRequest> findByStatus(ServiceRequest.RequestStatus status);
     boolean existsByUserIdAndServiceIdAndStatus(
             UUID userId, UUID serviceId, ServiceRequest.RequestStatus status);
+    boolean existsByUserIdAndServiceIdAndPlanIdAndStatus(
+            UUID userId, UUID serviceId, UUID planId, ServiceRequest.RequestStatus status);
 }

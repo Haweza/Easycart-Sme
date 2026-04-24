@@ -28,7 +28,7 @@ public class InviteService {
     private final ProfileRepository profileRepository;
     private final FamilyRepository familyRepository;
     private final FamilyMemberRepository familyMemberRepository;
-    private final com.easycart.sme.repository.ServiceRepository serviceRepository;
+    private final com.easycart.sme.repository.PlanRepository planRepository;
 
     // -------------------------------------------------------
     //  ADMIN: Create invite
@@ -48,8 +48,8 @@ public class InviteService {
         Family family = familyRepository.findById(request.getFamilyId())
                 .orElseThrow(() -> new NotFoundException("Family not found"));
 
-        com.easycart.sme.entity.Service service = serviceRepository.findById(request.getServiceId())
-                .orElseThrow(() -> new NotFoundException("Service not found"));
+        com.easycart.sme.entity.Plan plan = planRepository.findById(request.getPlanId())
+                .orElseThrow(() -> new NotFoundException("Plan not found"));
 
         // ENFORCEMENT: Check user not already an active member of this family
         if (familyMemberRepository.existsByUserIdAndFamilyIdAndStatus(
@@ -58,9 +58,9 @@ public class InviteService {
         }
 
         // ENFORCEMENT: No duplicate PENDING invites
-        if (inviteRepository.existsByRecipientIdAndFamilyIdAndServiceIdAndStatus(
-                recipient.getId(), family.getId(), service.getId(), Invite.InviteStatus.PENDING)) {
-            throw new ConflictException("A pending invite already exists for this user, family, and service");
+        if (inviteRepository.existsByRecipientIdAndFamilyIdAndPlanIdAndStatus(
+                recipient.getId(), family.getId(), plan.getId(), Invite.InviteStatus.PENDING)) {
+            throw new ConflictException("A pending invite already exists for this user, family, and plan");
         }
 
         // Generate a cryptographically secure token
@@ -69,7 +69,7 @@ public class InviteService {
         Invite invite = Invite.builder()
                 .recipient(recipient)
                 .family(family)
-                .service(service)
+                .plan(plan)
                 .createdBy(admin)
                 .status(Invite.InviteStatus.PENDING)
                 .token(token)

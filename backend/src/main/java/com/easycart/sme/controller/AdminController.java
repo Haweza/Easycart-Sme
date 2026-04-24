@@ -25,6 +25,7 @@ public class AdminController {
 
     private final ProfileRepository profileRepository;
     private final FamilyRepository familyRepository;
+    private final com.easycart.sme.repository.PlanRepository planRepository;
 
     // --- Users ---
 
@@ -75,10 +76,16 @@ public class AdminController {
                 throw new ForbiddenException("Assigned user is not an ORGANIZER");
             }
         }
+        com.easycart.sme.entity.Plan plan = null;
+        if (dto.getPlanId() != null) {
+            plan = planRepository.findById(dto.getPlanId())
+                    .orElseThrow(() -> new NotFoundException("Plan not found"));
+        }
         Family family = Family.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .organizer(organizer)
+                .plan(plan)
                 .maxMembers(dto.getMaxMembers() != null ? dto.getMaxMembers() : 10)
                 .build();
         return ResponseEntity.ok(FamilyResponse.from(familyRepository.save(family)));

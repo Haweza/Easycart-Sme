@@ -15,7 +15,8 @@ public class InviteResponse {
     private String recipientName;
     private UUID familyId;
     private String familyName;
-    private UUID serviceId;
+    private UUID planId;
+    private String planName;
     private String serviceName;
     private String status;
     private String token;
@@ -31,8 +32,9 @@ public class InviteResponse {
                 .recipientName(i.getRecipient().getFullName())
                 .familyId(i.getFamily().getId())
                 .familyName(i.getFamily().getName())
-                .serviceId(i.getService().getId())
-                .serviceName(i.getService().getName())
+                .planId(i.getPlan().getId())
+                .planName(i.getPlan().getName())
+                .serviceName(i.getPlan().getService().getName())
                 .status(i.getStatus().name())
                 .token(i.getToken())
                 .message(i.getMessage())

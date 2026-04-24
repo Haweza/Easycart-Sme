@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -13,44 +13,36 @@
 <nav class="navbar" role="navigation">
   <div class="navbar-inner container">
     <a href="index.html" class="navbar-brand">
-      <div class="logo-mark">EC</div>
+      <div class="logo-icon">🛒</div>
       <span class="brand-name">Easy<span>Cart</span> <small style="font-size:.65rem;opacity:.8">Organizer</small></span>
     </a>
     <div class="navbar-links" id="nav-links">
-      <span style="color:rgba(255,255,255,.8);font-size:.9rem;margin-right:10px" id="nav-org-name"></span>
+      <span style="color:var(--text-muted);font-size:.9rem;margin-right:10px" id="nav-org-name"></span>
+      
+      <button id="theme-toggle" class="theme-toggle" style="margin-right: 12px;">🌙</button>
+
       <span class="badge badge-organizer" style="margin-right:14px">ORGANIZER</span>
-      <button class="btn btn-outline-white btn-sm" onclick="handleLogout()">Sign Out</button>
+      <button class="btn btn-outline btn-sm" onclick="handleLogout()">Sign Out</button>
     </div>
-    <button class="navbar-burger" id="burger-btn">☰</button>
   </div>
 </nav>
 
 <!-- APP LAYOUT -->
-<div class="app-layout">
+<div class="dashboard-grid">
 
   <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-section">
-      <div class="sidebar-label">Organizer Menu</div>
+      <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 0 1.25rem 1rem;">Organizer Menu</div>
       <a href="#" class="sidebar-link active" data-view="overview" onclick="showView('overview',this)">
-        <span class="icon">🏠</span> My Overview
+        🏠 Overview
       </a>
       <a href="#" class="sidebar-link" data-view="families" onclick="showView('families',this)">
-        <span class="icon">👨‍👩‍👧‍👦</span> My Families
+        👨‍👩‍👧‍👦 My Families
       </a>
       <a href="#" class="sidebar-link" data-view="members" onclick="showView('members',this)">
-        <span class="icon">👤</span> Members
+        👤 Members
       </a>
-    </div>
-
-    <!-- Organizer scope notice -->
-    <div style="padding:16px 20px;margin-top:auto">
-      <div style="background:var(--yellow-light);border:1px solid var(--yellow);border-radius:var(--radius);padding:14px">
-        <div style="font-size:.78rem;font-weight:700;color:var(--blue);margin-bottom:4px">⚠️ Organizer Scope</div>
-        <div style="font-size:.75rem;color:var(--text-muted);line-height:1.5">
-          You can only manage <strong>families assigned to you</strong>. Contact admin for any changes beyond your scope.
-        </div>
-      </div>
     </div>
   </aside>
 
@@ -60,55 +52,34 @@
     <!-- ======= OVERVIEW ======= -->
     <div id="view-overview" class="fade-in">
       <div class="page-header">
-        <div>
-          <div class="page-title">Organizer Dashboard</div>
-          <div class="page-subtitle">Manage your assigned families and members</div>
-        </div>
+        <h1 class="page-title">Organizer Panel</h1>
       </div>
 
       <div class="stats-grid mb-6">
-        <div class="stat-card">
-          <div class="stat-card-icon">🏠</div>
-          <div class="stat-card-value" id="stat-my-families">—</div>
-          <div class="stat-card-label">My Families</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-icon">👤</div>
-          <div class="stat-card-value" id="stat-total-members">—</div>
-          <div class="stat-card-label">Total Members</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-card-icon">✅</div>
-          <div class="stat-card-value" id="stat-active-members">—</div>
-          <div class="stat-card-label">Active Members</div>
-        </div>
+        <div class="card"><div style="color:var(--text-muted); font-size: 0.9rem;">My Families</div><div style="font-size: 2rem; font-weight: 800;" id="stat-my-families">—</div></div>
+        <div class="card"><div style="color:var(--text-muted); font-size: 0.9rem;">Total Members</div><div style="font-size: 2rem; font-weight: 800;" id="stat-total-members">—</div></div>
+        <div class="card"><div style="color:var(--text-muted); font-size: 0.9rem;">Active Now</div><div style="font-size: 2rem; font-weight: 800;" id="stat-active-members">—</div></div>
       </div>
 
-      <!-- Family cards -->
-      <div class="section-header" style="text-align:left;margin-bottom:20px">
-        <div style="font-size:1rem;font-weight:700;color:var(--blue)">My Assigned Families</div>
+      <div class="page-header mt-6">
+        <h2 class="page-title" style="font-size: 1.25rem;">Quick View</h2>
       </div>
-      <div id="family-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px">
-        <div class="loading-row"><div class="spinner"></div></div>
+      <div id="family-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px">
+        <!-- Cards -->
       </div>
     </div>
 
     <!-- ======= FAMILIES VIEW ======= -->
     <div id="view-families" style="display:none" class="fade-in">
       <div class="page-header">
-        <div>
-          <div class="page-title">My Families</div>
-          <div class="page-subtitle">Families you are responsible for</div>
-        </div>
+        <h2 class="page-title">My Families</h2>
       </div>
-      <div class="table-wrapper">
+      <div class="table-container">
         <table>
           <thead>
-            <tr><th>Family Name</th><th>Max Members</th><th>Status</th><th>Created</th><th>Actions</th></tr>
+            <tr><th>Family Name</th><th>Service & Plan</th><th>Status</th><th>Actions</th></tr>
           </thead>
-          <tbody id="families-tbody">
-            <tr><td colspan="5" class="loading-row"><div class="spinner"></div></td></tr>
-          </tbody>
+          <tbody id="families-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -116,27 +87,17 @@
     <!-- ======= MEMBERS VIEW ======= -->
     <div id="view-members" style="display:none" class="fade-in">
       <div class="page-header">
-        <div>
-          <div class="page-title">Family Members</div>
-          <div class="page-subtitle" id="members-subtitle">Select a family to view members</div>
-        </div>
-        <div>
-          <select id="family-select" class="form-control" style="width:220px" onchange="loadMembersForFamily(this.value)">
-            <option value="">— Select a family —</option>
-          </select>
-        </div>
+        <h2 class="page-title">Members</h2>
+        <select id="family-select" class="form-control" style="width:240px" onchange="loadMembersForFamily(this.value)">
+          <option value="">Select a family</option>
+        </select>
       </div>
-      <div class="table-wrapper">
+      <div class="table-container">
         <table>
           <thead>
             <tr><th>Name</th><th>Email</th><th>Status</th><th>Joined</th></tr>
           </thead>
-          <tbody id="members-tbody">
-            <tr><td colspan="4"><div class="empty-state">
-              <div class="empty-state-icon">👥</div>
-              <h3>Select a family above</h3>
-            </div></td></tr>
-          </tbody>
+          <tbody id="members-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -145,7 +106,25 @@
 </div>
 
 <div id="toast-container" class="toast-container"></div>
+<script src="js/config.js"></script>
 <script src="js/api.js"></script>
 <script src="js/organizer.js"></script>
+<script>
+  // Theme Toggle logic
+  const themeToggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', savedTheme);
+  themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
+  });
+</script>
 </body>
 </html>

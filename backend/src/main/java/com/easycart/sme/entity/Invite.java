@@ -15,7 +15,7 @@ import java.util.UUID;
     uniqueConstraints = {
         @UniqueConstraint(
             name = "no_duplicate_pending_invite",
-            columnNames = {"recipient_id", "family_id", "service_id", "status"}
+            columnNames = {"recipient_id", "family_id", "plan_id", "status"}
         )
     }
 )
@@ -35,8 +35,8 @@ public class Invite {
     private Family family;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "service_id", nullable = false)
-    private Service service;
+    @JoinColumn(name = "plan_id", nullable = false)
+    private Plan plan;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false)

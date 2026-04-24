@@ -8,5 +8,6 @@ import java.util.UUID;
 public class ServiceRequestCreateDto {
     @NotNull(message = "serviceId is required")
     private UUID serviceId;
+    private UUID planId;
     private String message;
 }

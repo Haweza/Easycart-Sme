@@ -24,20 +24,13 @@ public class Service {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
-
-    @Column(nullable = false, length = 10)
-    @Builder.Default
-    private String currency = "ZMW";
-
-    @Column(name = "billing_cycle", nullable = false, length = 20)
-    @Builder.Default
-    private String billingCycle = "MONTHLY";
-
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private Boolean isActive = true;
+
+    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private java.util.List<Plan> plans = new java.util.ArrayList<>();
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

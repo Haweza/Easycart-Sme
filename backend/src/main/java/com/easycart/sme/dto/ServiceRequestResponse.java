@@ -15,6 +15,8 @@ public class ServiceRequestResponse {
     private String userName;
     private UUID serviceId;
     private String serviceName;
+    private UUID planId;
+    private String planName;
     private String status;
     private String message;
     private String adminNote;
@@ -29,6 +31,8 @@ public class ServiceRequestResponse {
                 .userName(r.getUser().getFullName())
                 .serviceId(r.getService().getId())
                 .serviceName(r.getService().getName())
+                .planId(r.getPlan() != null ? r.getPlan().getId() : null)
+                .planName(r.getPlan() != null ? r.getPlan().getName() : null)
                 .status(r.getStatus().name())
                 .message(r.getMessage())
                 .adminNote(r.getAdminNote())
