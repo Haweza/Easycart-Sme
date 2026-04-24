@@ -363,3 +363,12 @@ document.getElementById('invite-form').addEventListener('submit', async (e) => {
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function handleLogout()  { clearAuth(); window.location.href = 'login.html'; }
 function escHtml(str)    { return str ? str.replace(/'/g, "\\'").replace(/"/g, '&quot;') : ''; }
+
+// Sidebar Toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const burger = document.getElementById('burger-btn');
+  const sidebar = document.getElementById('sidebar');
+  if (burger && sidebar) {
+    burger.addEventListener('click', () => sidebar.classList.toggle('open'));
+  }
+});

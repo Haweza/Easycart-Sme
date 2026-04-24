@@ -10,9 +10,10 @@ let allServices = [];
 (async function init() {
   if (!requireRole('CUSTOMER')) return;
   const user = getUser();
-  document.getElementById('nav-user-name').textContent = user.fullName;
-  document.getElementById('nav-user-role').textContent = user.role;
-  document.getElementById('hero-name').textContent = user.fullName.split(' ')[0];
+  if (!user) return;
+  document.getElementById('nav-user-name').textContent = user.fullName || 'User';
+  document.getElementById('nav-user-role').textContent = user.role || 'CUSTOMER';
+  document.getElementById('hero-name').textContent = (user.fullName || 'User').split(' ')[0];
 
   await Promise.all([loadMyData(), loadServices()]);
   renderOverview();
@@ -139,7 +140,7 @@ function openRequestModal(serviceId) {
 function renderRequests() {
   const tbody = document.getElementById('requests-table-body');
   if (!myRequests.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">You haven\\'t made any requests yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">You haven\'t made any requests yet.</td></tr>';
     return;
   }
   tbody.innerHTML = myRequests.map(r => `
@@ -198,3 +199,12 @@ async function declineInvite(id) {
 // ---- Helpers ----------------------------------------------
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function handleLogout()  { clearAuth(); window.location.href = 'login.html'; }
+
+// Sidebar Toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const burger = document.getElementById('burger-btn');
+  const sidebar = document.getElementById('sidebar');
+  if (burger && sidebar) {
+    burger.addEventListener('click', () => sidebar.classList.toggle('open'));
+  }
+});

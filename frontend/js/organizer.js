@@ -9,6 +9,7 @@ let memberCache = {};
 (async function init() {
   if (!requireRole('ORGANIZER')) return;
   const user = getUser();
+  if (!user) return;
   document.getElementById('nav-org-name').textContent = user.fullName || 'Organizer';
 
   await loadMyFamilies();
@@ -140,3 +141,12 @@ async function loadMembersForFamily(familyId) {
 }
 
 function handleLogout() { clearAuth(); window.location.href = 'login.html'; }
+
+// Sidebar Toggle
+document.addEventListener('DOMContentLoaded', () => {
+  const burger = document.getElementById('burger-btn');
+  const sidebar = document.getElementById('sidebar');
+  if (burger && sidebar) {
+    burger.addEventListener('click', () => sidebar.classList.toggle('open'));
+  }
+});

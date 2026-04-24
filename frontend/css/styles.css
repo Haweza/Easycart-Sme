@@ -153,10 +153,16 @@ ul { list-style: none; }
 }
 .btn-accent:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-.btn-outline {
-  background: transparent; border: 2px solid var(--border); color: var(--text);
-}
 .btn-outline:hover { background: var(--bg-subtle); border-color: var(--text-muted); }
+
+/* ---- SERVICES GRID --------------------------------------- */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
 
 /* ---- CARDS (Glassmorphism) ------------------------------- */
 .card {
@@ -289,8 +295,14 @@ tr:hover td { background: var(--surface-hover); }
 @media (max-width: 1024px) {
   .hero-inner { grid-template-columns: 1fr; text-align: center; }
   .dashboard-grid { grid-template-columns: 1fr; }
-  .sidebar { display: none; }
+  .sidebar { 
+    position: fixed; left: -280px; top: 80px; bottom: 0; width: 280px; 
+    z-index: 999; transition: var(--transition); background: var(--surface);
+  }
+  .sidebar.open { left: 0; }
+  .navbar-burger { display: block !important; }
 }
+
 
 /* ---- ANIMATIONS ------------------------------------------ */
 @keyframes fadeInUp {
