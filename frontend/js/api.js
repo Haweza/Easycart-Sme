@@ -14,33 +14,42 @@ function isLoggedIn()        { return !!getToken(); }
 
 // ---- Core fetch ------------------------------------------- 
 async function apiFetch(path, options = {}) {
-  const token = getToken();
-  const headers = {
-    'Content-Type': 'application/json',
-    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-    ...options.headers,
-  };
+  try {
+    const token = getToken();
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+      ...options.headers,
+    };
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
-    headers,
-    body: options.body ? JSON.stringify(options.body) : undefined,
-  });
+    const res = await fetch(`${API_BASE}${path}`, {
+      ...options,
+      headers,
+      body: options.body ? JSON.stringify(options.body) : undefined,
+    });
 
-  if (res.status === 401) {
-    clearAuth();
-    window.location.href = '/login.html';
-    return;
+    if (res.status === 401) {
+      clearAuth();
+      window.location.replace('login.html');
+      return;
+    }
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      const errorMsg = data.message || `HTTP ${res.status} at ${path}`;
+      console.error('API Error:', errorMsg);
+      throw new Error(errorMsg);
+    }
+
+    return data;
+  } catch (err) {
+    console.error('Fetch Failed:', err.message, 'URL:', `${API_BASE}${path}`);
+    throw new Error(`Connection failed to the backend. Please check your internet or backend status.`);
   }
-
-  const data = await res.json().catch(() => ({}));
-
-  if (!res.ok) {
-    throw new Error(data.message || `HTTP ${res.status}`);
-  }
-
-  return data;
 }
+
+
 
 // ---- Auth -------------------------------------------------
 const Auth = {
@@ -111,11 +120,11 @@ function showToast(message, type = 'info') {
 function requireRole(...roles) {
   const user = getUser();
   if (!user || !isLoggedIn()) {
-    window.location.href = '/login.html';
+    window.location.replace('login.html');
     return false;
   }
   if (roles.length && !roles.includes(user.role)) {
-    window.location.href = '/dashboard.html';
+    window.location.replace('dashboard.html');
     return false;
   }
   return true;

@@ -247,10 +247,12 @@ function openCreateFamilyModal() {
   document.getElementById('family-modal').classList.add('open');
 }
 
-function updatePlansDropdown(serviceId, planDropdownId) {
+function updatePlansDropdown(serviceElementId, planDropdownId) {
+  const serviceId = document.getElementById(serviceElementId).value;
   const sel = document.getElementById(planDropdownId);
   sel.innerHTML = '<option value="">Select Plan</option>';
   
+  if (!serviceId) return;
   const s = allServices.find(x => x.id === serviceId);
   if (!s || !s.plans) return;
 
@@ -261,6 +263,7 @@ function updatePlansDropdown(serviceId, planDropdownId) {
     sel.appendChild(opt);
   });
 }
+
 
 
 document.getElementById('family-form').addEventListener('submit', async (e) => {

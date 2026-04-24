@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -23,6 +22,12 @@ public class Service {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    private java.math.BigDecimal price;
+    private String currency;
+    
+    @Column(name = "billing_cycle")
+    private String billingCycle;
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default

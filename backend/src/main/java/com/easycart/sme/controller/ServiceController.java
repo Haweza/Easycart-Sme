@@ -26,6 +26,9 @@ public class ServiceController {
                 "id",           s.getId().toString(),
                 "name",         s.getName(),
                 "description",  s.getDescription() != null ? s.getDescription() : "",
+                "price",        s.getPrice() != null ? s.getPrice() : 0.0,
+                "currency",     s.getCurrency() != null ? s.getCurrency() : "ZMW",
+                "billingCycle", s.getBillingCycle() != null ? s.getBillingCycle() : "MONTHLY",
                 "plans",        s.getPlans().stream().filter(com.easycart.sme.entity.Plan::getIsActive).map(p -> Map.of(
                         "id", p.getId().toString(),
                         "name", p.getName(),
@@ -33,6 +36,7 @@ public class ServiceController {
                         "currency", p.getCurrency()
                 )).toList()
         )).toList();
+
         return ResponseEntity.ok(result);
     }
 
@@ -47,6 +51,9 @@ public class ServiceController {
                 "id",           s.getId().toString(),
                 "name",         s.getName(),
                 "description",  s.getDescription() != null ? s.getDescription() : "",
+                "price",        s.getPrice() != null ? s.getPrice() : 0.0,
+                "currency",     s.getCurrency() != null ? s.getCurrency() : "ZMW",
+                "billingCycle", s.getBillingCycle() != null ? s.getBillingCycle() : "MONTHLY",
                 "plans",        s.getPlans().stream().filter(com.easycart.sme.entity.Plan::getIsActive).map(p -> Map.of(
                         "id", p.getId().toString(),
                         "name", p.getName(),
@@ -54,5 +61,6 @@ public class ServiceController {
                         "currency", p.getCurrency()
                 )).toList()
         ));
+
     }
 }

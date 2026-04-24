@@ -133,9 +133,20 @@ button { cursor: pointer; border: none; outline: none; background: none; }
 .slide {
   position: absolute; inset: 0; padding: 2rem;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  opacity: 0; transition: opacity 0.8s ease; text-align: center;
+  opacity: 0; 
+  transform: scale(0.9) translateY(10px);
+  filter: blur(8px);
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: center;
+  pointer-events: none;
 }
-.slide.active { opacity: 1; position: relative; }
+.slide.active { 
+  opacity: 1; 
+  transform: scale(1) translateY(0);
+  filter: blur(0);
+  pointer-events: auto;
+}
+
 .slide-icon { font-size: 4.5rem; margin-bottom: 1.5rem; }
 .slide-name { font-size: 1.75rem; font-weight: 800; color: var(--primary); margin-bottom: 0.5rem; }
 [data-theme="dark"] .slide-name { color: var(--text); }

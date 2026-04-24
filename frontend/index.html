@@ -166,10 +166,10 @@
 
   // ---- Slideshow Logic ------------------------------------
   const slideshowData = [
-    { icon: '<i class="fab fa-netflix" style="color:#E50914"></i>', name: 'Netflix Premium', price: 'ZMW 100' },
-    { icon: '<i class="fab fa-apple" style="color:#000000"></i>',   name: 'Apple Music',     price: 'ZMW 32' },
-    { icon: '<i class="fab fa-spotify" style="color:#1DB954"></i>', name: 'Spotify Family',  price: 'ZMW 70' },
-    { icon: '<i class="fas fa-play" style="color:#F47521"></i>',    name: 'Crunchyroll',     price: 'ZMW 45' }
+    { icon: '<i class="fa-brands fa-netflix" style="color:#E50914"></i>', name: 'Netflix Premium', price: 'ZMW 100' },
+    { icon: '<i class="fa-brands fa-apple" style="color:#000000"></i>',   name: 'Apple Music',     price: 'ZMW 32' },
+    { icon: '<i class="fa-brands fa-spotify" style="color:#1DB954"></i>', name: 'Spotify Family',  price: 'ZMW 70' },
+    { icon: '<i class="fa-brands fa-crunchyroll" style="color:#F47521"></i>', name: 'Crunchyroll', price: 'ZMW 45' }
   ];
 
   let currentSlide = 0;
@@ -197,13 +197,22 @@
     try {
       const services = await Services.listActive();
       if (!services || !Array.isArray(services) || services.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No services available at the moment.</div>';
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px; border: 1px dashed var(--border); border-radius: var(--radius);">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">📦</div>
+            <p style="color: var(--text-muted);">No services available in the database.</p>
+            <p style="font-size: 0.85rem; margin-top: 8px;">Please add services and plans in the Admin panel.</p>
+          </div>
+        `;
         return;
       }
       grid.innerHTML = services.map(s => {
-        const lowestPrice = s.plans && s.plans.length > 0 
+        let lowestPrice = s.plans && s.plans.length > 0 
           ? Math.min(...s.plans.map(p => p.price)) 
-          : '...';
+          : s.price;
+        
+        if (!lowestPrice || lowestPrice === 0) lowestPrice = '...';
+
         return `
           <div class="card">
             <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--accent);">
@@ -218,8 +227,15 @@
           </div>
         `;
       }).join('');
-    } catch (e) {
-      grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; color: var(--danger);">Failed to load services.</div>';
+    } catch (err) {
+      console.error('Failed to load services:', err);
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; color: var(--danger); padding: 40px;">
+          <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+          <p>Failed to connect to the backend.</p>
+          <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 8px;">URL: ${window.API_BASE_URL}</p>
+        </div>
+      `;
     }
   })();
 </script>
