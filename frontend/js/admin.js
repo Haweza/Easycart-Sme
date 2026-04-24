@@ -248,20 +248,20 @@ function openCreateFamilyModal() {
 }
 
 function updatePlansDropdown(serviceId, planDropdownId) {
-  const sId = document.getElementById(serviceId).value;
-  const pSel = document.getElementById(planDropdownId);
-  pSel.innerHTML = '<option value="">Select a plan</option>';
+  const sel = document.getElementById(planDropdownId);
+  sel.innerHTML = '<option value="">Select Plan</option>';
   
-  if (!sId) return;
-  const service = allServices.find(s => s.id === sId);
-  if (service && service.plans) {
-    service.plans.forEach(p => {
-      const opt = document.createElement('option');
-      opt.value = p.id; opt.textContent = `${p.name} (${p.currency} ${p.price})`;
-      pSel.appendChild(opt);
-    });
-  }
+  const s = allServices.find(x => x.id === serviceId);
+  if (!s || !s.plans) return;
+
+  s.plans.forEach(p => {
+    const opt = document.createElement('option');
+    opt.value = p.id;
+    opt.textContent = `${p.name} (${p.currency} ${p.price})`;
+    sel.appendChild(opt);
+  });
 }
+
 
 document.getElementById('family-form').addEventListener('submit', async (e) => {
   e.preventDefault();

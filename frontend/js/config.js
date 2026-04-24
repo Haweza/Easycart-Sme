@@ -16,4 +16,4 @@ const IS_LOCAL = window.location.hostname === 'localhost' ||
 
 window.API_BASE_URL = IS_LOCAL
   ? 'http://localhost:8080/api'
-  : 'https://easycart-sme.onrender.com/api';
+  : 'https://easycart-sms.onrender.com/api';
