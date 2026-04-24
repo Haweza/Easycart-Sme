@@ -210,6 +210,33 @@
 </div>
 
 <!-- ================================================
+     MODAL: View Family Members
+     ================================================ -->
+<div class="modal-overlay" id="members-modal">
+  <div class="modal" style="max-width: 600px;">
+    <div class="modal-header">
+      <div class="modal-title" id="members-modal-title">Family Members</div>
+      <button class="modal-close" onclick="closeModal('members-modal')">✕</button>
+    </div>
+    <div class="table-wrapper" style="margin-top:10px; max-height:400px; overflow-y:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Status</th>
+            <th>Joined</th>
+          </tr>
+        </thead>
+        <tbody id="members-tbody">
+          <tr><td colspan="4" class="loading-row"><div class="spinner"></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================
      MODAL: Create Invite
      ================================================ -->
 <div class="modal-overlay" id="invite-modal">

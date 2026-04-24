@@ -205,8 +205,11 @@ function renderFamilies() {
       <td>${f.isActive ? `<span class="badge badge-active">Active</span>` : `<span class="badge badge-expired">Inactive</span>`}</td>
       <td class="text-sm text-muted">${fmtDate(f.createdAt)}</td>
       <td>
-        <button class="btn btn-outline btn-sm" onclick="openAssignOrgModal('${f.id}','${escHtml(f.name)}')">
+        <button class="btn btn-outline-white btn-sm" onclick="openAssignOrgModal('${f.id}','${escHtml(f.name)}')">
           Assign Organizer
+        </button>
+        <button class="btn btn-outline btn-sm" onclick="openMembersModal('${f.id}','${escHtml(f.name)}')">
+          View Members
         </button>
       </td>
     </tr>`).join('');
@@ -262,6 +265,32 @@ document.getElementById('family-form').addEventListener('submit', async (e) => {
     btn.disabled = false; btn.textContent = 'Create Family';
   }
 });
+
+// View Members Modal Logic
+async function openMembersModal(familyId, familyName) {
+  document.getElementById('members-modal-title').textContent = `Members — ${familyName}`;
+  const tbody = document.getElementById('members-tbody');
+  tbody.innerHTML = '<tr><td colspan="4" class="loading-row"><div class="spinner"></div></td></tr>';
+  document.getElementById('members-modal').classList.add('open');
+
+  try {
+    const members = await Organizer.getMembers(familyId);
+    if (!members.length) {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center" style="padding:20px">No members found in this family.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = members.map(m => `
+      <tr>
+        <td><strong>${escHtml(m.user.fullName)}</strong></td>
+        <td class="text-sm text-muted">${escHtml(m.user.email)}</td>
+        <td>${statusBadge(m.status)}</td>
+        <td class="text-sm text-muted">${fmtDate(m.joinedAt)}</td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    tbody.innerHTML = `<tr><td colspan="4" class="text-danger" style="padding:20px">Error loading members: ${e.message}</td></tr>`;
+  }
+}
 
 // ---- Invites ----------------------------------------------
 function renderInvites() {
