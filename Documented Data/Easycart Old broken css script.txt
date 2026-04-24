@@ -1,0 +1,249 @@
+Easycart Old broken css script
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="EasyCart SME — Africa's smart subscription management platform for families and SMEs." />
+  <title>EasyCart SME — Subscription Management Made Simple</title>
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+</head>
+<body>
+
+<!-- ========================================================
+     NAVBAR
+     ======================================================== -->
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+  <div class="navbar-inner container">
+    <a href="index.html" class="navbar-brand">
+      <div class="logo-icon"><i class="fas fa-shopping-cart"></i></div>
+      <span class="brand-name">Easy<span>Cart</span> <small style="font-size:.65rem;font-weight:500;opacity:.8">SME</small></span>
+    </a>
+
+    <div class="navbar-links">
+      <a href="#services" class="navbar-link">Services</a>
+      <a href="#how-it-works" class="navbar-link">How It Works</a>
+      
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
+        🌙
+      </button>
+
+      <div id="auth-buttons" style="display: flex; gap: 12px; align-items: center;">
+        <a href="login.html" id="nav-login" class="btn btn-outline">Sign In</a>
+        <a href="login.html#register" id="nav-register" class="btn btn-primary">Get Started</a>
+      </div>
+    </div>
+
+    <button class="navbar-burger" id="burger-btn" aria-label="Menu" style="display: none; background: none; border: none; font-size: 1.5rem; color: var(--text);">☰</button>
+  </div>
+</nav>
+
+<!-- ========================================================
+     HERO & SLIDESHOW
+     ======================================================== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-inner">
+      <div class="hero-text animate-up">
+        <h1 class="hero-title">
+          The Smart Way to<br />
+          <span>Share Subscriptions</span>
+        </h1>
+        <p class="hero-desc">
+          Stop overpaying. Join a family, split the cost, and enjoy premium services like Netflix, Apple Music, and Spotify for a fraction of the price.
+        </p>
+        <div class="hero-actions" style="display: flex; gap: 16px;">
+          <a href="login.html#register" class="btn btn-primary btn-lg">
+            🚀 Join a Family
+          </a>
+          <a href="#services" class="btn btn-outline btn-lg">
+            Explore Plans
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual animate-up" style="animation-delay: 0.2s;">
+        <div class="slideshow-container" id="service-slideshow">
+          <!-- Slides loaded via JS -->
+          <div class="slide active">
+            <div class="slide-icon">📺</div>
+            <div class="slide-name">Netflix Premium</div>
+            <div class="slide-price">Starting from ZMW 100</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     SERVICES SECTION
+     ======================================================== -->
+<section class="services-section" id="services">
+  <div class="container">
+    <div class="section-header">
+      <h2 class="section-title">Available Services</h2>
+      <p class="section-desc">Choose from our curated list of premium digital services and find a plan that fits your needs.</p>
+    </div>
+
+    <div class="services-grid" id="services-grid">
+      <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+        <div style="width: 40px; height: 40px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================
+     FOOTER
+     ======================================================== -->
+<footer class="footer" style="background: var(--bg-subtle); border-top: 1px solid var(--border); padding: 60px 0 30px;">
+  <div class="container">
+    <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 40px; margin-bottom: 40px;">
+      <div>
+        <div class="navbar-brand" style="margin-bottom: 16px;">
+          <div class="logo-icon">🛒</div>
+          <span class="brand-name">Easy<span>Cart</span></span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.95rem; max-width: 320px;">
+          Making premium digital services accessible and affordable for everyone in Zambia.
+        </p>
+      </div>
+      <div>
+        <h4 style="margin-bottom: 16px;">Quick Links</h4>
+        <ul style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; color: var(--text-muted);">
+          <li><a href="#services">All Services</a></li>
+          <li><a href="login.html">Member Login</a></li>
+          <li><a href="login.html#register">Create Account</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="margin-bottom: 16px;">Contact Admin</h4>
+        <ul style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; color: var(--text-muted);">
+          <li>📧 support@easycart.com</li>
+          <li>📱 +260 975 200 620</li>
+          <li>💬 WhatsApp: +260 975 200 620</li>
+        </ul>
+      </div>
+    </div>
+    <div style="border-top: 1px solid var(--border); padding-top: 20px; display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; color: var(--text-muted);">
+      <p>© 2025 EasyCart SME. All rights reserved.</p>
+      <p>🇿🇲 Made in Zambia</p>
+    </div>
+  </div>
+</footer>
+
+<!-- WhatsApp Floating Button -->
+<a href="https://wa.me/260975200620" class="whatsapp-btn" target="_blank" title="Contact us on WhatsApp">
+  📱
+</a>
+
+<script src="js/config.js"></script>
+<script src="js/api.js"></script>
+<script>
+  // ---- Theme Toggle ---------------------------------------
+  const themeToggle = document.getElementById('theme-toggle');
+  const html = document.documentElement;
+  
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  html.setAttribute('data-theme', savedTheme);
+  themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = html.getAttribute('data-theme');
+    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    html.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
+  });
+
+  // ---- Navbar Auth State ----------------------------------
+  if (isLoggedIn()) {
+    document.getElementById('auth-buttons').innerHTML = `
+      <a href="#" onclick="redirectByRole(); return false;" class="btn btn-primary">My Dashboard</a>
+    `;
+  }
+
+  // ---- Slideshow Logic ------------------------------------
+  const slideshowData = [
+    { icon: '<i class="fa-brands fa-netflix" style="color:#E50914"></i>', name: 'Netflix Premium', price: 'ZMW 100' },
+    { icon: '<i class="fa-brands fa-apple" style="color:#000000"></i>',   name: 'Apple Music',     price: 'ZMW 32' },
+    { icon: '<i class="fa-brands fa-spotify" style="color:#1DB954"></i>', name: 'Spotify Family',  price: 'ZMW 70' },
+    { icon: '<i class="fa-brands fa-crunchyroll" style="color:#F47521"></i>', name: 'Crunchyroll', price: 'ZMW 45' }
+  ];
+
+  let currentSlide = 0;
+  const slideshowEl = document.getElementById('service-slideshow');
+
+  function renderSlide() {
+    const s = slideshowData[currentSlide];
+    slideshowEl.innerHTML = `
+      <div class="slide active animate-up">
+        <div class="slide-icon">${s.icon}</div>
+        <div class="slide-name">${s.name}</div>
+        <div class="slide-price">Starting from ${s.price}</div>
+      </div>
+    `;
+    currentSlide = (currentSlide + 1) % slideshowData.length;
+  }
+
+  setInterval(renderSlide, 4000);
+  if (slideshowEl) renderSlide();
+
+  // ---- Load Services --------------------------------------
+  (async function() {
+    const grid = document.getElementById('services-grid');
+    if (!grid) return;
+    try {
+      const services = await Services.listActive();
+      if (!services || !Array.isArray(services) || services.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px; border: 1px dashed var(--border); border-radius: var(--radius);">
+            <div style="font-size: 2rem; margin-bottom: 1rem;">📦</div>
+            <p style="color: var(--text-muted);">No services available in the database.</p>
+            <p style="font-size: 0.85rem; margin-top: 8px;">Please add services and plans in the Admin panel.</p>
+          </div>
+        `;
+        return;
+      }
+      grid.innerHTML = services.map(s => {
+        let lowestPrice = s.plans && s.plans.length > 0 
+          ? Math.min(...s.plans.map(p => p.price)) 
+          : s.price;
+        
+        if (!lowestPrice || lowestPrice === 0) lowestPrice = '...';
+
+        return `
+          <div class="card">
+            <div style="font-size: 2.5rem; margin-bottom: 1rem; color: var(--accent);">
+              <i class="fas fa-box-open"></i>
+            </div>
+            <h3 style="margin-bottom: 0.5rem;">${s.name}</h3>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">${s.description || 'Premium subscription service.'}</p>
+            <div style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.5rem;">
+              ZMW ${lowestPrice} <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: 500;">/ plan</span>
+            </div>
+            <a href="login.html#register" class="btn btn-outline w-full">Request Access</a>
+          </div>
+        `;
+      }).join('');
+    } catch (err) {
+      console.error('Failed to load services:', err);
+      grid.innerHTML = `
+        <div style="grid-column: 1/-1; text-align: center; color: var(--danger); padding: 40px;">
+          <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+          <p>Failed to connect to the backend.</p>
+          <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 8px;">URL: ${window.API_BASE_URL}</p>
+        </div>
+      `;
+    }
+  })();
+</script>
+
+<style>
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+</body>
+</html>
