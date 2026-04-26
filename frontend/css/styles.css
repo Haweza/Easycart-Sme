@@ -857,10 +857,10 @@ tr:hover td {
 .category-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-color);
+  color: var(--text);
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
 }
 
 .services-grid {
@@ -870,8 +870,8 @@ tr:hover td {
 }
 
 .service-card {
-  background: var(--surface-color);
-  border: 1px solid var(--border-color);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   padding: 20px;
   text-align: center;
@@ -893,7 +893,7 @@ tr:hover td {
   border-radius: 20%;
   object-fit: cover;
   margin: 0 auto 16px;
-  background: var(--bg-color);
+  background: var(--bg);
   /* Fallback background for transparent PNGs */
 }
 
@@ -970,8 +970,8 @@ tr:hover td {
 }
 
 .plan-modal-content {
-  background: var(--surface-color);
-  border: 1px solid var(--border-color);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
   width: 90%;
   max-width: 400px;
@@ -992,13 +992,13 @@ tr:hover td {
   justify-content: space-between;
   align-items: center;
   padding: 20px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--border);
 }
 
 .plan-modal-header h3 {
   margin: 0;
   font-size: 1.25rem;
-  color: var(--text-color);
+  color: var(--text);
 }
 
 .close-modal-btn {
@@ -1011,7 +1011,7 @@ tr:hover td {
 }
 
 .close-modal-btn:hover {
-  color: var(--text-color);
+  color: var(--text);
 }
 
 .plan-modal-body {
@@ -1026,8 +1026,8 @@ tr:hover td {
   justify-content: space-between;
   align-items: center;
   padding: 16px;
-  background: var(--bg-color);
-  border: 1px solid var(--border-color);
+  background: var(--bg);
+  border: 1px solid var(--border);
   border-radius: 8px;
   margin-bottom: 12px;
   cursor: pointer;
@@ -1035,19 +1035,19 @@ tr:hover td {
 }
 
 .plan-option-card:hover {
-  border-color: var(--primary-color);
-  background: rgba(var(--primary-color-rgb, 128, 128, 128), 0.05);
+  border-color: var(--primary);
+  background: rgba(var(--primary-rgb, 128, 128, 128), 0.05);
   /* Very subtle hover tint */
 }
 
 .plan-duration {
   font-weight: 600;
   font-size: 1rem;
-  color: var(--text-color);
+  color: var(--text);
 }
 
 .plan-price {
-  color: var(--primary-color);
+  color: var(--primary);
   font-weight: bold;
 }
 
