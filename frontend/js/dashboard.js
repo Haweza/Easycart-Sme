@@ -3,7 +3,7 @@
  */
 
 let myRequests = [];
-let myInvites  = [];
+let myInvites = [];
 let allServices = [];
 
 // ---- Boot -------------------------------------------------
@@ -26,39 +26,39 @@ async function loadMyData() {
       Invites.getMy()
     ]);
     myRequests = reqs;
-    myInvites  = invs;
-  } catch(e) { console.error(e); }
+    myInvites = invs;
+  } catch (e) { console.error(e); }
 }
 
 async function loadServices() {
   try {
     allServices = await Services.listActive();
-  } catch(e) { allServices = []; }
+  } catch (e) { allServices = []; }
 }
 
 // ---- View Switching ---------------------------------------
 function showView(name, link) {
-  ['overview','services','requests','invites'].forEach(v => {
+  ['overview', 'services', 'requests', 'invites'].forEach(v => {
     document.getElementById(`view-${v}`).style.display = v === name ? 'block' : 'none';
   });
   document.querySelectorAll('.sidebar-link').forEach(a => a.classList.remove('active'));
   if (link) link.classList.add('active');
-  
+
   if (name === 'services') renderServices();
   if (name === 'requests') renderRequests();
-  if (name === 'invites')  renderInvites();
+  if (name === 'invites') renderInvites();
 }
 
 // ---- Overview ---------------------------------------------
 function renderOverview() {
   document.getElementById('stat-requests').textContent = myRequests.length;
-  document.getElementById('stat-invites').textContent  = myInvites.length;
-  
+  document.getElementById('stat-invites').textContent = myInvites.length;
+
   const activeCount = myInvites.filter(i => i.status === 'ACCEPTED').length;
   const pendingCount = myInvites.filter(i => i.status === 'PENDING').length;
-  
+
   document.getElementById('stat-active').textContent = activeCount;
-  
+
   const callout = document.getElementById('pending-invites-callout');
   if (pendingCount > 0) {
     document.getElementById('pending-count').textContent = pendingCount;
@@ -73,33 +73,83 @@ function renderOverview() {
   renderOverviewServices();
 }
 
+const serviceMeta = {
+  "Prime Video": { icon: "assets/prime.png", category: "🎬 Video / OTT Streaming Services" },
+  "Netflix": { icon: "assets/netflix.png", category: "🎬 Video / OTT Streaming Services" },
+  "Disney+": { icon: "assets/disney.png", category: "🎬 Video / OTT Streaming Services" },
+  "Showmax": { icon: "assets/showmax.png", category: "🎬 Video / OTT Streaming Services" },
+  "Crunchyroll": { icon: "assets/crunchyroll.png", category: "🎬 Video / OTT Streaming Services" },
+  "Hulu": { icon: "assets/hulu.png", category: "🎬 Video / OTT Streaming Services" },
+  "HBO Max": { icon: "assets/hbo.png", category: "🎬 Video / OTT Streaming Services" },
+  "DStv Now": { icon: "assets/dstv.png", category: "📡 Hybrid / Live TV + Streaming" },
+  "Apple Music": { icon: "assets/apple_music.png", category: "🎧 Music Streaming Services" },
+  "Spotify Premium": { icon: "assets/spotify.png", category: "🎧 Music Streaming Services" },
+  "iCloud": { icon: "assets/icloud.png", category: "☁️ Cloud Services" },
+  "iCloud + Snapchat+": { icon: "assets/icloud_snap.png", category: "☁️ Cloud Services" }
+};
+
 function renderOverviewServices() {
   const grid = document.getElementById('overview-services-grid');
-  // Just show first 3 services
-  grid.innerHTML = allServices.slice(0,3).map(s => `
-    <div class="card" onclick="openRequestModal('${s.id}')" style="cursor: pointer;">
-      <div style="font-size: 1.5rem; margin-bottom: 8px;">📦</div>
-      <div style="font-weight: 700;">${s.name}</div>
-      <div style="font-size: 0.8rem; color: var(--text-muted);">Request Plan →</div>
-    </div>
-  `).join('');
+  // Show first 4 services in a horizontal mini-card style
+  grid.innerHTML = allServices.slice(0, 4).map(s => {
+    const meta = serviceMeta[s.name] || { icon: "assets/default_icon.png" };
+    return `
+      <div class="service-card" onclick="openRequestModal('${s.id}')" style="cursor: pointer; display: flex; flex-direction: row; align-items: center; justify-content: flex-start; padding: 12px; gap: 16px; margin: 0;">
+        <img src="${meta.icon}" alt="${s.name}" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover;" onerror="this.src='assets/default_icon.png'">
+        <div style="text-align: left;">
+          <div style="font-weight: 700;">${s.name}</div>
+          <div style="font-size: 0.8rem; color: var(--primary-color, #007aff); font-weight: 600; margin-top: 4px;">Request Plan &rarr;</div>
+        </div>
+      </div>
+    `;
+  }).join('');
 }
 
 // ---- Services ---------------------------------------------
 function renderServices() {
-  const grid = document.getElementById('services-grid-dash');
+  const container = document.getElementById('services-grid-dash');
+
+  // Remove the default grid class since we are building categorized sub-grids
+  container.classList.remove('services-grid');
+
   if (!allServices.length) {
-    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center;">No services available.</div>';
+    container.innerHTML = '<div style="text-align:center; padding: 40px;">No services available.</div>';
     return;
   }
-  grid.innerHTML = allServices.map(s => `
-    <div class="card">
-      <div style="font-size: 2rem; margin-bottom: 1rem;">📦</div>
-      <h3 style="margin-bottom: 8px;">${s.name}</h3>
-      <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1.5rem;">${s.description || 'Premium subscription service.'}</p>
-      <button class="btn btn-primary w-full" onclick="openRequestModal('${s.id}')">Request Access</button>
-    </div>
-  `).join('');
+
+  // Group services by category
+  const grouped = {};
+  allServices.forEach(s => {
+    const meta = serviceMeta[s.name] || { icon: "assets/default_icon.png", category: "Other Services" };
+    s.icon = meta.icon; // Attach icon for easy use
+    if (!grouped[meta.category]) grouped[meta.category] = [];
+    grouped[meta.category].push(s);
+  });
+
+  let html = '';
+  Object.keys(grouped).forEach(cat => {
+    html += `
+      <div class="category-section" style="margin-top: 2rem;">
+        <h3 class="category-title" style="margin-bottom: 1.5rem;">${cat}</h3>
+        <div class="services-grid">
+          ${grouped[cat].map(s => `
+            <div class="service-card" style="margin: 0;">
+              <img src="${s.icon}" alt="${s.name}" class="service-icon" onerror="this.src='assets/default_icon.png'">
+              <h4 style="margin-bottom: 8px;">${s.name}</h4>
+              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
+                Starting at ZMW ${s.plans && s.plans.length ? Math.min(...s.plans.map(p => parseFloat(p.price))) : (s.price || '...')}
+              </p>
+              <button class="btn btn-primary" style="width: 100%;" onclick="openRequestModal('${s.id}')">
+                Request Access
+              </button>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
 }
 
 // ---- Request Modal ----------------------------------------
@@ -115,7 +165,7 @@ function openRequestModal(serviceId) {
 
   document.getElementById('request-message').value = '';
   document.getElementById('request-modal').classList.add('open');
-  
+
   // Form listener
   const form = document.getElementById('request-form');
   form.onsubmit = async (e) => {
@@ -131,7 +181,7 @@ function openRequestModal(serviceId) {
       showToast('Request Submitted!', 'success');
       closeModal('request-modal');
       loadMyData().then(renderOverview);
-    } catch(e) { showToast(e.message, 'error'); }
+    } catch (e) { showToast(e.message, 'error'); }
     finally { btn.disabled = false; }
   };
 }
@@ -185,7 +235,7 @@ async function acceptInvite(id) {
     await Invites.accept(id);
     showToast('Invitation Accepted!', 'success');
     loadMyData().then(() => { renderOverview(); renderInvites(); });
-  } catch(e) { showToast(e.message, 'error'); }
+  } catch (e) { showToast(e.message, 'error'); }
 }
 
 async function declineInvite(id) {
@@ -193,12 +243,12 @@ async function declineInvite(id) {
     await Invites.decline(id);
     showToast('Invitation Declined', 'info');
     loadMyData().then(() => { renderOverview(); renderInvites(); });
-  } catch(e) { showToast(e.message, 'error'); }
+  } catch (e) { showToast(e.message, 'error'); }
 }
 
 // ---- Helpers ----------------------------------------------
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function handleLogout()  { clearAuth(); window.location.href = 'login.html'; }
+function handleLogout() { clearAuth(); window.location.href = 'login.html'; }
 
 // Sidebar Toggle
 document.addEventListener('DOMContentLoaded', () => {
