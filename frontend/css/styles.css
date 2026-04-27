@@ -879,14 +879,13 @@ tr:hover td {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 20px;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-}
 
+  height: 260px;
+}
 .service-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -894,15 +893,19 @@ tr:hover td {
 }
 
 .service-icon {
-  width: 80px;
-  height: 80px;
-  border-radius: 20%;
+  width: 100%;
+  height: 140px; /* fixed top section */
   object-fit: cover;
-  margin: 0 auto 16px;
-  background: var(--bg);
-  /* Fallback background for transparent PNGs */
 }
+.service-content {
+  padding: 12px;
 
+  flex: 1; /* takes remaining space */
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 /* --- Modals (Global & Dashboard) --- */
 .modal-overlay {
   position: fixed;
