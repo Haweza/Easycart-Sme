@@ -430,6 +430,7 @@ button {
 }
 
 .sidebar {
+  display: flex;
   background: var(--bg-subtle);
   border-right: 1px solid var(--border);
   padding: 1.5rem 0.75rem;
@@ -694,7 +695,7 @@ tr:hover td {
   }
 
   .sidebar {
-    display: none;
+    display: flex;
   }
 
   .grid {
@@ -878,7 +879,7 @@ tr:hover td {
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
+  padding: 20px;
   text-align: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   display: flex;
@@ -889,37 +890,17 @@ tr:hover td {
 .service-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-}
-
-/* Full-bleed image banner at top of card */
-.service-card-img-wrap {
-  width: 100%;
-  height: 160px;
-  overflow: hidden;
-  background: var(--bg-subtle, #f1f5f9);
-  flex-shrink: 0;
+  /* Adjusts nicely in dark mode */
 }
 
 .service-icon {
-  width: 100%;
-  height: 100%;
+  width: 80px;
+  height: 80px;
+  border-radius: 20%;
   object-fit: cover;
-  object-position: center;
-  display: block;
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.service-card:hover .service-icon {
-  transform: scale(1.06);
-}
-
-/* Text + button body beneath the image */
-.service-card-body {
-  padding: 16px 16px 20px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 8px;
+  margin: 0 auto 16px;
+  background: var(--bg);
+  /* Fallback background for transparent PNGs */
 }
 
 /* --- Modals (Global & Dashboard) --- */
@@ -936,7 +917,8 @@ tr:hover td {
   align-items: center;
   justify-content: center;
   z-index: 99999;
-  transform: translateZ(0); /* Fixes z-index bleeding in some browsers */
+  transform: translateZ(0);
+  /* Fixes z-index bleeding in some browsers */
   /* Hidden by default for dashboard: */
   opacity: 0;
   visibility: hidden;
@@ -953,7 +935,7 @@ tr:hover td {
 
 /* For index.html which toggles inline display flex instead of .open */
 #plan-modal-overlay {
-  opacity: 1; 
+  opacity: 1;
   visibility: visible;
   pointer-events: auto;
 }
@@ -970,26 +952,31 @@ tr:hover td {
   transform: translateY(20px);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
+
 .modal-overlay.open .modal {
   transform: translateY(0);
 }
+
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
+
 .modal-title {
   font-size: 1.25rem;
   font-weight: 700;
 }
+
 .modal-close {
   font-size: 1.5rem;
   color: var(--text-muted);
-  background: none; 
-  border: none; 
+  background: none;
+  border: none;
   cursor: pointer;
 }
+
 .modal-close:hover {
   color: var(--text);
 }
