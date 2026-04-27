@@ -161,8 +161,7 @@ function openReviewModal(requestId) {
   document.getElementById('review-modal').classList.add('open');
 }
 
-document.getElementById('review-approve-btn').addEventListener('click', () => doReview(true));
-document.getElementById('review-reject-btn').addEventListener('click', () => doReview(false));
+// NOTE: review button listeners are registered in DOMContentLoaded below
 
 async function doReview(approved) {
   const note = document.getElementById('review-note').value.trim();
@@ -266,25 +265,7 @@ function updatePlansDropdown(serviceElementId, planDropdownId) {
 
 
 
-document.getElementById('family-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = document.getElementById('family-submit-btn');
-  btn.disabled = true; btn.textContent = 'Creating...';
-
-  try {
-    await Admin.createFamily({
-      name: document.getElementById('family-name').value.trim(),
-      planId: document.getElementById('family-plan').value,
-      organizerId: document.getElementById('family-organizer').value || null,
-      maxMembers: 10
-    });
-    await loadFamilies();
-    renderFamilies();
-    closeModal('family-modal');
-    showToast('Family Created!', 'success');
-  } catch (e) { showToast(e.message, 'error'); }
-  finally { btn.disabled = false; btn.textContent = 'Create Family'; }
-});
+// NOTE: family form submit listener is registered in DOMContentLoaded below
 
 // Members Modal
 async function openMembersModal(familyId, familyName) {
@@ -344,48 +325,72 @@ function updateInvitePlanInfo() {
   }
 }
 
-document.getElementById('invite-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const btn = document.getElementById('invite-submit-btn');
-
-  const recipientId = document.getElementById('invite-recipient').value;
-  const familyId = document.getElementById('invite-family').value;
-  const planId = document.getElementById('invite-plan-id').value;
-
-  // Front-end guards — give the admin clear feedback instead of silent failures
-  if (!recipientId) { showToast('Please select a recipient.', 'error'); return; }
-  if (!familyId) { showToast('Please select a family.', 'error'); return; }
-  if (!planId) { showToast('The selected family has no plan assigned. Please edit the family and assign a plan first.', 'error'); return; }
-
-  btn.disabled = true;
-  try {
-    await Invites.create({
-      recipientId,
-      familyId,
-      planId,
-      message: document.getElementById('invite-message').value.trim()
-    });
-    await loadInvites();
-    renderInvites();
-    closeModal('invite-modal');
-    showToast('Invite Sent!', 'success');
-  } catch (err) {
-    showToast(err.message, 'error');   // now shows the real backend reason
-  } finally {
-    btn.disabled = false;
-  }
-});
+// NOTE: invite form submit listener is registered in DOMContentLoaded below
 
 // ---- Shared Helpers ---------------------------------------
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 function handleLogout() { clearAuth(); window.location.href = 'login.html'; }
 function escHtml(str) { return str ? str.replace(/'/g, "\\'").replace(/"/g, '&quot;') : ''; }
 
-// Sidebar Toggle
+// ---- All DOM event bindings (safe, isolated) --------------
 document.addEventListener('DOMContentLoaded', () => {
+
+  // Sidebar toggle
   const burger = document.getElementById('burger-btn');
   const sidebar = document.getElementById('sidebar');
   if (burger && sidebar) {
     burger.addEventListener('click', () => sidebar.classList.toggle('open'));
   }
+
+  // Review modal buttons
+  document.getElementById('review-approve-btn')?.addEventListener('click', () => doReview(true));
+  document.getElementById('review-reject-btn')?.addEventListener('click', () => doReview(false));
+
+  // Family form
+  document.getElementById('family-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('family-submit-btn');
+    btn.disabled = true; btn.textContent = 'Creating...';
+    try {
+      await Admin.createFamily({
+        name: document.getElementById('family-name').value.trim(),
+        planId: document.getElementById('family-plan').value,
+        organizerId: document.getElementById('family-organizer').value || null,
+        maxMembers: 10
+      });
+      await loadFamilies();
+      renderFamilies();
+      closeModal('family-modal');
+      showToast('Family Created!', 'success');
+    } catch (e) { showToast(e.message, 'error'); }
+    finally { btn.disabled = false; btn.textContent = 'Create Family'; }
+  });
+
+  // Invite form
+  document.getElementById('invite-form')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('invite-submit-btn');
+
+    const recipientId = document.getElementById('invite-recipient').value;
+    const familyId = document.getElementById('invite-family').value;
+    const planId = document.getElementById('invite-plan-id').value;
+
+    if (!recipientId) { showToast('Please select a recipient.', 'error'); return; }
+    if (!familyId) { showToast('Please select a family.', 'error'); return; }
+    if (!planId) { showToast('The selected family has no plan assigned. Please create the family with a plan first.', 'error'); return; }
+
+    btn.disabled = true;
+    try {
+      await Invites.create({ recipientId, familyId, planId, message: document.getElementById('invite-message').value.trim() });
+      await loadInvites();
+      renderInvites();
+      closeModal('invite-modal');
+      showToast('Invite Sent!', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+    } finally {
+      btn.disabled = false;
+    }
+  });
+
 });
