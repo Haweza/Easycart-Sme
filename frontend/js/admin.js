@@ -380,6 +380,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!planId) { showToast('The selected family has no plan assigned. Please create the family with a plan first.', 'error'); return; }
 
     btn.disabled = true;
+    btn.textContent = 'Sending...';
     try {
       await Invites.create({ recipientId, familyId, planId, message: document.getElementById('invite-message').value.trim() });
       await loadInvites();
@@ -390,6 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showToast(err.message, 'error');
     } finally {
       btn.disabled = false;
+      btn.textContent = 'Send Invite';
     }
   });
 

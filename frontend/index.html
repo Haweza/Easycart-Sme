@@ -187,10 +187,13 @@
 
     // ---- Slideshow Logic ------------------------------------
     const slideshowData = [
-      { icon: '<i class="fa-brands fa-netflix" style="color:#E50914"></i>', name: 'Netflix Premium', price: 'ZMW 100' },
-      { icon: '<i class="fa-brands fa-apple" style="color:#000000"></i>', name: 'Apple Music', price: 'ZMW 32' },
-      { icon: '<i class="fa-brands fa-spotify" style="color:#1DB954"></i>', name: 'Spotify Family', price: 'ZMW 70' },
-      { icon: '<i class="fa-brands fa-crunchyroll" style="color:#F47521"></i>', name: 'Crunchyroll', price: 'ZMW 45' }
+      { id: "prime", name: "Prime Video", icon: "assets/prime.png", plans: [{ duration: "1 Month", price: 65 }, { duration: "2 Months", price: 105 }, { duration: "3 Months", price: 155 }] },
+      { id: "netflix", name: "Netflix", icon: "assets/netflix.png", plans: [{ duration: "1 Month", price: 100 }] },
+      { id: "disney", name: "Disney+", icon: "assets/disney.png", plans: [{ duration: "1 Month", price: 150 }] },
+      { id: "showmax", name: "Showmax", icon: "assets/showmax.png", plans: [{ duration: "1 Month", price: 50 }] },
+      { id: "crunchyroll", name: "Crunchyroll", icon: "assets/crunchyroll.png", plans: [{ duration: "1 Month", price: 45 }, { duration: "2 Months", price: 95 }, { duration: "3 Months", price: 145 }] },
+      { id: "hulu", name: "Hulu", icon: "assets/hulu.png", plans: [{ duration: "1 Month", price: 150 }] },
+      { id: "hbo", name: "HBO Max", icon: "assets/hbo.png", plans: [{ duration: "1 Month", price: 150 }] }
     ];
 
     let currentSlide = 0;
@@ -200,7 +203,7 @@
       const s = slideshowData[currentSlide];
       slideshowEl.innerHTML = `
       <div class="slide active animate-up">
-        <div class="slide-icon">${s.icon}</div>
+        <div class="slide-icon">${s.id}</div>
         <div class="slide-name">${s.name}</div>
         <div class="slide-price">Starting from ${s.price}</div>
       </div>
@@ -261,14 +264,18 @@
         <div class="services-grid">
           ${cat.services.map(s => `
             <div class="service-card">
-              <img src="${s.icon}" alt="${s.name}" class="service-icon" onerror="this.src='assets/default_icon.png'">
-              <h4>${s.name}</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">
-                Starting at ZMW ${Math.min(...s.plans.map(p => p.price))}
-              </p>
-              <button class="btn btn-primary" style="width: 100%;" onclick='openPlanModal(${JSON.stringify(s).replace(/'/g, "&#39;")})'>
-                Request
-              </button>
+              <div class="service-card-img-wrap">
+                <img src="${s.icon}" alt="${s.name}" class="service-icon" onerror="this.src='assets/default_icon.png'">
+              </div>
+              <div class="service-card-body">
+                <h4>${s.name}</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 8px;">
+                  Starting at ZMW ${Math.min(...s.plans.map(p => p.price))}
+                </p>
+                <button class="btn btn-primary" style="width: 100%; margin-top: auto;" onclick='openPlanModal(${JSON.stringify(s).replace(/'/g, "&#39;")})'>
+                  Request
+                </button>
+              </div>
             </div>
           `).join('')}
         </div>

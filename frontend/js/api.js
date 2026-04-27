@@ -37,7 +37,7 @@ async function apiFetch(path, options = {}) {
   if (res.status === 401) {
     clearAuth();
     window.location.replace('login.html');
-    return;
+    throw new Error('Session expired. Please log in again.');
   }
 
   const data = await res.json().catch(() => ({}));
