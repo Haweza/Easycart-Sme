@@ -3,11 +3,11 @@
  * Refactored for Service/Plan structure
  */
 
-let allUsers     = [];
-let allFamilies  = [];
-let allRequests  = [];
-let allInvites   = [];
-let allServices  = [];
+let allUsers = [];
+let allFamilies = [];
+let allRequests = [];
+let allInvites = [];
+let allServices = [];
 let currentReviewId = null;
 
 // ---- Boot -------------------------------------------------
@@ -24,7 +24,7 @@ let currentReviewId = null;
 
 // ---- View switching ---------------------------------------
 function showView(name, link) {
-  ['overview','users','requests','families','invites'].forEach(v => {
+  ['overview', 'users', 'requests', 'families', 'invites'].forEach(v => {
     document.getElementById(`view-${v}`).style.display = v === name ? 'block' : 'none';
   });
   document.querySelectorAll('.sidebar-link').forEach(a => a.classList.remove('active'));
@@ -41,20 +41,20 @@ function showView(name, link) {
 }
 
 // ---- Data loaders -----------------------------------------
-async function loadUsers()    { try { allUsers    = await Admin.getUsers();           } catch(e) { allUsers = []; } }
-async function loadFamilies() { try { allFamilies = await Admin.getFamilies();        } catch(e) { allFamilies = []; } }
-async function loadRequests() { try { allRequests = await ServiceRequests.getPending(); } catch(e) { allRequests = []; } }
-async function loadInvites()  { try { allInvites  = await Invites.getAll();           } catch(e) { allInvites = []; } }
-async function loadServices() { try { allServices = await Services.listActive();      } catch(e) { allServices = []; } }
+async function loadUsers() { try { allUsers = await Admin.getUsers(); } catch (e) { allUsers = []; } }
+async function loadFamilies() { try { allFamilies = await Admin.getFamilies(); } catch (e) { allFamilies = []; } }
+async function loadRequests() { try { allRequests = await ServiceRequests.getPending(); } catch (e) { allRequests = []; } }
+async function loadInvites() { try { allInvites = await Invites.getAll(); } catch (e) { allInvites = []; } }
+async function loadServices() { try { allServices = await Services.listActive(); } catch (e) { allServices = []; } }
 
 // ---- Overview ---------------------------------------------
 function renderOverview() {
   const unapproved = allUsers.filter(u => !u.isApproved).length;
   const pendingInv = allInvites.filter(i => i.status === 'PENDING').length;
-  document.getElementById('s-users').textContent      = allUsers.length;
-  document.getElementById('s-families').textContent   = allFamilies.length;
+  document.getElementById('s-users').textContent = allUsers.length;
+  document.getElementById('s-families').textContent = allFamilies.length;
   document.getElementById('s-req-pending').textContent = allRequests.length;
-  document.getElementById('s-inv-pending').textContent  = pendingInv;
+  document.getElementById('s-inv-pending').textContent = pendingInv;
 
   if (unapproved) {
     document.getElementById('unapproved-badge').textContent = unapproved;
@@ -91,9 +91,9 @@ function renderUsersTable() {
       <td class="text-sm text-muted">${u.email}</td>
       <td>${roleBadge(u.role)}</td>
       <td>
-        ${u.isApproved 
-          ? `<span class="badge badge-accepted">Approved</span>`
-          : `<button class="btn btn-primary btn-sm" onclick="approveUser('${u.id}')">Approve</button>`}
+        ${u.isApproved
+      ? `<span class="badge badge-accepted">Approved</span>`
+      : `<button class="btn btn-primary btn-sm" onclick="approveUser('${u.id}')">Approve</button>`}
       </td>
       <td>
         <select class="form-control" style="width:140px; font-size: 0.85rem;" onchange="changeRole('${u.id}', this.value)">
@@ -114,7 +114,7 @@ async function approveUser(userId) {
     renderUsersTable();
     renderOverview();
     showToast('User approved!', 'success');
-  } catch(e) { showToast(e.message, 'error'); }
+  } catch (e) { showToast(e.message, 'error'); }
 }
 
 async function changeRole(userId, newRole) {
@@ -125,7 +125,7 @@ async function changeRole(userId, newRole) {
     if (u) u.role = newRole;
     renderUsersTable();
     showToast(`Role updated to ${newRole}`, 'success');
-  } catch(e) { showToast(e.message, 'error'); }
+  } catch (e) { showToast(e.message, 'error'); }
 }
 
 // ---- Service Requests -------------------------------------
@@ -173,7 +173,7 @@ async function doReview(approved) {
     renderOverview();
     closeModal('review-modal');
     showToast(approved ? 'Request Approved' : 'Request Rejected', 'success');
-  } catch(e) { showToast(e.message, 'error'); }
+  } catch (e) { showToast(e.message, 'error'); }
 }
 
 // ---- Families (Grouped by Service) ------------------------
@@ -193,7 +193,7 @@ function renderFamilies() {
   });
 
   container.innerHTML = Object.keys(grouped).map(sName => `
-    <div class="accordion-item" id="acc-${sName.replace(/\s/g,'-')}">
+    <div class="accordion-item" id="acc-${sName.replace(/\s/g, '-')}">
       <div class="accordion-header" onclick="this.parentElement.classList.toggle('open')">
         <span>${sName} <small style="font-weight: 500; color: var(--text-muted); margin-left: 8px;">(${grouped[sName].length} families)</small></span>
         <span>▼</span>
@@ -233,9 +233,9 @@ function openCreateFamilyModal() {
     opt.value = s.id; opt.textContent = s.name;
     sSel.appendChild(opt);
   });
-  
+
   document.getElementById('family-plan').innerHTML = '<option value="">Select a plan</option>';
-  
+
   const oSel = document.getElementById('family-organizer');
   oSel.innerHTML = '<option value="">Assign Organizer</option>';
   allUsers.filter(u => u.role === 'ORGANIZER').forEach(u => {
@@ -251,7 +251,7 @@ function updatePlansDropdown(serviceElementId, planDropdownId) {
   const serviceId = document.getElementById(serviceElementId).value;
   const sel = document.getElementById(planDropdownId);
   sel.innerHTML = '<option value="">Select Plan</option>';
-  
+
   if (!serviceId) return;
   const s = allServices.find(x => x.id === serviceId);
   if (!s || !s.plans) return;
@@ -270,7 +270,7 @@ document.getElementById('family-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = document.getElementById('family-submit-btn');
   btn.disabled = true; btn.textContent = 'Creating...';
-  
+
   try {
     await Admin.createFamily({
       name: document.getElementById('family-name').value.trim(),
@@ -282,7 +282,7 @@ document.getElementById('family-form').addEventListener('submit', async (e) => {
     renderFamilies();
     closeModal('family-modal');
     showToast('Family Created!', 'success');
-  } catch(e) { showToast(e.message, 'error'); }
+  } catch (e) { showToast(e.message, 'error'); }
   finally { btn.disabled = false; btn.textContent = 'Create Family'; }
 });
 
@@ -329,6 +329,7 @@ function openCreateInviteModal() {
   });
 
   document.getElementById('invite-plan-display').value = '';
+  document.getElementById('invite-plan-id').value = '';   // reset stale plan id
   document.getElementById('invite-message').value = '';
   document.getElementById('invite-modal').classList.add('open');
 }
@@ -346,26 +347,39 @@ function updateInvitePlanInfo() {
 document.getElementById('invite-form').addEventListener('submit', async (e) => {
   e.preventDefault();
   const btn = document.getElementById('invite-submit-btn');
+
+  const recipientId = document.getElementById('invite-recipient').value;
+  const familyId = document.getElementById('invite-family').value;
+  const planId = document.getElementById('invite-plan-id').value;
+
+  // Front-end guards — give the admin clear feedback instead of silent failures
+  if (!recipientId) { showToast('Please select a recipient.', 'error'); return; }
+  if (!familyId) { showToast('Please select a family.', 'error'); return; }
+  if (!planId) { showToast('The selected family has no plan assigned. Please edit the family and assign a plan first.', 'error'); return; }
+
   btn.disabled = true;
   try {
     await Invites.create({
-      recipientId: document.getElementById('invite-recipient').value,
-      familyId: document.getElementById('invite-family').value,
-      planId: document.getElementById('invite-plan-id').value,
+      recipientId,
+      familyId,
+      planId,
       message: document.getElementById('invite-message').value.trim()
     });
     await loadInvites();
     renderInvites();
     closeModal('invite-modal');
     showToast('Invite Sent!', 'success');
-  } catch(e) { showToast(e.message, 'error'); }
-  finally { btn.disabled = false; }
+  } catch (err) {
+    showToast(err.message, 'error');   // now shows the real backend reason
+  } finally {
+    btn.disabled = false;
+  }
 });
 
 // ---- Shared Helpers ---------------------------------------
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function handleLogout()  { clearAuth(); window.location.href = 'login.html'; }
-function escHtml(str)    { return str ? str.replace(/'/g, "\\'").replace(/"/g, '&quot;') : ''; }
+function handleLogout() { clearAuth(); window.location.href = 'login.html'; }
+function escHtml(str) { return str ? str.replace(/'/g, "\\'").replace(/"/g, '&quot;') : ''; }
 
 // Sidebar Toggle
 document.addEventListener('DOMContentLoaded', () => {

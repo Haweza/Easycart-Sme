@@ -14,39 +14,42 @@ function isLoggedIn() { return !!getToken(); }
 
 // ---- Core fetch ------------------------------------------- 
 async function apiFetch(path, options = {}) {
-  try {
-    const token = getToken();
-    const headers = {
-      'Content-Type': 'application/json',
-      ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
-      ...options.headers,
-    };
+  const token = getToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...options.headers,
+  };
 
-    const res = await fetch(`${API_BASE}${path}`, {
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, {
       ...options,
       headers,
       body: options.body ? JSON.stringify(options.body) : undefined,
     });
-
-    if (res.status === 401) {
-      clearAuth();
-      window.location.replace('login.html');
-      return;
-    }
-
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      const errorMsg = data.message || `HTTP ${res.status} at ${path}`;
-      console.error('API Error:', errorMsg);
-      throw new Error(errorMsg);
-    }
-
-    return data;
-  } catch (err) {
-    console.error('Fetch Failed:', err.message, 'URL:', `${API_BASE}${path}`);
-    throw new Error(`Connection failed to the backend. Please check your internet or backend status.`);
+  } catch (networkErr) {
+    // Only genuine network failures (offline, CORS block, DNS) land here
+    console.error('Network Error:', networkErr.message, 'URL:', `${API_BASE}${path}`);
+    throw new Error('Connection failed — please check your internet or backend status.');
   }
+
+  if (res.status === 401) {
+    clearAuth();
+    window.location.replace('login.html');
+    return;
+  }
+
+  const data = await res.json().catch(() => ({}));
+
+  if (!res.ok) {
+    // Throw the real backend message so callers can show it
+    const errorMsg = data.message || `HTTP ${res.status} at ${path}`;
+    console.error('API Error:', errorMsg);
+    throw new Error(errorMsg);
+  }
+
+  return data;
 }
 
 
