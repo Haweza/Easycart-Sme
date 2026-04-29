@@ -245,6 +245,35 @@ button {
   width: 100%;
 }
 
+.navbar-burger {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text);
+  cursor: pointer;
+  transition: var(--transition);
+  margin-left: auto;
+  padding: 0.5rem;
+}
+
+.navbar-burger:hover {
+  color: var(--accent);
+}
+
+.navbar-links.mobile-active {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  flex-direction: column;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 1.5rem;
+  gap: 1rem;
+  z-index: 1000;
+}
+
 /* ---- BUTTONS --------------------------------------------- */
 .btn {
   display: inline-flex;
@@ -365,6 +394,7 @@ button {
   border-radius: var(--radius-lg);
   background: var(--bg-subtle);
   aspect-ratio: 16/9;
+  min-height: 500px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -373,7 +403,7 @@ button {
 .slide {
   position: absolute;
   inset: 0;
-  padding: 2rem;
+  padding: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -396,13 +426,16 @@ button {
 }
 
 .slide-icon {
-  font-size: 4.5rem;
-  margin-bottom: 1.5rem;
+  height: 250px;
+  width: auto;
+  max-width: 300px;
+  object-fit: contain;
+  margin-bottom: 2rem;
   animation: gentleFloat 3s ease-in-out infinite;
 }
 
 .slide-name {
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   font-weight: 800;
   color: var(--primary);
   margin-bottom: 0.5rem;
@@ -415,7 +448,7 @@ button {
 }
 
 .slide-price {
-  font-size: 1rem;
+  font-size: 1.25rem;
   color: var(--text-muted);
   font-weight: 500;
   opacity: 0;
@@ -684,10 +717,35 @@ tr:hover td {
 
 /* Tablet Landscape & Small Desktops */
 @media (max-width: 1024px) {
+  .hero {
+    padding: 60px 0;
+  }
+
   .hero-inner {
     grid-template-columns: 1fr;
     text-align: center;
     gap: 2rem;
+  }
+
+  .slideshow-container {
+    min-height: 400px;
+  }
+
+  .slide {
+    padding: 2.5rem;
+  }
+
+  .slide-icon {
+    height: 200px;
+    max-width: 250px;
+  }
+
+  .slide-name {
+    font-size: 1.75rem;
+  }
+
+  .slide-price {
+    font-size: 1rem;
   }
 
   .dashboard-grid {
@@ -716,11 +774,34 @@ tr:hover td {
   }
 
   .hero {
-    padding: 60px 0;
+    padding: 50px 0;
   }
 
   .hero-title {
     font-size: clamp(1.75rem, 6vw, 2.5rem);
+  }
+
+  .slideshow-container {
+    min-height: 350px;
+    aspect-ratio: auto;
+  }
+
+  .slide {
+    padding: 2rem;
+  }
+
+  .slide-icon {
+    height: 160px;
+    max-width: 200px;
+    margin-bottom: 1.5rem;
+  }
+
+  .slide-name {
+    font-size: 1.5rem;
+  }
+
+  .slide-price {
+    font-size: 0.95rem;
   }
 
   .main-content {
@@ -745,6 +826,31 @@ tr:hover td {
 
 /* Mobile Landscape */
 @media (max-width: 640px) {
+  .hero {
+    padding: 40px 0;
+  }
+
+  .navbar-burger {
+    display: block;
+  }
+
+  .navbar-links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 1.5rem;
+    gap: 1rem;
+    display: none;
+    z-index: 1000;
+  }
+
+  .navbar-links.mobile-active {
+    display: flex;
+  }
 
   .products-grid,
   .cards-grid {
@@ -782,12 +888,27 @@ tr:hover td {
     padding: 0 1rem;
   }
 
+  .slideshow-container {
+    min-height: 300px;
+    aspect-ratio: auto;
+  }
+
+  .slide {
+    padding: 1.5rem;
+  }
+
   .slide-icon {
-    font-size: 3rem;
+    height: 130px;
+    max-width: 160px;
+    margin-bottom: 1rem;
   }
 
   .slide-name {
     font-size: 1.25rem;
+  }
+
+  .slide-price {
+    font-size: 0.9rem;
   }
 
   .main-content {
@@ -806,6 +927,38 @@ tr:hover td {
 
 /* Mobile Small */
 @media (max-width: 480px) {
+  .hero {
+    padding: 30px 0;
+  }
+
+  .hero-title {
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .slideshow-container {
+    min-height: 280px;
+    aspect-ratio: auto;
+    border-radius: var(--radius);
+  }
+
+  .slide {
+    padding: 1rem;
+  }
+
+  .slide-icon {
+    height: 110px;
+    max-width: 140px;
+    margin-bottom: 0.75rem;
+  }
+
+  .slide-name {
+    font-size: 1rem;
+  }
+
+  .slide-price {
+    font-size: 0.85rem;
+  }
+
   :root {
     --radius: 4px;
     --radius-lg: 8px;
@@ -884,7 +1037,8 @@ tr:hover td {
   display: flex;
   flex-direction: column;
 
-  height: 260px;
+  height: 240px;
+  align-items: center;
 }
 .service-card:hover {
   transform: translateY(-4px);
@@ -893,9 +1047,10 @@ tr:hover td {
 }
 
 .service-icon {
-  width: 100%;
-  height: 140px; /* fixed top section */
-  object-fit: cover;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  margin: 1rem auto 0.5rem;
 }
 .service-content {
   padding: 12px;
