@@ -8,15 +8,60 @@ let allServices = [];
 
 // ---- Boot -------------------------------------------------
 (async function init() {
-  if (!requireRole('CUSTOMER')) return;
+  if (!isLoggedIn()) { window.location.replace('login.html'); return; }
   const user = getUser();
-  if (!user) return;
+  if (!user) { window.location.replace('login.html'); return; }
+
   document.getElementById('nav-user-name').textContent = user.fullName || 'User';
-  document.getElementById('nav-user-role').textContent = user.role || 'CUSTOMER';
+  const roleBadgeEl = document.getElementById('nav-user-role');
+  roleBadgeEl.textContent = user.role || 'CUSTOMER';
+  roleBadgeEl.className = `badge badge-${user.role?.toLowerCase() || 'customer'}`;
   document.getElementById('hero-name').textContent = (user.fullName || 'User').split(' ')[0];
+
+  // Desktop Actions
+  const navExtra = document.getElementById('nav-role-action');
+  if (navExtra) {
+    if (user.role === 'ADMIN') {
+      navExtra.innerHTML = `<a href="admin.html" class="btn btn-primary btn-sm" id="admin-panel-btn">⚙ Admin Panel</a>`;
+    } else if (user.role === 'ORGANIZER') {
+      navExtra.innerHTML = `<a href="organizer.html" class="btn btn-outline btn-sm" id="organizer-panel-btn">🏠 Organizer Panel</a>`;
+    }
+  }
+
+  // Mobile Sidebar Header
+  const mobileName = document.getElementById('mobile-nav-user-name');
+  if (mobileName) mobileName.textContent = user.fullName || 'User';
+  
+  const mobileRole = document.getElementById('mobile-nav-user-role');
+  if (mobileRole) {
+    mobileRole.textContent = user.role || 'CUSTOMER';
+    mobileRole.className = `badge badge-${user.role?.toLowerCase() || 'customer'}`;
+  }
+
+  // Mobile Sidebar Actions
+  const mobileNavExtra = document.getElementById('mobile-nav-role-action');
+  if (mobileNavExtra) {
+    if (user.role === 'ADMIN') {
+      mobileNavExtra.innerHTML = `<a href="admin.html" class="btn btn-primary btn-sm w-full">⚙ Admin Panel</a>`;
+    } else if (user.role === 'ORGANIZER') {
+      mobileNavExtra.innerHTML = `<a href="organizer.html" class="btn btn-outline btn-sm w-full">🏠 Organizer Panel</a>`;
+    }
+  }
 
   await Promise.all([loadMyData(), loadServices()]);
   renderOverview();
+
+  // Check if a service should be auto-opened for request
+  const urlParams = new URLSearchParams(window.location.search);
+  const serviceId = urlParams.get('openRequest');
+  if (serviceId) {
+    // Auto-open request modal for this service
+    setTimeout(() => {
+      openRequestModal(serviceId);
+      // Clean up URL to prevent re-opening on refresh
+      window.history.replaceState({}, document.title, 'dashboard.html');
+    }, 300);
+  }
 })();
 
 async function loadMyData() {
@@ -254,7 +299,12 @@ function handleLogout() { clearAuth(); window.location.href = 'login.html'; }
 document.addEventListener('DOMContentLoaded', () => {
   const burger = document.getElementById('burger-btn');
   const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  
   if (burger && sidebar) {
-    burger.addEventListener('click', () => sidebar.classList.toggle('open'));
+    burger.addEventListener('click', () => {
+      sidebar.classList.toggle('open');
+      if (overlay) overlay.classList.toggle('active');
+    });
   }
 });

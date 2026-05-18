@@ -2,6 +2,7 @@ package com.easycart.sme.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -12,4 +13,6 @@ public class CreateFamilyDto {
     private UUID organizerId;
     private UUID planId;
     private Integer maxMembers;
+    private Instant startDate;
+    private Instant expiresAt;
 }

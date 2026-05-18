@@ -1,0 +1,34 @@
+Tonight's session 14/05/2026
+	notes#
+
+Let me check what supabase was trying to say. "Gmail"
+	Got this email on the 13/05
+Hi there,
+
+Starting May 30, new Supabase projects will not expose tables in the "public" schema to the Data API by default. Any table you create in "public" after that date requires an explicit GRANT before supabase-js, PostgREST, or GraphQL can access it.
+
+Now am moving to application server migration.(11:36pm) 
+Render loads up backend slow. When the app stays inactive for a long time, application layer sleeps and takes a while to load up again. I was warned but then i ignored it.
+
+chatgpt
+" Typical Render pain points:
+
+cold starts
+slower wake times
+memory limits
+sluggish Java containers
+deployment unpredictability
+expensive scaling for JVM apps
+shared instance performance inconsistency "
+
+The app is experiencing this even before we go actual live. We need migration now.
+
+Recommended platform between chatgpt
+Railway.
+Let me visit it first and inspect for my self.
+We wait for the stakeholder on this decision.
+
+Now, we fix the responsive design layout for dashboard(Frontend work, should be lightweight)
+
+
+Well, my bundles finished even before i could finish tracing my dashboard html file.

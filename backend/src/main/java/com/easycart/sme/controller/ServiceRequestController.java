@@ -24,7 +24,7 @@ public class ServiceRequestController {
 
     /** POST /api/service-requests — Customer submits a service request */
     @PostMapping
-    @PreAuthorize("hasRole('CUSTOMER')")
+    @PreAuthorize("hasAnyRole('CUSTOMER', 'ADMIN', 'ORGANIZER')")
     public ResponseEntity<ServiceRequestResponse> createRequest(
             @Valid @RequestBody ServiceRequestCreateDto dto,
             Principal principal) {

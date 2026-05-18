@@ -3,11 +3,13 @@ package com.easycart.sme.controller;
 import com.easycart.sme.dto.FamilyResponse;
 import com.easycart.sme.entity.Family;
 import com.easycart.sme.entity.FamilyMember;
+import com.easycart.sme.entity.ActivityLog;
 import com.easycart.sme.exception.ForbiddenException;
 import com.easycart.sme.exception.NotFoundException;
 import com.easycart.sme.repository.FamilyMemberRepository;
 import com.easycart.sme.repository.FamilyRepository;
 import com.easycart.sme.repository.ProfileRepository;
+import com.easycart.sme.repository.ActivityLogRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,6 +28,7 @@ public class FamilyController {
     private final FamilyRepository familyRepository;
     private final FamilyMemberRepository familyMemberRepository;
     private final ProfileRepository profileRepository;
+    private final ActivityLogRepository activityLogRepository;
 
     /**
      * GET /api/families
@@ -85,5 +88,49 @@ public class FamilyController {
                 )
         )).toList();
         return ResponseEntity.ok(result);
+    }
+
+    /**
+     * DELETE /api/families/{familyId}/members/{userId}
+     * ORGANIZER: can only remove members from their assigned families.
+     * ADMIN: can remove members from any family.
+     */
+    @DeleteMapping("/{familyId}/members/{userId}")
+    @PreAuthorize("hasAnyRole('ADMIN','ORGANIZER')")
+    public ResponseEntity<Void> removeMember(
+            @PathVariable UUID familyId,
+            @PathVariable UUID userId,
+            Principal principal) {
+
+        UUID actorId = UUID.fromString(principal.getName());
+        var actorProfile = profileRepository.findById(actorId)
+                .orElseThrow(() -> new NotFoundException("Actor profile not found"));
+
+        Family family = familyRepository.findById(familyId)
+                .orElseThrow(() -> new NotFoundException("Family not found"));
+
+        // ORGANIZER scope check
+        if (actorProfile.getRole().name().equals("ORGANIZER")) {
+            if (family.getOrganizer() == null || !family.getOrganizer().getId().equals(actorId)) {
+                throw new ForbiddenException("You can only remove members from your assigned families");
+            }
+        }
+
+        // Find the active member
+        FamilyMember member = familyMemberRepository.findByFamilyIdAndUserId(familyId, userId)
+                .orElseThrow(() -> new NotFoundException("Active family membership not found for this user"));
+
+        // Delete the member record
+        familyMemberRepository.delete(member);
+
+        // Save activity log for organizers and admins alike
+        activityLogRepository.save(ActivityLog.builder()
+                .actorId(actorId)
+                .actorName(actorProfile.getFullName())
+                .action("REMOVE_MEMBER")
+                .description(String.format("Removed %s from family %s", member.getUser().getFullName(), family.getName()))
+                .build());
+
+        return ResponseEntity.ok().build();
     }
 }

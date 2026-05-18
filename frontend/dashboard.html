@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,190 +8,226 @@
   <title>Dashboard — EasyCart SME</title>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body>
+  <div class="sidebar-overlay" id="sidebar-overlay"
+    onclick="document.getElementById('sidebar').classList.remove('open'); this.classList.remove('active');"></div>
 
-<!-- NAVBAR -->
-<nav class="navbar" role="navigation">
-  <div class="navbar-inner container">
-    <a href="index.html" class="navbar-brand">
-      <div class="logo-icon"><i class="fas fa-shopping-cart"></i></div>
-      <span class="brand-name">Easy<span>Cart</span> <small style="font-size:.65rem;font-weight:500;opacity:.8">SME</small></span>
-    </a>
-    <div class="navbar-links" id="nav-links">
-      <span id="nav-user-name" style="color:var(--text-muted);font-size:.9rem;margin-right:8px"></span>
-      
-      <button id="theme-toggle" class="theme-toggle" style="margin-right: 12px;">🌙</button>
+  <!-- NAVBAR -->
+  <nav class="navbar" role="navigation">
+    <div class="navbar-inner container">
+      <a href="index.html" class="navbar-brand">
+        <div class="logo-icon"><i class="fas fa-shopping-cart"></i></div>
+        <span class="brand-name">Easy<span>Cart</span> <small
+            style="font-size:.65rem;font-weight:500;opacity:.8">SME</small></span>
+      </a>
+      <div class="navbar-links" id="nav-links">
+        <span id="nav-user-name" style="color:var(--text-muted);font-size:.9rem;margin-right:8px"></span>
 
-      <span id="nav-user-role" class="badge badge-customer" style="margin-right:12px"></span>
-      <button class="btn btn-outline btn-sm" onclick="handleLogout()">Sign Out</button>
+        <button id="theme-toggle" class="theme-toggle" style="margin-right: 12px;">🌙</button>
+
+        <span id="nav-user-role" class="badge badge-customer" style="margin-right:12px"></span>
+
+        <!-- Injected by dashboard.js for ADMIN / ORGANIZER -->
+        <span id="nav-role-action" style="margin-right:8px"></span>
+
+        <button class="btn btn-outline btn-sm" onclick="handleLogout()">Sign Out</button>
+      </div>
+      <button id="burger-btn" class="navbar-burger" aria-label="Toggle sidebar">☰</button>
+    </div>
+  </nav>
+
+  <!-- APP LAYOUT -->
+  <div class="dashboard-grid">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-mobile-profile"
+        style="display: none; padding: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span id="mobile-nav-user-name" style="font-weight: 700; font-size: 1rem;"></span>
+            <span id="mobile-nav-user-role" class="badge badge-customer"></span>
+          </div>
+          <button id="mobile-theme-toggle" class="theme-toggle" style="margin-left: auto;">🌙</button>
+        </div>
+        <div id="mobile-nav-role-action" style="margin-bottom: 1rem;"></div>
+        <button class="btn btn-outline btn-sm w-full" onclick="handleLogout()">Sign Out</button>
+      </div>
+      <div class="sidebar-section">
+        <div
+          style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 0 1.25rem 1rem;">
+          Menu</div>
+        <a href="#" class="sidebar-link active" data-view="overview" onclick="showView('overview',this)">
+          🏠 Overview
+        </a>
+        <a href="#" class="sidebar-link" data-view="services" onclick="showView('services',this)">
+          💼 Browse Services
+        </a>
+        <a href="#" class="sidebar-link" data-view="requests" onclick="showView('requests',this)">
+          📋 My Requests
+        </a>
+        <a href="#" class="sidebar-link" data-view="invites" onclick="showView('invites',this)">
+          📬 My Invites
+          <span class="badge badge-pending" id="invite-badge" style="display:none;margin-left:auto"></span>
+        </a>
+        <a href="index.html" class="sidebar-link">
+          ↩️ Back to Homepage
+        </a>
+      </div>
+
+      <div style="margin-top: auto; padding: 1.5rem;">
+        <div class="card" style="background: var(--bg-subtle); padding: 1rem;">
+          <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">Support</div>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Questions about your plan? Chat
+            with us.</p>
+          <a href="https://wa.me/260970000000" class="btn btn-primary btn-sm w-full" target="_blank">WhatsApp Admin</a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+      <!-- ======= OVERVIEW VIEW ======= -->
+      <div id="view-overview" class="fade-in">
+        <div class="page-header">
+          <h1 class="page-title">Welcome, <span id="hero-name">—</span> 👋</h1>
+        </div>
+
+        <div class="stats-grid mb-6">
+          <div class="card">
+            <div style="color:var(--text-muted); font-size: 0.9rem;">My Requests</div>
+            <div style="font-size: 2rem; font-weight: 800;" id="stat-requests">—</div>
+          </div>
+          <div class="card">
+            <div style="color:var(--text-muted); font-size: 0.9rem;">My Invites</div>
+            <div style="font-size: 2rem; font-weight: 800;" id="stat-invites">—</div>
+          </div>
+          <div class="card">
+            <div style="color:var(--text-muted); font-size: 0.9rem;">Active Groups</div>
+            <div style="font-size: 2rem; font-weight: 800;" id="stat-active">—</div>
+          </div>
+        </div>
+
+        <div id="pending-invites-callout" style="display:none" class="mb-6">
+          <div class="alert alert-warning">
+            📬 You have <strong id="pending-count">0</strong> pending invite(s).
+            <a href="#" onclick="showView('invites')" style="font-weight:700; margin-left:8px">Check them out →</a>
+          </div>
+        </div>
+
+        <div class="page-header mt-6">
+          <h2 class="page-title" style="font-size: 1.25rem;">Quick Services</h2>
+        </div>
+        <div id="overview-services-grid" class="services-grid">
+          <!-- Short grid of services -->
+        </div>
+      </div>
+
+      <!-- ======= SERVICES VIEW ======= -->
+      <div id="view-services" class="fade-in" style="display:none">
+        <div class="page-header">
+          <h2 class="page-title">All Services</h2>
+        </div>
+        <div id="services-grid-dash" class="services-grid">
+          <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ======= REQUESTS VIEW ======= -->
+      <div id="view-requests" class="fade-in" style="display:none">
+        <div class="page-header">
+          <h2 class="page-title">My Requests</h2>
+        </div>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Plan</th>
+                <th>Status</th>
+                <th>Submitted</th>
+              </tr>
+            </thead>
+            <tbody id="requests-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ======= INVITES VIEW ======= -->
+      <div id="view-invites" class="fade-in" style="display:none">
+        <div class="page-header">
+          <h2 class="page-title">My Invites</h2>
+        </div>
+        <div id="invites-list" style="display: flex; flex-direction: column; gap: 16px;">
+          <!-- Cards loaded via JS -->
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- REQUEST SERVICE MODAL -->
+  <div class="modal-overlay" id="request-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">Request Access</div>
+        <button class="modal-close" onclick="closeModal('request-modal')">✕</button>
+      </div>
+      <form id="request-form">
+        <div class="form-group">
+          <label class="form-label">Service</label>
+          <div id="request-service-name" style="font-weight: 700; font-size: 1.1rem; margin-bottom: 12px;"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Select Plan *</label>
+          <select id="request-plan" class="form-control" required></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Note to Admin (Optional)</label>
+          <textarea id="request-message" class="form-control" rows="3"
+            placeholder="e.g. Please add me to the Bandas family if possible."></textarea>
+        </div>
+        <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+          <button type="button" class="btn btn-outline" onclick="closeModal('request-modal')">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="request-submit-btn">Send Request</button>
+        </div>
+      </form>
     </div>
   </div>
-</nav>
 
-<!-- APP LAYOUT -->
-<div class="dashboard-grid">
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/260970000000" class="whatsapp-btn" target="_blank" title="Chat with Admin">
+    📱
+  </a>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-section">
-      <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 0 1.25rem 1rem;">Menu</div>
-      <a href="#" class="sidebar-link active" data-view="overview" onclick="showView('overview',this)">
-        🏠 Overview
-      </a>
-      <a href="#" class="sidebar-link" data-view="services" onclick="showView('services',this)">
-        💼 Browse Services
-      </a>
-      <a href="#" class="sidebar-link" data-view="requests" onclick="showView('requests',this)">
-        📋 My Requests
-      </a>
-      <a href="#" class="sidebar-link" data-view="invites" onclick="showView('invites',this)">
-        📬 My Invites
-        <span class="badge badge-pending" id="invite-badge" style="display:none;margin-left:auto"></span>
-      </a>
-    </div>
-    
-    <div style="margin-top: auto; padding: 1.5rem;">
-      <div class="card" style="background: var(--bg-subtle); padding: 1rem;">
-        <div style="font-weight: 700; font-size: 0.85rem; margin-bottom: 8px;">Support</div>
-        <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 12px;">Questions about your plan? Chat with us.</p>
-        <a href="https://wa.me/260970000000" class="btn btn-primary btn-sm w-full" target="_blank">WhatsApp Admin</a>
-      </div>
-    </div>
-  </aside>
+  <div id="toast-container" class="toast-container"></div>
 
-  <!-- MAIN CONTENT -->
-  <main class="main-content">
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script>
+    // Theme Toggle logic
+    const themeToggles = document.querySelectorAll('.theme-toggle');
+    const html = document.documentElement;
 
-    <!-- ======= OVERVIEW VIEW ======= -->
-    <div id="view-overview" class="fade-in">
-      <div class="page-header">
-        <h1 class="page-title">Welcome, <span id="hero-name">—</span> 👋</h1>
-      </div>
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    themeToggles.forEach(t => t.textContent = savedTheme === 'light' ? '🌙' : '☀️');
 
-      <div class="stats-grid mb-6">
-        <div class="card">
-          <div style="color:var(--text-muted); font-size: 0.9rem;">My Requests</div>
-          <div style="font-size: 2rem; font-weight: 800;" id="stat-requests">—</div>
-        </div>
-        <div class="card">
-          <div style="color:var(--text-muted); font-size: 0.9rem;">My Invites</div>
-          <div style="font-size: 2rem; font-weight: 800;" id="stat-invites">—</div>
-        </div>
-        <div class="card">
-          <div style="color:var(--text-muted); font-size: 0.9rem;">Active Groups</div>
-          <div style="font-size: 2rem; font-weight: 800;" id="stat-active">—</div>
-        </div>
-      </div>
-
-      <div id="pending-invites-callout" style="display:none" class="mb-6">
-        <div class="alert alert-warning">
-          📬 You have <strong id="pending-count">0</strong> pending invite(s).
-          <a href="#" onclick="showView('invites')" style="font-weight:700; margin-left:8px">Check them out →</a>
-        </div>
-      </div>
-
-      <div class="page-header mt-6">
-        <h2 class="page-title" style="font-size: 1.25rem;">Quick Services</h2>
-      </div>
-      <div id="overview-services-grid" class="services-grid">
-         <!-- Short grid of services -->
-      </div>
-    </div>
-
-    <!-- ======= SERVICES VIEW ======= -->
-    <div id="view-services" class="fade-in" style="display:none">
-      <div class="page-header">
-        <h2 class="page-title">All Services</h2>
-      </div>
-      <div id="services-grid-dash" class="services-grid">
-        <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
-          <div class="spinner"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ======= REQUESTS VIEW ======= -->
-    <div id="view-requests" class="fade-in" style="display:none">
-      <div class="page-header">
-        <h2 class="page-title">My Requests</h2>
-      </div>
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr><th>Service</th><th>Plan</th><th>Status</th><th>Submitted</th></tr>
-          </thead>
-          <tbody id="requests-table-body"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- ======= INVITES VIEW ======= -->
-    <div id="view-invites" class="fade-in" style="display:none">
-      <div class="page-header">
-        <h2 class="page-title">My Invites</h2>
-      </div>
-      <div id="invites-list" style="display: flex; flex-direction: column; gap: 16px;">
-        <!-- Cards loaded via JS -->
-      </div>
-    </div>
-
-  </main>
-</div>
-
-<!-- REQUEST SERVICE MODAL -->
-<div class="modal-overlay" id="request-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-title">Request Access</div>
-      <button class="modal-close" onclick="closeModal('request-modal')">✕</button>
-    </div>
-    <form id="request-form">
-      <div class="form-group">
-        <label class="form-label">Service</label>
-        <div id="request-service-name" style="font-weight: 700; font-size: 1.1rem; margin-bottom: 12px;"></div>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Select Plan *</label>
-        <select id="request-plan" class="form-control" required></select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">Note to Admin (Optional)</label>
-        <textarea id="request-message" class="form-control" rows="3" placeholder="e.g. Please add me to the Bandas family if possible."></textarea>
-      </div>
-      <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
-        <button type="button" class="btn btn-outline" onclick="closeModal('request-modal')">Cancel</button>
-        <button type="submit" class="btn btn-primary" id="request-submit-btn">Send Request</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- WhatsApp Floating Button -->
-<a href="https://wa.me/260970000000" class="whatsapp-btn" target="_blank" title="Chat with Admin">
-  📱
-</a>
-
-<div id="toast-container" class="toast-container"></div>
-
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script src="js/dashboard.js"></script>
-<script>
-  // Theme Toggle logic
-  const themeToggle = document.getElementById('theme-toggle');
-  const html = document.documentElement;
-  
-  const savedTheme = localStorage.getItem('theme') || 'light';
-  html.setAttribute('data-theme', savedTheme);
-  themeToggle.textContent = savedTheme === 'light' ? '🌙' : '☀️';
-
-  themeToggle.addEventListener('click', () => {
-    const currentTheme = html.getAttribute('data-theme');
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-    html.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-    themeToggle.textContent = newTheme === 'light' ? '🌙' : '☀️';
-  });
-</script>
+    themeToggles.forEach(toggle => {
+      toggle.addEventListener('click', () => {
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        themeToggles.forEach(t => t.textContent = newTheme === 'light' ? '🌙' : '☀️');
+      });
+    });
+  </script>
 </body>
+
 </html>

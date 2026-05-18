@@ -11,6 +11,8 @@ let memberCache = {};
   const user = getUser();
   if (!user) return;
   document.getElementById('nav-org-name').textContent = user.fullName || 'Organizer';
+  const mobileOrgName = document.getElementById('mobile-nav-org-name');
+  if (mobileOrgName) mobileOrgName.textContent = user.fullName || 'Organizer';
 
   await loadMyFamilies();
   renderOverview();
@@ -27,6 +29,20 @@ function showView(name, link) {
   
   if (name === 'families') renderFamiliesTable();
   if (name === 'members')  populateFamilySelect();
+  closeSidebar();
+}
+
+// Sidebar toggle (Mobile)
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (overlay) overlay.classList.toggle('active');
+}
+
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  const overlay = document.getElementById('sidebar-overlay');
+  if (overlay) overlay.classList.remove('active');
 }
 
 // ---- Data -------------------------------------------------
@@ -121,14 +137,14 @@ function populateFamilySelect() {
 async function loadMembersForFamily(familyId) {
   const tbody = document.getElementById('members-tbody');
   if (!familyId) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px;">Select a family from the list.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:40px;">Select a family from the list.</td></tr>`;
     return;
   }
-  tbody.innerHTML = `<tr><td colspan="4" class="text-center" style="padding:40px;"><div class="spinner"></div></td></tr>`;
+  tbody.innerHTML = `<tr><td colspan="5" class="text-center" style="padding:40px;"><div class="spinner"></div></td></tr>`;
 
   const members = await getMembersForFamily(familyId);
   if (!members.length) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:40px;">No members yet.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:40px;">No members yet.</td></tr>`;
     return;
   }
   tbody.innerHTML = members.map(m => `
@@ -137,7 +153,30 @@ async function loadMembersForFamily(familyId) {
       <td class="text-sm text-muted">${m.user?.email || '—'}</td>
       <td>${statusBadge(m.status)}</td>
       <td class="text-sm text-muted">${fmtDate(m.joinedAt)}</td>
+      <td>
+        <button class="btn btn-outline btn-sm" onclick="removeMember('${familyId}', '${m.userId}')" style="color:var(--danger); border-color:rgba(220,38,38,0.2); padding: 4px 8px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;">
+          🗑️ Remove
+        </button>
+      </td>
     </tr>`).join('');
+}
+
+async function removeMember(familyId, userId) {
+  if (!confirm('Are you sure you want to remove this member from your family?')) return;
+  try {
+    await Organizer.removeFamilyMember(familyId, userId);
+    showToast('Member removed successfully!', 'success');
+    
+    // Clear cache for this family to force re-fetch
+    delete memberCache[familyId];
+    
+    // Re-load and re-render
+    await loadMembersForFamily(familyId);
+    await loadMyFamilies();
+    renderOverview();
+  } catch (err) {
+    showToast(err.message, 'error');
+  }
 }
 
 function handleLogout() { clearAuth(); window.location.href = 'login.html'; }

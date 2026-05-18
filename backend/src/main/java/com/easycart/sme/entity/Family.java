@@ -50,4 +50,10 @@ public class Family {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "plan_id")
     private Plan plan;
+
+    @Column(name = "start_date")
+    private Instant startDate;
+
+    @Column(name = "expires_at")
+    private Instant expiresAt;
 }

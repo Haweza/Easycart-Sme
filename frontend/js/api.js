@@ -91,12 +91,16 @@ const Admin = {
   getFamilies: () => apiFetch('/admin/families'),
   createFamily: (payload) => apiFetch('/admin/families', { method: 'POST', body: payload }),
   assignOrganizer: (id, organizerId) => apiFetch(`/admin/families/${id}/organizer`, { method: 'PUT', body: { organizerId } }),
+  addFamilyMember: (familyId, userId) => apiFetch(`/admin/families/${familyId}/members`, { method: 'POST', body: { userId } }),
+  removeFamilyMember: (familyId, userId) => apiFetch(`/families/${familyId}/members/${userId}`, { method: 'DELETE' }),
+  getActivities: () => apiFetch('/admin/activities'),
 };
 
 // ---- Organizer --------------------------------------------
 const Organizer = {
   getMyFamilies: () => apiFetch('/families'),
   getMembers: (familyId) => apiFetch(`/families/${familyId}/members`),
+  removeFamilyMember: (familyId, userId) => apiFetch(`/families/${familyId}/members/${userId}`, { method: 'DELETE' }),
 };
 
 // ---- Toast ------------------------------------------------
@@ -137,7 +141,8 @@ function requireRole(...roles) {
 function redirectByRole() {
   const user = getUser();
   if (!user) return;
-  const map = { ADMIN: 'admin.html', ORGANIZER: 'organizer.html', CUSTOMER: 'dashboard.html' };
+  // All roles land on dashboard first — Admin Panel is accessed via button from there
+  const map = { ADMIN: 'dashboard.html', ORGANIZER: 'dashboard.html', CUSTOMER: 'dashboard.html' };
   window.location.href = map[user.role] || 'dashboard.html';
 }
 

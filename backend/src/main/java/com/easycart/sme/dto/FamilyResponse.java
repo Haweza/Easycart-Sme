@@ -19,7 +19,10 @@ public class FamilyResponse {
     private Boolean isActive;
     private UUID planId;
     private String planName;
+    private UUID serviceId;
     private String serviceName;
+    private Instant startDate;
+    private Instant expiresAt;
     private Instant createdAt;
 
     public static FamilyResponse from(Family f) {
@@ -33,7 +36,10 @@ public class FamilyResponse {
                 .isActive(f.getIsActive())
                 .planId(f.getPlan() != null ? f.getPlan().getId() : null)
                 .planName(f.getPlan() != null ? f.getPlan().getName() : null)
+                .serviceId(f.getPlan() != null && f.getPlan().getService() != null ? f.getPlan().getService().getId() : null)
                 .serviceName(f.getPlan() != null ? f.getPlan().getService().getName() : null)
+                .startDate(f.getStartDate())
+                .expiresAt(f.getExpiresAt())
                 .createdAt(f.getCreatedAt())
                 .build();
     }

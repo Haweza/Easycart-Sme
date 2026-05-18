@@ -2,11 +2,13 @@ package com.easycart.sme.controller;
 
 import com.easycart.sme.dto.*;
 import com.easycart.sme.entity.Profile;
+import com.easycart.sme.entity.ActivityLog;
 import com.easycart.sme.exception.ConflictException;
 import com.easycart.sme.exception.ForbiddenException;
 import com.easycart.sme.exception.NotFoundException;
 import com.easycart.sme.repository.ProfileRepository;
 import com.easycart.sme.repository.FamilyRepository;
+import com.easycart.sme.repository.ActivityLogRepository;
 import com.easycart.sme.entity.Family;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,15 @@ public class AdminController {
 
     private final ProfileRepository profileRepository;
     private final FamilyRepository familyRepository;
+    private final com.easycart.sme.repository.FamilyMemberRepository familyMemberRepository;
     private final com.easycart.sme.repository.PlanRepository planRepository;
+    private final ActivityLogRepository activityLogRepository;
+
+    /** GET /api/admin/activities — list all activity logs for the notice feed */
+    @GetMapping("/activities")
+    public ResponseEntity<List<ActivityLog>> getActivityLogs() {
+        return ResponseEntity.ok(activityLogRepository.findAllByOrderByCreatedAtDesc());
+    }
 
     // --- Users ---
 
@@ -87,6 +97,8 @@ public class AdminController {
                 .organizer(organizer)
                 .plan(plan)
                 .maxMembers(dto.getMaxMembers() != null ? dto.getMaxMembers() : 10)
+                .startDate(dto.getStartDate())
+                .expiresAt(dto.getExpiresAt())
                 .build();
         return ResponseEntity.ok(FamilyResponse.from(familyRepository.save(family)));
     }
@@ -111,7 +123,54 @@ public class AdminController {
         if (organizer.getRole() != Profile.UserRole.ORGANIZER) {
             throw new ForbiddenException("User is not an ORGANIZER");
         }
-        family.setOrganizer(organizer);
+    family.setOrganizer(organizer);
         return ResponseEntity.ok(FamilyResponse.from(familyRepository.save(family)));
+    }
+
+    /** POST /api/admin/families/{id}/members — Add member to family */
+    @PostMapping("/families/{id}/members")
+    public ResponseEntity<Void> addMember(
+            @PathVariable UUID id,
+            @RequestBody java.util.Map<String, UUID> payload) {
+        UUID userId = payload.get("userId");
+        if (userId == null) {
+            throw new com.easycart.sme.exception.BadRequestException("userId is required");
+        }
+
+        Family family = familyRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Family not found"));
+
+        Profile user = profileRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
+
+        if (user.getRole() != Profile.UserRole.CUSTOMER) {
+            throw new com.easycart.sme.exception.BadRequestException("User is not a CUSTOMER");
+        }
+        if (!user.getIsApproved()) {
+            throw new com.easycart.sme.exception.BadRequestException("User is not approved");
+        }
+
+        if (familyMemberRepository.existsByUserIdAndFamilyIdAndStatus(
+                userId, id, com.easycart.sme.entity.FamilyMember.MembershipStatus.ACTIVE)) {
+            throw new ConflictException("User is already an active member of this family");
+        }
+
+        long activeCount = familyMemberRepository.findByFamilyId(id)
+                .stream()
+                .filter(m -> m.getStatus() == com.easycart.sme.entity.FamilyMember.MembershipStatus.ACTIVE)
+                .count();
+
+        if (activeCount >= family.getMaxMembers()) {
+            throw new com.easycart.sme.exception.BadRequestException("Family has reached maximum members limit");
+        }
+
+        com.easycart.sme.entity.FamilyMember member = com.easycart.sme.entity.FamilyMember.builder()
+                .family(family)
+                .user(user)
+                .status(com.easycart.sme.entity.FamilyMember.MembershipStatus.ACTIVE)
+                .build();
+        familyMemberRepository.save(member);
+
+        return ResponseEntity.ok().build();
     }
 }

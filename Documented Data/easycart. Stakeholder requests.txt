@@ -1,0 +1,4 @@
+easycart
+Admin needs to communicate to organizer.
+organizer. minimal work.
+manage members in families.

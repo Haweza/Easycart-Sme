@@ -229,6 +229,17 @@ $$ LANGUAGE plpgsql;
 -- Schedule this via Supabase cron (pg_cron) or call from backend
 -- SELECT cron.schedule('expire-invites', '0 * * * *', 'SELECT expire_old_invites()');
 
+-- 8. PROMOS --------------------------------------------------
+
+CREATE TABLE promos (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    service_name  TEXT NOT NULL,
+    description   TEXT NOT NULL,
+    price         TEXT NOT NULL,
+    image_content TEXT,
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- 9. INDEXES ------------------------------------------------
 
 CREATE INDEX idx_profiles_role ON profiles(role);

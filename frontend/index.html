@@ -26,7 +26,7 @@
 
       <div class="navbar-links">
         <a href="#services" class="navbar-link">Services</a>
-        <a href="#how-it-works" class="navbar-link">How It Works</a>
+        <a href="how-it-works.html" class="navbar-link">How It Works</a>
 
         <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Theme">
           🌙
@@ -138,9 +138,9 @@
           </ul>
         </div>
         <div>
-          <h4 style="margin-bottom: 16px;">Contact Admin</h4>
+          <h4 style="margin-bottom: 16px;">Contact Customer care</h4>
           <ul style="display: flex; flex-direction: column; gap: 10px; font-size: 0.9rem; color: var(--text-muted);">
-            <li>📧 support@easycart.com</li>
+            <li>📧 easycartzambia@gmail.com</li>
             <li>📱 +260 975 200 620</li>
             <li>💬 WhatsApp: +260 975 200 620</li>
           </ul>
@@ -207,7 +207,7 @@
     `;
     }
 
-    // ---- Slideshow Logic ------------------------------------
+    // ---- Slideshow / Promo Logic -----------------------------
     const slideshowData = [
       { image: 'assets/netflix.png', name: 'Netflix Premium', price: 'ZMW 100' },
       { image: 'assets/apple_music.png', name: 'Apple Music', price: 'ZMW 46' },
@@ -217,21 +217,69 @@
 
     let currentSlide = 0;
     const slideshowEl = document.getElementById('service-slideshow');
+    let slideshowInterval = null;
 
-    function renderSlide() {
-      const s = slideshowData[currentSlide];
-      slideshowEl.innerHTML = `
-  <div class="slide active animate-up">
-    <img src="${s.image}" alt="${s.name}" class="slide-icon">
-    <div class="slide-name">${s.name}</div>
-    <div class="slide-price">Starting from ${s.price}</div>
-  </div>
-`;
-      currentSlide = (currentSlide + 1) % slideshowData.length;
+    async function checkActivePromo() {
+      try {
+        const res = await fetch(`${API_BASE}/promos/active`);
+        if (res.status === 200) {
+          const promo = await res.json();
+          renderPromoCard(promo);
+          return true; // Active promo found
+        }
+      } catch (e) {
+        console.error("Failed to load active promo", e);
+      }
+      return false; // No active promo
     }
 
-    setInterval(renderSlide, 4000);
-    if (slideshowEl) renderSlide();
+    function renderPromoCard(promo) {
+      if (!slideshowEl) return;
+      slideshowEl.innerHTML = `
+        <div class="slide active animate-up" style="display:flex; flex-direction:column; height:100%; justify-content:space-between; padding: 2rem;">
+          <div style="width: 100%; display: flex; justify-content: center; margin-bottom: 1rem;">
+            <div style="background: var(--bg-subtle); border-radius: var(--radius-lg); padding: 16px; display: flex; align-items: center; justify-content: center; width: 130px; height: 130px; box-shadow: var(--shadow);">
+              <img src="${promo.imageContent || 'assets/default_icon.png'}" alt="${promo.serviceName}" style="max-width:100%; max-height:100%; object-fit:contain; border-radius: var(--radius-sm);" onerror="this.src='assets/default_icon.png'">
+            </div>
+          </div>
+          <div style="text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px;">
+            <span class="badge" style="align-self: center; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; background: #D1FAE5; color: #065F46;">🔥 Special Promo Deal</span>
+            <h3 style="font-size: 1.5rem; font-weight: 800; color: var(--text); margin: 0;">${promo.serviceName}</h3>
+            <p style="font-size: 0.925rem; color: var(--text-muted); line-height: 1.4; margin: 4px 0;">${promo.description}</p>
+            <div style="font-size: 1.25rem; font-weight: 700; color: var(--success);">${promo.price}</div>
+          </div>
+          <a href="login.html#register" class="btn btn-primary btn-lg w-full" style="margin-top: 1rem; display: flex; justify-content: center; align-items: center; width: 100%;">
+            ⚡ Claim Deal Now
+          </a>
+        </div>
+      `;
+    }
+
+    async function initHeroSection() {
+      const hasPromo = await checkActivePromo();
+      if (hasPromo) {
+        return;
+      }
+      
+      function renderSlide() {
+        const s = slideshowData[currentSlide];
+        slideshowEl.innerHTML = `
+          <div class="slide active animate-up">
+            <img src="${s.image}" alt="${s.name}" class="slide-icon">
+            <div class="slide-name">${s.name}</div>
+            <div class="slide-price">Starting from ${s.price}</div>
+          </div>
+        `;
+        currentSlide = (currentSlide + 1) % slideshowData.length;
+      }
+
+      if (slideshowEl) {
+        renderSlide();
+        slideshowInterval = setInterval(renderSlide, 4000);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initHeroSection);
 
     // Data Structure with all your requested plans
     const serviceCategories = [
@@ -332,9 +380,37 @@
     }
 
     function selectPlan(serviceName, planDuration) {
-      // Replace this alert with your redirect logic to the sign up/checkout page!
-      alert(`You selected ${planDuration} for ${serviceName}. You can redirect the user to login/checkout now.`);
+      // Find the service ID by name
+      let selectedService = null;
+      for (const cat of serviceCategories) {
+        const svc = cat.services.find(s => s.name === serviceName);
+        if (svc) {
+          selectedService = svc;
+          break;
+        }
+      }
+
+      if (!selectedService) return;
+
+      // Store the selected service and plan in localStorage
+      const selectedPlan = selectedService.plans.find(p => p.duration === planDuration);
+      localStorage.setItem('ec_selected_service', JSON.stringify({
+        id: selectedService.id,
+        name: selectedService.name,
+        duration: planDuration,
+        price: selectedPlan?.price
+      }));
+
       closePlanModal();
+
+      // Check if user is logged in
+      if (isLoggedIn()) {
+        // Redirect to dashboard with service request modal open
+        window.location.href = 'dashboard.html?openRequest=' + selectedService.id;
+      } else {
+        // Redirect to login/register page
+        window.location.href = 'login.html#register';
+      }
     }
 
     // Ensure the modal closes if the user clicks outside the modal box

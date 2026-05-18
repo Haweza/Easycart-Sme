@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Tags Cheat Sheet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+            background: #f9f9f9;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        code {
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+
+        .category {
+            margin-top: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>HTML Tags Cheat Sheet</h1>
+    <p>Common and important HTML tags with their purpose. Starting with <code>&lt;div&gt;</code> as requested.</p>
+
+    <h2 class="category">Layout & Container Tags</h2>
+    <table>
+        <tr>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>&lt;div&gt;</code></td>
+            <td>Generic block-level container. Used for grouping content and layout (no semantic meaning).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;span&gt;</code></td>
+            <td>Generic inline container. Used for styling small pieces of text.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;section&gt;</code></td>
+            <td>Semantic section of content (thematic grouping).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;article&gt;</code></td>
+            <td>Independent, self-contained content (e.g., blog post, news article).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;header&gt;</code></td>
+            <td>Header for a page, section, or article.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;footer&gt;</code></td>
+            <td>Footer for a page, section, or article.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;nav&gt;</code></td>
+            <td>Navigation links.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;main&gt;</code></td>
+            <td>Main content of the document.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;aside&gt;</code></td>
+            <td>Sidebar or content related to the main content.</td>
+        </tr>
+    </table>
+
+    <h2 class="category">Text & Content Tags</h2>
+    <table>
+        <tr>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>&lt;h1&gt; to &lt;h6&gt;</code></td>
+            <td>Headings (h1 is most important, h6 is least).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;p&gt;</code></td>
+            <td>Paragraph of text.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;a&gt;</code></td>
+            <td>Hyperlink (anchor). Use <code>href</code> attribute.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;strong&gt;</code></td>
+            <td>Strong importance (usually bold).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;em&gt;</code></td>
+            <td>Emphasis (usually italic).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;br&gt;</code></td>
+            <td>Line break.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;hr&gt;</code></td>
+            <td>Horizontal rule (thematic break).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;blockquote&gt;</code></td>
+            <td>Block quotation.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;pre&gt;</code></td>
+            <td>Preformatted text (preserves whitespace).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;code&gt;</code></td>
+            <td>Inline code snippet.</td>
+        </tr>
+    </table>
+
+    <h2 class="category">Lists</h2>
+    <table>
+        <tr>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>&lt;ul&gt;</code></td>
+            <td>Unordered (bulleted) list.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;ol&gt;</code></td>
+            <td>Ordered (numbered) list.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;li&gt;</code></td>
+            <td>List item (used inside ul/ol).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;dl&gt;</code></td>
+            <td>Description list.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;dt&gt;</code></td>
+            <td>Term in a description list.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;dd&gt;</code></td>
+            <td>Description/value in a description list.</td>
+        </tr>
+    </table>
+
+    <h2 class="category">Tables</h2>
+    <table>
+        <tr>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>&lt;table&gt;</code></td>
+            <td>Defines a table.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;tr&gt;</code></td>
+            <td>Table row.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;th&gt;</code></td>
+            <td>Table header cell.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;td&gt;</code></td>
+            <td>Table data cell.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;thead&gt;</code></td>
+            <td>Table header group.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;tbody&gt;</code></td>
+            <td>Table body group.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;tfoot&gt;</code></td>
+            <td>Table footer group.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;caption&gt;</code></td>
+            <td>Table caption.</td>
+        </tr>
+    </table>
+
+    <h2 class="category">Forms & Inputs</h2>
+    <table>
+        <tr>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>&lt;form&gt;</code></td>
+            <td>Form container.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;input&gt;</code></td>
+            <td>Input field (text, email, password, checkbox, radio, etc.).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;label&gt;</code></td>
+            <td>Label for a form control.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;button&gt;</code></td>
+            <td>Clickable button.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;textarea&gt;</code></td>
+            <td>Multi-line text input.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;select&gt;</code></td>
+            <td>Dropdown list.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;option&gt;</code></td>
+            <td>Option inside a select.</td>
+        </tr>
+    </table>
+
+    <h2 class="category">Media & Embedded Content</h2>
+    <table>
+        <tr>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>&lt;img&gt;</code></td>
+            <td>Image. Requires <code>src</code> and <code>alt</code>.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;video&gt;</code></td>
+            <td>Video player.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;audio&gt;</code></td>
+            <td>Audio player.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;source&gt;</code></td>
+            <td>Media source (used inside video/audio).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;iframe&gt;</code></td>
+            <td>Embed another document (YouTube, maps, etc.).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;svg&gt;</code></td>
+            <td>Scalable Vector Graphics container.</td>
+        </tr>
+    </table>
+
+    <h2 class="category">Document Structure</h2>
+    <table>
+        <tr>
+            <th>Tag</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td><code>&lt;!DOCTYPE html&gt;</code></td>
+            <td>Declares HTML5 document.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;html&gt;</code></td>
+            <td>Root element of the HTML document.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;head&gt;</code></td>
+            <td>Metadata container (title, links, scripts).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;body&gt;</code></td>
+            <td>Visible content of the document.</td>
+        </tr>
+        <tr>
+            <td><code>&lt;title&gt;</code></td>
+            <td>Page title (in head).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;meta&gt;</code></td>
+            <td>Metadata (charset, viewport, etc.).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;link&gt;</code></td>
+            <td>Link to external resources (CSS, icons).</td>
+        </tr>
+        <tr>
+            <td><code>&lt;script&gt;</code></td>
+            <td>Embed or link JavaScript.</td>
+        </tr>
+    </table>
+
+    <hr>
+    <p><strong>Tip:</strong> Always use semantic tags (section, article, header, etc.) when they fit instead of generic
+        <code>&lt;div&gt;</code> for better accessibility and SEO.</p>
+</body>
+
+</html>
