@@ -48,6 +48,13 @@ public class ServiceRequestController {
         return ResponseEntity.ok(serviceRequestService.getAllPendingRequests());
     }
 
+    /** GET /api/service-requests — Admin views all requests (pending, approved, rejected) */
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<ServiceRequestResponse>> getAllRequests() {
+        return ResponseEntity.ok(serviceRequestService.getAllRequests());
+    }
+
     /** PUT /api/service-requests/{id}/review — Admin approves/rejects */
     @PutMapping("/{id}/review")
     @PreAuthorize("hasRole('ADMIN')")
@@ -57,6 +64,6 @@ public class ServiceRequestController {
             Principal principal) {
         UUID adminId = UUID.fromString(principal.getName());
         return ResponseEntity.ok(serviceRequestService.reviewRequest(
-                id, dto.isApproved(), dto.getAdminNote(), adminId));
+                id, dto, adminId));
     }
 }

@@ -28,6 +28,9 @@ public class ActivityLog {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String description; // e.g. "Removed John Banda from Spotify Family"
 
+    @Column(name = "family_id")
+    private UUID familyId;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;

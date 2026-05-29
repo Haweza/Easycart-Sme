@@ -47,7 +47,8 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-      <div class="sidebar-mobile-profile" style="display: none; padding: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;">
+      <div class="sidebar-mobile-profile"
+        style="display: none; padding: 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem;">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <span id="mobile-nav-admin-name" style="font-weight: 700; font-size: 1rem;"></span>
@@ -138,15 +139,18 @@
 
         <!-- Recent Activities Notice Feed -->
         <div class="card mt-6">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
             <h3 style="margin:0; font-size:1.15rem; display:flex; align-items:center; gap:8px; font-weight:700;">
               🔔 Notice & Activity Feed
             </h3>
-            <button class="btn btn-outline btn-sm" onclick="loadActivities()" style="padding: 4px 8px; font-size: 0.75rem; border-radius:var(--radius-sm);">
+            <button class="btn btn-outline btn-sm" onclick="loadActivities()"
+              style="padding: 4px 8px; font-size: 0.75rem; border-radius:var(--radius-sm);">
               🔄 Refresh Feed
             </button>
           </div>
-          <div id="activities-feed" style="display:flex; flex-direction:column; gap:12px; max-height: 400px; overflow-y: auto; padding-right:4px;">
+          <div id="activities-feed"
+            style="display:flex; flex-direction:column; gap:12px; max-height: 400px; overflow-y: auto; padding-right:4px;">
             <div class="empty-state" style="padding: 20px;">
               <div class="spinner"></div>
             </div>
@@ -277,9 +281,29 @@
           </div>
         </div>
 
-        <div id="subscriptions-list" style="display:flex;flex-direction:column;gap:14px;">
-          <div class="empty-state">
-            <div class="spinner"></div>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:20px;">
+          <!-- Family Subscriptions -->
+          <div class="card" style="padding: 1.5rem;">
+            <h3 style="margin-bottom: 1.25rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+              👨‍👩‍👧‍👦 Family Subscriptions
+            </h3>
+            <div id="subscriptions-list" style="display:flex;flex-direction:column;gap:14px;">
+              <div class="empty-state">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Individual Subscriptions -->
+          <div class="card" style="padding: 1.5rem;">
+            <h3 style="margin-bottom: 1.25rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+              👤 Individual Subscriptions
+            </h3>
+            <div id="individual-subscriptions-list" style="display:flex;flex-direction:column;gap:14px;">
+              <div class="empty-state">
+                <div class="spinner"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -310,17 +334,21 @@
       <!-- ======= ADD MEMBER VIEW (NEW) ======= -->
       <div id="view-add-member" style="display:none" class="fade-in">
         <div class="page-header">
-          <button class="btn btn-outline btn-sm" onclick="showView('families')" style="margin-right:12px;">← Back</button>
+          <button class="btn btn-outline btn-sm" onclick="showView('families')" style="margin-right:12px;">←
+            Back</button>
           <div>
             <h2 class="page-title" id="add-member-family-title">Add Member to Family</h2>
-            <p class="page-subtitle" id="add-member-family-subtitle">Select an approved customer to join this family.</p>
+            <p class="page-subtitle" id="add-member-family-subtitle">Select an approved customer to join this family.
+            </p>
           </div>
         </div>
 
         <div class="card mb-6" style="padding:0; overflow:hidden;">
-          <div style="padding: 1.25rem; border-bottom: 1px solid var(--border); display:flex; gap:12px; align-items:center; background:var(--surface-hover);">
+          <div
+            style="padding: 1.25rem; border-bottom: 1px solid var(--border); display:flex; gap:12px; align-items:center; background:var(--surface-hover);">
             <i class="fas fa-search text-muted"></i>
-            <input type="text" id="family-user-search" class="form-control" placeholder="Search by name or email..." style="margin:0; border:none; background:transparent; width:100%; font-size:1rem;">
+            <input type="text" id="family-user-search" class="form-control" placeholder="Search by name or email..."
+              style="margin:0; border:none; background:transparent; width:100%; font-size:1rem;">
           </div>
           <div id="family-user-selection-list" style="max-height: 600px; overflow-y: auto;">
             <!-- JS populated -->
@@ -344,25 +372,31 @@
             <form id="promo-form" onsubmit="publishPromo(event)">
               <div class="form-group">
                 <label class="form-label">Service Name *</label>
-                <input type="text" id="promo-service-name" class="form-control" placeholder="e.g. Spotify Premium, Netflix Ultra" required />
+                <input type="text" id="promo-service-name" class="form-control"
+                  placeholder="e.g. Spotify Premium, Netflix Ultra" required />
               </div>
               <div class="form-group">
                 <label class="form-label">Price / Deal Text *</label>
-                <input type="text" id="promo-price" class="form-control" placeholder="e.g. ZMW 40 / Month, Only ZMW 50!" required />
+                <input type="text" id="promo-price" class="form-control" placeholder="e.g. ZMW 40 / Month, Only ZMW 50!"
+                  required />
               </div>
               <div class="form-group">
                 <label class="form-label">Short Description *</label>
-                <textarea id="promo-description" class="form-control" rows="3" placeholder="Describe this promo/deal..." required></textarea>
+                <textarea id="promo-description" class="form-control" rows="3" placeholder="Describe this promo/deal..."
+                  required></textarea>
               </div>
               <div class="form-group">
                 <label class="form-label">Promo Image / Icon *</label>
                 <div style="display:flex; gap:16px; align-items:center; margin-top:8px;">
-                  <div id="promo-image-preview-container" style="width:70px; height:70px; border-radius:var(--radius); border:2px dashed var(--border); display:flex; align-items:center; justify-content:center; background:var(--bg-subtle); overflow:hidden;">
+                  <div id="promo-image-preview-container"
+                    style="width:70px; height:70px; border-radius:var(--radius); border:2px dashed var(--border); display:flex; align-items:center; justify-content:center; background:var(--bg-subtle); overflow:hidden;">
                     <span style="font-size:1.5rem; color:var(--text-muted);">🖼️</span>
                   </div>
                   <div style="flex:1;">
-                    <input type="file" id="promo-image" class="form-control" accept="image/*" onchange="previewPromoImage(this)" required />
-                    <small class="text-muted" style="display:block; margin-top:4px;">Supports PNG, JPG, or SVG. Maximum 2MB.</small>
+                    <input type="file" id="promo-image" class="form-control" accept="image/*"
+                      onchange="previewPromoImage(this)" required />
+                    <small class="text-muted" style="display:block; margin-top:4px;">Supports PNG, JPG, or SVG. Maximum
+                      2MB.</small>
                   </div>
                 </div>
               </div>
@@ -375,7 +409,8 @@
           <!-- Column 2: Currently Active Promo -->
           <div class="card" style="grid-column: span 5; display:flex; flex-direction:column;">
             <h3 style="margin-bottom: 1.25rem; font-weight:700;">📢 Active Promotion</h3>
-            <div id="active-promo-status-container" style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+            <div id="active-promo-status-container"
+              style="flex:1; display:flex; flex-direction:column; justify-content:center;">
               <!-- JS populated -->
             </div>
           </div>
@@ -486,6 +521,18 @@
         <button class="modal-close" onclick="closeModal('review-modal')">✕</button>
       </div>
       <div id="review-content" class="mb-6"></div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+        <div class="form-group">
+          <label class="form-label">Start Date (optional)</label>
+          <input type="date" id="review-start-date" class="form-control" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Expiry Date (optional)</label>
+          <input type="date" id="review-expires-date" class="form-control" />
+        </div>
+      </div>
+
       <div class="form-group">
         <label class="form-label">Admin Note (optional)</label>
         <textarea id="review-note" class="form-control" rows="3"
@@ -510,7 +557,8 @@
           <div class="spinner"></div>
         </div>
       </div>
-      <div class="modal-footer" style="padding: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end;">
+      <div class="modal-footer"
+        style="padding: 1rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end;">
         <button class="btn btn-primary" id="btn-add-member-trigger">+ Add Member</button>
       </div>
     </div>
@@ -522,8 +570,22 @@
       <div class="modal-header"
         style="position:sticky;top:0;background:var(--surface);z-index:1;padding-bottom:1rem;border-bottom:1px solid var(--border);margin-bottom:1.25rem;">
         <div>
-          <div class="modal-title" id="user-details-name">User Intelligence</div>
-          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;" id="user-details-email"></div>
+          <div class="modal-title" id="user-details-name">
+            User Intelligence
+          </div>
+
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:2px;" id="user-details-email">
+          </div>
+
+          <div style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;display:flex;align-items:center;gap:6px;"
+            id="user-details-phone-wrap">
+
+            <span>📞</span>
+
+            <span id="user-details-phone">
+              No phone number
+            </span>
+          </div>
         </div>
         <button class="modal-close" onclick="closeModal('user-details-modal')">✕</button>
       </div>
@@ -549,6 +611,14 @@
         <div style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;" id="engagement-label"></div>
       </div>
 
+      <!-- Active Subscriptions with Start/Expiry dates -->
+      <div style="margin-bottom:1.25rem;">
+        <div
+          style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:8px;">
+          Active Subscriptions (Start & Expiry)</div>
+        <div id="user-active-subscriptions" style="display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+
       <!-- Request history -->
       <div style="margin-bottom:1rem;">
         <div
@@ -572,7 +642,7 @@
   <script src="js/config.js"></script>
 
   <script src="js/api.js"></script>
-  <script src="js/admin.js"></script>
+  <script type="module" src="js/admin/admin.js"></script>
   <script>
     // Theme Toggle logic
     const themeToggles = document.querySelectorAll('.theme-toggle');

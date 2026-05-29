@@ -59,6 +59,12 @@ public class ServiceRequest {
     @Column(name = "reviewed_at")
     private Instant reviewedAt;
 
+    @Column(name = "start_date")
+    private Instant startDate;
+
+    @Column(name = "expires_at")
+    private Instant expiresAt;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;

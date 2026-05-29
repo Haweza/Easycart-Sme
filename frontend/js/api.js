@@ -71,6 +71,7 @@ const ServiceRequests = {
   create: (payload) => apiFetch('/service-requests', { method: 'POST', body: payload }),
   getMy: () => apiFetch('/service-requests/my'),
   getPending: () => apiFetch('/service-requests/pending'),
+  getAll: () => apiFetch('/service-requests'),
   review: (id, payload) => apiFetch(`/service-requests/${id}/review`, { method: 'PUT', body: payload }),
 };
 
@@ -94,6 +95,7 @@ const Admin = {
   addFamilyMember: (familyId, userId) => apiFetch(`/admin/families/${familyId}/members`, { method: 'POST', body: { userId } }),
   removeFamilyMember: (familyId, userId) => apiFetch(`/families/${familyId}/members/${userId}`, { method: 'DELETE' }),
   getActivities: () => apiFetch('/admin/activities'),
+  getSubscriptions: () => apiFetch('/admin/subscriptions'),
 };
 
 // ---- Organizer --------------------------------------------
@@ -101,6 +103,7 @@ const Organizer = {
   getMyFamilies: () => apiFetch('/families'),
   getMembers: (familyId) => apiFetch(`/families/${familyId}/members`),
   removeFamilyMember: (familyId, userId) => apiFetch(`/families/${familyId}/members/${userId}`, { method: 'DELETE' }),
+  getActivities: () => apiFetch('/families/activities'),
 };
 
 // ---- Toast ------------------------------------------------

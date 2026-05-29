@@ -1,0 +1,12 @@
+Individual subscription cycle implementation. AI flows
+
+1: Service request change
+Addition:  @Column(name = "start_date")
+    private Instant startDate;
+
+    @Column(name = "expires_at")
+    private Instant expiresAt;
+ 
+A service request should only represent a user asking for access to a service, not the actual active subscription itself. Once the admin approves the request, the system should create a separate subscription or membership record that contains the real access lifecycle details such as start date, expiration date, status, and optional family assignment. This separation keeps the system clean because requests remain historical approval records, while subscriptions handle active access, renewals, expiration tracking, notifications, and future billing logic independently.
+
+2

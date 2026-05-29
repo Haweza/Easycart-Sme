@@ -22,6 +22,9 @@ public class ServiceRequestResponse {
     private String adminNote;
     private UUID reviewedBy;
     private Instant reviewedAt;
+    private Instant startDate;
+    private Instant expiresAt;
+    private String userEmail;
     private Instant createdAt;
 
     public static ServiceRequestResponse from(ServiceRequest r) {
@@ -29,6 +32,7 @@ public class ServiceRequestResponse {
                 .id(r.getId())
                 .userId(r.getUser().getId())
                 .userName(r.getUser().getFullName())
+                .userEmail(r.getUser().getEmail())
                 .serviceId(r.getService().getId())
                 .serviceName(r.getService().getName())
                 .planId(r.getPlan() != null ? r.getPlan().getId() : null)
@@ -38,6 +42,8 @@ public class ServiceRequestResponse {
                 .adminNote(r.getAdminNote())
                 .reviewedBy(r.getReviewedBy() != null ? r.getReviewedBy().getId() : null)
                 .reviewedAt(r.getReviewedAt())
+                .startDate(r.getStartDate())
+                .expiresAt(r.getExpiresAt())
                 .createdAt(r.getCreatedAt())
                 .build();
     }

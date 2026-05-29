@@ -29,6 +29,7 @@ public class FamilyController {
     private final FamilyMemberRepository familyMemberRepository;
     private final ProfileRepository profileRepository;
     private final ActivityLogRepository activityLogRepository;
+    private final com.easycart.sme.repository.SubscriptionRepository subscriptionRepository;
 
     /**
      * GET /api/families
@@ -46,7 +47,16 @@ public class FamilyController {
         if (profile.getRole().name().equals("ADMIN")) {
             families = familyRepository.findAll();
         } else {
-            families = familyRepository.findByOrganizerId(userId);
+            List<Family> organizerFamilies = familyRepository.findByOrganizerId(userId);
+            List<com.easycart.sme.entity.Subscription> organizerSubs = subscriptionRepository.findByUserId(userId);
+            java.util.Set<UUID> organizerServiceIds = organizerSubs.stream()
+                    .filter(s -> s.getStatus() == com.easycart.sme.entity.Subscription.SubscriptionStatus.ACTIVE)
+                    .map(s -> s.getService().getId())
+                    .collect(java.util.stream.Collectors.toSet());
+            
+            families = organizerFamilies.stream()
+                    .filter(f -> f.getService() != null && organizerServiceIds.contains(f.getService().getId()))
+                    .toList();
         }
         return ResponseEntity.ok(families.stream().map(FamilyResponse::from).toList());
     }
@@ -129,8 +139,29 @@ public class FamilyController {
                 .actorName(actorProfile.getFullName())
                 .action("REMOVE_MEMBER")
                 .description(String.format("Removed %s from family %s", member.getUser().getFullName(), family.getName()))
+                .familyId(familyId)
                 .build());
 
         return ResponseEntity.ok().build();
+    }
+
+    /**
+     * GET /api/families/activities
+     * Returns activities for families assigned to this organizer.
+     */
+    @GetMapping("/activities")
+    @PreAuthorize("hasRole('ORGANIZER')")
+    public ResponseEntity<List<ActivityLog>> getOrganizerActivities(Principal principal) {
+        UUID organizerId = UUID.fromString(principal.getName());
+        List<Family> families = familyRepository.findByOrganizerId(organizerId);
+        List<UUID> familyIds = families.stream().map(Family::getId).toList();
+        
+        if (familyIds.isEmpty()) {
+            return ResponseEntity.ok(List.of());
+        }
+        
+        // Find logs where familyId is in organizer's families
+        List<ActivityLog> logs = activityLogRepository.findByFamilyIdInOrderByCreatedAtDesc(familyIds);
+        return ResponseEntity.ok(logs);
     }
 }

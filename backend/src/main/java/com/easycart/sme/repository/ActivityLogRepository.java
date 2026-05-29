@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface ActivityLogRepository extends JpaRepository<ActivityLog, UUID> {
     List<ActivityLog> findAllByOrderByCreatedAtDesc();
+    List<ActivityLog> findByFamilyIdInOrderByCreatedAtDesc(List<UUID> familyIds);
 }

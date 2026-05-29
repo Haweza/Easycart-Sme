@@ -1,6 +1,7 @@
 package com.easycart.sme.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import java.time.Instant;
 import java.util.UUID;
@@ -11,6 +12,10 @@ public class CreateFamilyDto {
     private String name;
     private String description;
     private UUID organizerId;
+
+    @NotNull(message = "serviceId is required")
+    private UUID serviceId;
+
     private UUID planId;
     private Integer maxMembers;
     private Instant startDate;

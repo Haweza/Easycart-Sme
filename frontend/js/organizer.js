@@ -17,6 +17,7 @@ let memberCache = {};
   await loadMyFamilies();
   renderOverview();
   populateFamilySelect();
+  loadOrganizerActivities();
 })();
 
 // ---- View switching ---------------------------------------
@@ -189,3 +190,62 @@ document.addEventListener('DOMContentLoaded', () => {
     burger.addEventListener('click', () => sidebar.classList.toggle('open'));
   }
 });
+
+async function loadOrganizerActivities() {
+  const container = document.getElementById('organizer-activities-feed');
+  if (!container) return;
+
+  container.innerHTML = `<div class="empty-state" style="padding: 20px;"><div class="spinner"></div></div>`;
+
+  try {
+    const activities = await Organizer.getActivities();
+    if (!activities || !activities.length) {
+      container.innerHTML = `<div style="text-align:center; padding:30px; color:var(--text-muted); font-size:0.9rem;">No recent activities logged.</div>`;
+      return;
+    }
+
+    container.innerHTML = activities.map(act => {
+      let icon = 'ℹ️';
+      let badgeClass = 'badge-pending';
+      if (act.action === 'REMOVE_MEMBER') {
+        icon = '🗑️';
+        badgeClass = 'badge-declined';
+      } else if (act.action === 'ADD_MEMBER') {
+        icon = '👤';
+        badgeClass = 'badge-accepted';
+      }
+
+      const timeAgoStr = formatTimeAgo(new Date(act.createdAt));
+
+      return `
+        <div style="display:flex; gap:12px; padding:12px 16px; background:var(--surface-hover); border-radius:var(--radius); border-left:4px solid ${act.action === 'REMOVE_MEMBER' ? 'var(--danger)' : 'var(--accent)'}; transition:var(--transition); align-items:flex-start; text-align: left;">
+          <span style="font-size:1.25rem; margin-top:2px;">${icon}</span>
+          <div style="flex:1;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;">
+              <span style="font-weight:600; font-size:0.95rem;">${act.actorName}</span>
+              <span style="font-size:0.75rem; color:var(--text-muted); white-space:nowrap;">${timeAgoStr}</span>
+            </div>
+            <p style="font-size:0.875rem; color:var(--text-muted); margin:4px 0 6px 0;">${act.description}</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span class="badge ${badgeClass}" style="font-size:0.65rem; text-transform:uppercase; letter-spacing:0.04em;">${act.action}</span>
+              <span style="font-size:0.75rem; color:var(--text-muted); font-family:monospace;">${fmtDate(act.createdAt)}</span>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join('');
+  } catch (e) {
+    container.innerHTML = `<div style="color:var(--danger); padding:10px;">Failed to load activities: ${e.message}</div>`;
+  }
+}
+
+function formatTimeAgo(date) {
+  const seconds = Math.floor((new Date() - date) / 1000);
+  if (seconds < 60) return 'Just now';
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m ago`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h ago`;
+  const days = Math.floor(hours / 24);
+  return `${days}d ago`;
+}

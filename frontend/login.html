@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,173 +15,181 @@
       justify-content: center;
       min-height: 100vh;
       background: radial-gradient(circle at top left, rgba(var(--primary-rgb), 0.05), transparent),
-                  radial-gradient(circle at bottom right, rgba(var(--accent-rgb), 0.05), transparent);
+        radial-gradient(circle at bottom right, rgba(var(--accent-rgb), 0.05), transparent);
     }
   </style>
 </head>
+
 <body>
 
-<div class="card" style="width: 100%; max-width: 440px; padding: 2.5rem;">
-  <!-- Logo -->
-  <div style="text-align: center; margin-bottom: 2rem;">
-    <a href="index.html" class="navbar-brand" style="justify-content: center;">
-      <div class="logo-icon"><i class="fas fa-shopping-cart"></i></div>
-      <span class="brand-name">Easy<span>Cart</span></span>
-    </a>
-    <p id="auth-tagline" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">Sign in to your account</p>
-  </div>
-
-  <!-- Tabs (Styled as segmented control) -->
-  <div style="display: flex; background: var(--bg-subtle); padding: 4px; border-radius: var(--radius); margin-bottom: 2rem;">
-    <button class="btn btn-sm w-full" id="tab-login" style="background: var(--surface); box-shadow: var(--shadow-sm); color: var(--text);" onclick="switchTab('login')">Sign In</button>
-    <button class="btn btn-sm w-full" id="tab-register" style="background: transparent; color: var(--text-muted);" onclick="switchTab('register')">Register</button>
-  </div>
-
-  <!-- Alert -->
-  <div id="auth-alert" class="alert" style="display:none; margin-bottom: 1.5rem;"></div>
-
-  <!-- LOGIN FORM -->
-  <form id="login-form">
-    <div class="form-group">
-      <label class="form-label">Email Address</label>
-      <input type="email" id="login-email" class="form-control" placeholder="you@email.com" required />
+  <div class="card" style="width: 100%; max-width: 440px; padding: 2.5rem;">
+    <!-- Logo -->
+    <div style="text-align: center; margin-bottom: 2rem;">
+      <a href="index.html" class="navbar-brand" style="justify-content: center;">
+        <div class="logo-icon"><i class="fas fa-shopping-cart"></i></div>
+        <span class="brand-name">Easy<span>Cart</span></span>
+      </a>
+      <p id="auth-tagline" style="color: var(--text-muted); font-size: 0.9rem; margin-top: 8px;">Sign in to your account
+      </p>
     </div>
-    <div class="form-group">
-      <label class="form-label">Password</label>
-      <div class="password-wrapper">
-        <input type="password" id="login-password" class="form-control" placeholder="••••••••" required />
-        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('login-password')" title="Show/hide password">
-          <i class="fas fa-eye"></i>
-        </button>
+
+    <!-- Tabs (Styled as segmented control) -->
+    <div
+      style="display: flex; background: var(--bg-subtle); padding: 4px; border-radius: var(--radius); margin-bottom: 2rem;">
+      <button class="btn btn-sm w-full" id="tab-login"
+        style="background: var(--surface); box-shadow: var(--shadow-sm); color: var(--text);"
+        onclick="switchTab('login')">Sign In</button>
+      <button class="btn btn-sm w-full" id="tab-register" style="background: transparent; color: var(--text-muted);"
+        onclick="switchTab('register')">Register</button>
+    </div>
+
+    <!-- Alert -->
+    <div id="auth-alert" class="alert" style="display:none; margin-bottom: 1.5rem;"></div>
+
+    <!-- LOGIN FORM -->
+    <form id="login-form">
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="login-email" class="form-control" placeholder="you@email.com" required />
       </div>
-    </div>
-    <button type="submit" class="btn btn-primary w-full btn-lg mt-4" id="login-btn">Sign In</button>
-  </form>
-
-  <!-- REGISTER FORM -->
-  <form id="register-form" style="display:none">
-    <div class="form-group">
-      <label class="form-label">Full Name</label>
-      <input type="text" id="reg-name" class="form-control" placeholder="John Banda" required />
-    </div>
-    <div class="form-group">
-      <label class="form-label">Email Address</label>
-      <input type="email" id="reg-email" class="form-control" placeholder="you@email.com" required />
-    </div>
-    <div class="form-group">
-      <label class="form-label">Password</label>
-      <div class="password-wrapper">
-        <input type="password" id="reg-password" class="form-control" placeholder="Min 8 characters" required />
-        <button type="button" class="password-toggle" onclick="togglePasswordVisibility('reg-password')" title="Show/hide password">
-          <i class="fas fa-eye"></i>
-        </button>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="login-password" class="form-control" placeholder="••••••••" required />
+          <button type="button" class="password-toggle" onclick="togglePasswordVisibility('login-password')"
+            title="Show/hide password">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
       </div>
+      <button type="submit" class="btn btn-primary w-full btn-lg mt-4" id="login-btn">Sign In</button>
+    </form>
+
+    <!-- REGISTER FORM -->
+    <form id="register-form" style="display:none">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input type="text" id="reg-name" class="form-control" placeholder="John Banda" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email Address</label>
+        <input type="email" id="reg-email" class="form-control" placeholder="you@email.com" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Phone</label>
+        <input type="tel" id="reg-phone" class="form-control" placeholder="+260 977 123 456" required inputmode="tel"
+          autocomplete="tel" pattern="^\+?[0-9\s]{9,15}$" title="Enter a valid phone number" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <div class="password-wrapper">
+          <input type="password" id="reg-password" class="form-control" placeholder="Min 8 characters" required />
+          <button type="button" class="password-toggle" onclick="togglePasswordVisibility('reg-password')"
+            title="Show/hide password">
+            <i class="fas fa-eye"></i>
+          </button>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary w-full btn-lg mt-4" id="register-btn">Create Account</button>
+    </form>
+
+    <div style="text-align: center; margin-top: 2rem;">
+      <a href="index.html" style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">← Back to
+        Homepage</a>
     </div>
-    <button type="submit" class="btn btn-primary w-full btn-lg mt-4" id="register-btn">Create Account</button>
-  </form>
-
-  <div style="text-align: center; margin-top: 2rem;">
-    <a href="index.html" style="color: var(--text-muted); font-size: 0.85rem; font-weight: 500;">← Back to Homepage</a>
   </div>
-</div>
 
-<script src="js/config.js"></script>
-<script src="js/api.js"></script>
-<script>
-// Toggle password visibility
-function togglePasswordVisibility(inputId) {
-  const input = document.getElementById(inputId);
-  const toggle = event.target.closest('.password-toggle');
-  const icon = toggle.querySelector('i');
-  
-  if (input.type === 'password') {
-    input.type = 'text';
-    icon.classList.remove('fa-eye');
-    icon.classList.add('fa-eye-slash');
-  } else {
-    input.type = 'password';
-    icon.classList.remove('fa-eye-slash');
-    icon.classList.add('fa-eye');
-  }
-}
+  <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Toggle password visibility
+    function togglePasswordVisibility(inputId) {
+      const input = document.getElementById(inputId);
+      const toggle = event.target.closest('.password-toggle');
+      const icon = toggle.querySelector('i');
 
-// Logic remains same, just updating UI hooks
-if (isLoggedIn()) redirectByRole();
-
-function switchTab(tab) {
-  const isLogin = tab === 'login';
-  document.getElementById('login-form').style.display    = isLogin ? 'block' : 'none';
-  document.getElementById('register-form').style.display = isLogin ? 'none'  : 'block';
-  
-  const tL = document.getElementById('tab-login');
-  const tR = document.getElementById('tab-register');
-  
-  if(isLogin) {
-    tL.style.background = 'var(--surface)'; tL.style.boxShadow = 'var(--shadow-sm)'; tL.style.color = 'var(--text)';
-    tR.style.background = 'transparent'; tR.style.boxShadow = 'none'; tR.style.color = 'var(--text-muted)';
-  } else {
-    tR.style.background = 'var(--surface)'; tR.style.boxShadow = 'var(--shadow-sm)'; tR.style.color = 'var(--text)';
-    tL.style.background = 'transparent'; tL.style.boxShadow = 'none'; tL.style.color = 'var(--text-muted)';
-  }
-  document.getElementById('auth-tagline').textContent = isLogin ? 'Sign in to your account' : 'Create your free account';
-}
-
-if (window.location.hash === '#register') switchTab('register');
-
-// Handle forms... (same logic as before)
-document.getElementById('login-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const email = document.getElementById('login-email').value.trim();
-  const password = document.getElementById('login-password').value;
-  const btn = document.getElementById('login-btn');
-  btn.disabled = true; btn.textContent = 'Signing in...';
-  try {
-    const res = await Auth.login({ email, password });
-    setAuth(res.token, res.user);
-    
-    // Check if a service was selected on the homepage
-    const selectedService = localStorage.getItem('ec_selected_service');
-    if (selectedService) {
-      const service = JSON.parse(selectedService);
-      window.location.replace(`dashboard.html?openRequest=${service.id}`);
-    } else {
-      window.location.replace('dashboard.html');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
     }
-  } catch (err) {
-    const alert = document.getElementById('auth-alert');
-    alert.textContent = err.message || 'Login failed. Check your credentials.'; 
-    alert.className = 'alert alert-danger'; alert.style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Sign In';
-  }
-});
 
-document.getElementById('register-form').addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const name = document.getElementById('reg-name').value.trim();
-  const email = document.getElementById('reg-email').value.trim();
-  const password = document.getElementById('reg-password').value;
-  const btn = document.getElementById('register-btn');
-  btn.disabled = true; btn.textContent = 'Creating account...';
-  try {
-    const res = await Auth.register({ fullName: name, email, password });
-    setAuth(res.token, res.user);
-    
-    // Check if a service was selected on the homepage
-    const selectedService = localStorage.getItem('ec_selected_service');
-    if (selectedService) {
-      const service = JSON.parse(selectedService);
-      window.location.replace(`dashboard.html?openRequest=${service.id}`);
-    } else {
-      window.location.replace('dashboard.html');
+    // Logic remains same, just updating UI hooks
+    if (isLoggedIn()) redirectByRole();
+
+    function switchTab(tab) {
+      const isLogin = tab === 'login';
+      document.getElementById('login-form').style.display = isLogin ? 'block' : 'none';
+      document.getElementById('register-form').style.display = isLogin ? 'none' : 'block';
+
+      const tL = document.getElementById('tab-login');
+      const tR = document.getElementById('tab-register');
+
+      if (isLogin) {
+        tL.style.background = 'var(--surface)'; tL.style.boxShadow = 'var(--shadow-sm)'; tL.style.color = 'var(--text)';
+        tR.style.background = 'transparent'; tR.style.boxShadow = 'none'; tR.style.color = 'var(--text-muted)';
+      } else {
+        tR.style.background = 'var(--surface)'; tR.style.boxShadow = 'var(--shadow-sm)'; tR.style.color = 'var(--text)';
+        tL.style.background = 'transparent'; tL.style.boxShadow = 'none'; tL.style.color = 'var(--text-muted)';
+      }
+      document.getElementById('auth-tagline').textContent = isLogin ? 'Sign in to your account' : 'Create your free account';
     }
-  } catch (err) {
-    const alert = document.getElementById('auth-alert');
-    alert.textContent = err.message || 'Registration failed.'; 
-    alert.className = 'alert alert-danger'; alert.style.display = 'block';
-    btn.disabled = false; btn.textContent = 'Create Account';
-  }
-});
-</script>
+
+    if (window.location.hash === '#register') switchTab('register');
+
+    // Handle forms... (same logic as before)
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value.trim();
+      const password = document.getElementById('login-password').value;
+      const btn = document.getElementById('login-btn');
+      btn.disabled = true; btn.textContent = 'Signing in...';
+      try {
+        const res = await Auth.login({ email, password });
+        setAuth(res.token, res.user);
+
+        // Check if a service was selected on the homepage
+        const selectedService = localStorage.getItem('ec_selected_service');
+        if (selectedService) {
+          const service = JSON.parse(selectedService);
+          window.location.replace(`dashboard.html?openRequest=${service.id}`);
+        } else {
+          window.location.replace('dashboard.html');
+        }
+      } catch (err) {
+        const alert = document.getElementById('auth-alert');
+        alert.textContent = err.message || 'Login failed. Check your credentials.';
+        alert.className = 'alert alert-danger'; alert.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Sign In';
+      }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('reg-name').value.trim();
+      const email = document.getElementById('reg-email').value.trim();
+      const phone = document.getElementById("reg-phone").value.trim();
+      const password = document.getElementById('reg-password').value;
+      const btn = document.getElementById('register-btn');
+      btn.disabled = true; btn.textContent = 'Creating account...';
+      try {
+        const res = await Auth.register({ fullName: name, email, password, phone });
+        setAuth(res.token, res.user);
+
+      } catch (err) {
+        const alert = document.getElementById('auth-alert');
+        alert.textContent = err.message || 'Registration failed.';
+        alert.className = 'alert alert-danger'; alert.style.display = 'block';
+        btn.disabled = false; btn.textContent = 'Create Account';
+      }
+    });
+  </script>
 
 </body>
+
 </html>

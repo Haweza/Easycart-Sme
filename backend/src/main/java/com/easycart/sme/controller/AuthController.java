@@ -90,7 +90,9 @@ public class AuthController {
     public static class RegisterRequest {
         @NotBlank private String fullName;
         @Email @NotBlank private String email;
-        private String phone;
+        @NotBlank(message = "Phone number is required")
+@Size(min = 9, max = 15, message = "Invalid phone number length")
+private String phone;
         @Size(min = 8) @NotBlank private String password;
     }
 

@@ -30,11 +30,54 @@ public class AdminController {
     private final com.easycart.sme.repository.FamilyMemberRepository familyMemberRepository;
     private final com.easycart.sme.repository.PlanRepository planRepository;
     private final ActivityLogRepository activityLogRepository;
+    private final com.easycart.sme.repository.ServiceRequestRepository serviceRequestRepository;
+    private final com.easycart.sme.repository.SubscriptionRepository subscriptionRepository;
+    private final com.easycart.sme.repository.ServiceRepository serviceRepository;
 
     /** GET /api/admin/activities — list all activity logs for the notice feed */
     @GetMapping("/activities")
     public ResponseEntity<List<ActivityLog>> getActivityLogs() {
-        return ResponseEntity.ok(activityLogRepository.findAllByOrderByCreatedAtDesc());
+        List<ActivityLog> logs = new java.util.ArrayList<>(activityLogRepository.findAllByOrderByCreatedAtDesc());
+        
+        // Find subscriptions expiring in 7 days
+        java.time.Instant now = java.time.Instant.now();
+        java.time.Instant next7Days = now.plus(java.time.Duration.ofDays(7));
+        
+        List<com.easycart.sme.entity.Subscription> expiringSubs = subscriptionRepository.findAll().stream()
+                .filter(s -> s.getStatus() == com.easycart.sme.entity.Subscription.SubscriptionStatus.ACTIVE 
+                        && s.getExpiresAt() != null 
+                        && s.getExpiresAt().isAfter(now) 
+                        && s.getExpiresAt().isBefore(next7Days))
+                .toList();
+                
+        for (com.easycart.sme.entity.Subscription s : expiringSubs) {
+            long daysLeft = java.time.Duration.between(now, s.getExpiresAt()).toDays() + 1;
+            logs.add(ActivityLog.builder()
+                    .id(UUID.randomUUID()) // transient id
+                    .actorId(s.getUser().getId())
+                    .actorName("SYSTEM")
+                    .action("EXPIRING_SOON")
+                    .description(String.format("Individual subscription for %s (%s - %s) is expiring in %d days!", 
+                            s.getUser().getFullName(), 
+                            s.getService().getName(), 
+                            s.getPlan() != null ? s.getPlan().getName() : "plan",
+                            daysLeft))
+                    .createdAt(s.getExpiresAt().minus(java.time.Duration.ofDays(7))) // show it starting from 7 days before
+                    .build());
+        }
+        
+        // Sort all by createdAt desc
+        logs.sort((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()));
+        
+        return ResponseEntity.ok(logs);
+    }
+
+    /** GET /api/admin/subscriptions — list all active individual subscriptions */
+    @GetMapping("/subscriptions")
+    public ResponseEntity<List<com.easycart.sme.dto.SubscriptionResponse>> getAllSubscriptions() {
+        return ResponseEntity.ok(subscriptionRepository.findAll().stream()
+                .map(com.easycart.sme.dto.SubscriptionResponse::from)
+                .toList());
     }
 
     // --- Users ---
@@ -77,6 +120,14 @@ public class AdminController {
         if (familyRepository.existsByName(dto.getName())) {
             throw new ConflictException("A family with this name already exists");
         }
+        
+        com.easycart.sme.entity.Service service = serviceRepository.findById(dto.getServiceId())
+                .orElseThrow(() -> new NotFoundException("Service not found"));
+
+        if (service.getIsFamilyType() == null || !service.getIsFamilyType()) {
+            throw new com.easycart.sme.exception.BadRequestException("Family creation is only allowed for family-supported services");
+        }
+
         Profile organizer = null;
         if (dto.getOrganizerId() != null) {
             organizer = profileRepository.findById(dto.getOrganizerId())
@@ -86,15 +137,21 @@ public class AdminController {
                 throw new ForbiddenException("Assigned user is not an ORGANIZER");
             }
         }
+        
         com.easycart.sme.entity.Plan plan = null;
         if (dto.getPlanId() != null) {
             plan = planRepository.findById(dto.getPlanId())
                     .orElseThrow(() -> new NotFoundException("Plan not found"));
+            if (!plan.getService().getId().equals(service.getId())) {
+                throw new com.easycart.sme.exception.BadRequestException("The selected plan does not belong to the chosen service");
+            }
         }
+        
         Family family = Family.builder()
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .organizer(organizer)
+                .service(service)
                 .plan(plan)
                 .maxMembers(dto.getMaxMembers() != null ? dto.getMaxMembers() : 10)
                 .startDate(dto.getStartDate())
@@ -131,7 +188,8 @@ public class AdminController {
     @PostMapping("/families/{id}/members")
     public ResponseEntity<Void> addMember(
             @PathVariable UUID id,
-            @RequestBody java.util.Map<String, UUID> payload) {
+            @RequestBody java.util.Map<String, UUID> payload,
+            java.security.Principal principal) {
         UUID userId = payload.get("userId");
         if (userId == null) {
             throw new com.easycart.sme.exception.BadRequestException("userId is required");
@@ -148,6 +206,13 @@ public class AdminController {
         }
         if (!user.getIsApproved()) {
             throw new com.easycart.sme.exception.BadRequestException("User is not approved");
+        }
+
+        // Prevent adding a user to a family whose service does not match the user's requested/approved service.
+        boolean hasServiceAccess = serviceRequestRepository.existsByUserIdAndServiceIdAndStatus(
+                userId, family.getService().getId(), com.easycart.sme.entity.ServiceRequest.RequestStatus.APPROVED);
+        if (!hasServiceAccess) {
+            throw new com.easycart.sme.exception.BadRequestException("User has not been approved for this family's service");
         }
 
         if (familyMemberRepository.existsByUserIdAndFamilyIdAndStatus(
@@ -170,6 +235,19 @@ public class AdminController {
                 .status(com.easycart.sme.entity.FamilyMember.MembershipStatus.ACTIVE)
                 .build();
         familyMemberRepository.save(member);
+
+        // Audit log adding member
+        UUID actorId = UUID.fromString(principal.getName());
+        var actorProfile = profileRepository.findById(actorId)
+                .orElseThrow(() -> new NotFoundException("Admin profile not found"));
+
+        activityLogRepository.save(ActivityLog.builder()
+                .actorId(actorId)
+                .actorName(actorProfile.getFullName())
+                .action("ADD_MEMBER")
+                .description(String.format("Added %s to family %s", user.getFullName(), family.getName()))
+                .familyId(id)
+                .build());
 
         return ResponseEntity.ok().build();
     }

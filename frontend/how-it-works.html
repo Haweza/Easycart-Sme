@@ -8,6 +8,386 @@
   <title>How It Works — EasyCart SME</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .hiw-hero {
+      position: relative;
+      background: url('https://placehold.co/1920x1080/0F172A/ffffff?text=[HERO+BACKGROUND+PLACEHOLDER]') center/cover no-repeat;
+      min-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .hiw-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.6) 100%);
+      z-index: 1;
+    }
+
+    .hiw-hero-content {
+      position: relative;
+      z-index: 2;
+      padding: 2rem;
+      width: 100%;
+    }
+
+    .hiw-hero-title {
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      color: #fff;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+    }
+
+    .hiw-hero-desc {
+      font-size: clamp(1.1rem, 3vw, 1.35rem);
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 800px;
+      margin: 0 auto 3rem;
+    }
+
+    .hiw-buttons {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 3rem;
+    }
+
+    .btn-hero-primary {
+      background: var(--accent);
+      color: #000;
+      padding: 1.25rem 2.5rem;
+      border-radius: 99px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px -5px rgba(244, 196, 48, 0.4);
+    }
+
+    .btn-hero-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 35px -5px rgba(244, 196, 48, 0.5);
+    }
+
+    .btn-hero-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      color: #fff;
+      padding: 1.25rem 2.5rem;
+      border-radius: 99px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .btn-hero-secondary:hover {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-3px);
+    }
+
+    .about-btn {
+      background: none;
+      border: none;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: underline;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+
+    .about-btn:hover {
+      color: #fff;
+    }
+
+    .marketing-section {
+      padding: 6rem 0;
+      background: var(--bg);
+    }
+
+    .marketing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .marketing-card {
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      transition: all 0.4s ease;
+      position: relative;
+      background: var(--surface);
+    }
+
+    .marketing-card:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .marketing-card img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .marketing-card:hover img {
+      transform: scale(1.05);
+    }
+
+    .instructions-section {
+      padding: 8rem 0;
+      scroll-margin-top: 80px;
+    }
+
+    .instructions-alt {
+      background: var(--bg-subtle);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+
+    .section-header h2 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+
+    [data-theme="dark"] .section-header h2 {
+      color: var(--text);
+    }
+
+    .section-header p {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .steps-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .step-card {
+      display: flex;
+      gap: 1.5rem;
+      background: var(--surface);
+      padding: 2.5rem;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s ease;
+      align-items: flex-start;
+    }
+
+    .step-card:hover {
+      transform: translateX(10px);
+      border-color: var(--accent);
+      box-shadow: var(--shadow);
+    }
+
+    .step-number {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      font-weight: 800;
+      flex-shrink: 0;
+      border: 2px solid var(--border);
+      transition: all 0.3s ease;
+    }
+
+    [data-theme="dark"] .step-number {
+      color: var(--text);
+    }
+
+    .step-card:hover .step-number {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+    }
+
+    .step-content h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .step-content p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .whatsapp-cta {
+      padding: 7rem 0;
+      background: linear-gradient(135deg, var(--primary), #1e293b);
+      color: #fff;
+      text-align: center;
+    }
+
+    .whatsapp-icon {
+      font-size: 5rem;
+      color: #25D366;
+      margin-bottom: 2rem;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+      animation: gentleFloat 3s ease-in-out infinite;
+    }
+
+    .whatsapp-cta h2 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 1.5rem;
+      color: #fff;
+    }
+
+    .whatsapp-cta p {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      margin-bottom: 3rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #25D366;
+      color: #fff;
+      padding: 1.25rem 3rem;
+      border-radius: 99px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 25px -5px rgba(37, 211, 102, 0.4);
+    }
+
+    .btn-whatsapp:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 15px 35px -5px rgba(37, 211, 102, 0.5);
+      color: #fff;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      width: 90%;
+      max-width: 500px;
+      border-radius: var(--radius-lg);
+      padding: 3rem 2rem;
+      position: relative;
+      transform: translateY(20px) scale(0.95);
+      transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+      overflow: visible;
+    }
+
+    .modal-overlay.active .modal-card {
+      transform: translateY(0) scale(1);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      font-size: 1.25rem;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(8px);
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 9999;
+      padding: 0;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      user-select: none;
+      -webkit-user-select: none;
+      flex-shrink: 0;
+    }
+
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      color: #fff;
+      transform: scale(1.08) rotate(90deg);
+    }
+
+    .modal-close:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .modal-close * {
+      pointer-events: none;
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      margin-bottom: 0.75rem;
+      color: var(--primary);
+      padding-right: 2.5rem;
+    }
+
+    [data-theme="dark"] .modal-title {
+      color: var(--text);
+    }
+
+    .modal-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      padding-right: 1.5rem;
+    }
+  </style>
 </head>
 
 <body>
@@ -41,19 +421,158 @@
   </nav>
 
   <!-- MAIN CONTENT -->
-  <main class="main-content" style="padding: 4rem 0;">
-    <div class="container">
-      <!-- Page Header -->
-      <div class="page-header" style="margin-bottom: 4rem; text-align: center;">
-        <h1 class="page-title" style="font-size: 2.5rem; margin-bottom: 1rem;">How It Works</h1>
-        <p class="section-desc" style="max-width: 600px; margin: 0 auto; font-size: 1.1rem;">
-          Discover how EasyCart makes sharing subscriptions simple, affordable, and secure.
-        </p>
-      </div>
+  <main>
+    <!-- 1. Hero Section -->
+    <section class="hiw-hero">
+      <div class="hiw-hero-content container">
+        <h1 class="hiw-hero-title">[HOW IT WORKS TITLE PLACEHOLDER]</h1>
+        <p class="hiw-hero-desc">[SHORT DESCRIPTION PLACEHOLDER]</p>
 
-      <!-- Content will be added here -->
-      <div style="text-align: center; padding: 4rem 2rem; opacity: 0.7;">
-        <p style="font-size: 1.1rem; color: var(--text-muted);">Content coming soon...</p>
+        <div class="hiw-buttons">
+          <a href="#family-subscription" class="btn-hero-primary">Family Based Subscription</a>
+          <a href="#non-family-subscription" class="btn-hero-secondary">None Family Based Subscription</a>
+        </div>
+
+        <button id="open-about-modal" class="about-btn">Who are Easycart?</button>
+      </div>
+    </section>
+
+    <!-- 2. Marketing Placeholder Image Section -->
+    <section class="marketing-section">
+      <div class="container">
+        <div class="marketing-grid">
+          <div class="marketing-card">
+            <img src="https://placehold.co/800x600/e2e8f0/475569?text=[MARKETING+IMAGE+PLACEHOLDER+1]"
+              alt="Marketing 1">
+          </div>
+          <div class="marketing-card">
+            <img src="https://placehold.co/800x600/e2e8f0/475569?text=[MARKETING+IMAGE+PLACEHOLDER+2]"
+              alt="Marketing 2">
+          </div>
+          <div class="marketing-card">
+            <img src="https://placehold.co/800x600/e2e8f0/475569?text=[MARKETING+IMAGE+PLACEHOLDER+3]"
+              alt="Marketing 3">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Family Subscription Section -->
+    <section id="family-subscription" class="instructions-section">
+      <div class="container">
+        <div class="section-header">
+          <h2>[FAMILY SUBSCRIPTION TITLE PLACEHOLDER]</h2>
+          <p>[FAMILY DESCRIPTION PLACEHOLDER]</p>
+        </div>
+
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>[STEP 1 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 1 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>[STEP 2 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 2 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>[STEP 3 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 3 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>[STEP 4 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 4 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h3>[STEP 5 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 5 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Non Family Subscription Section -->
+    <section id="non-family-subscription" class="instructions-section instructions-alt">
+      <div class="container">
+        <div class="section-header">
+          <h2>[NON FAMILY SUBSCRIPTION TITLE PLACEHOLDER]</h2>
+          <p>[NON FAMILY DESCRIPTION PLACEHOLDER]</p>
+        </div>
+
+        <div class="steps-container">
+          <div class="step-card">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>[STEP 1 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 1 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>[STEP 2 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 2 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>[STEP 3 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 3 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>[STEP 4 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 4 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+          <div class="step-card">
+            <div class="step-number">5</div>
+            <div class="step-content">
+              <h3>[STEP 5 TITLE PLACEHOLDER]</h3>
+              <p>[STEP 5 DESCRIPTION PLACEHOLDER]</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. WhatsApp Customer Care CTA Section -->
+    <section class="whatsapp-cta">
+      <div class="container">
+        <i class="fab fa-whatsapp whatsapp-icon"></i>
+        <h2>[CUSTOMER SUPPORT TITLE PLACEHOLDER]</h2>
+        <p>[CUSTOMER SUPPORT DESCRIPTION PLACEHOLDER]</p>
+        <a href="[WHATSAPP_LINK_PLACEHOLDER]" target="_blank" class="btn-whatsapp">
+          <i class="fab fa-whatsapp" style="margin-right: 0.75rem; font-size: 1.5rem;"></i> Contact Customer Care
+        </a>
+      </div>
+    </section>
+
+    <!-- About Modal Overlay -->
+    <div id="about-modal" class="modal-overlay">
+      <button id="close-about-modal" class="modal-close"
+        onclick="document.getElementById('about-modal').classList.remove('active')"><i
+          class="fas fa-times"></i></button>
+      <div class="modal-card">
+        <h3 class="modal-title">[ABOUT TITLE PLACEHOLDER]</h3>
+        <p class="modal-desc">[ABOUT PARAGRAPH PLACEHOLDER]</p>
       </div>
     </div>
   </main>
@@ -101,6 +620,7 @@
   </footer>
 
   <script src="js/config.js"></script>
+  <script src="js/api.js"></script>
   <script>
     // Theme toggle functionality
     const themeToggle = document.getElementById('theme-toggle');
@@ -142,11 +662,39 @@
     });
 
     // Check if user is logged in and update auth buttons
-    if (isLoggedIn()) {
+    if (typeof isLoggedIn === 'function' && isLoggedIn()) {
       document.getElementById('auth-buttons').innerHTML = `
         <a href="#" onclick="redirectByRole(); return false;" class="btn btn-primary">My Dashboard</a>
       `;
     }
+
+    // Modal Logic for "How It Works"
+    document.addEventListener('DOMContentLoaded', function () {
+      const aboutBtn = document.getElementById('open-about-modal');
+      const aboutModal = document.getElementById('about-modal');
+      const closeBtn = document.getElementById('close-about-modal');
+
+      if (aboutBtn) {
+        aboutBtn.addEventListener('click', function () {
+          aboutModal.classList.add('active');
+        });
+      }
+
+      if (closeBtn) {
+        closeBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          aboutModal.classList.remove('active');
+        });
+      }
+
+      if (aboutModal) {
+        aboutModal.addEventListener('click', function (e) {
+          if (e.target === aboutModal) {
+            aboutModal.classList.remove('active');
+          }
+        });
+      }
+    });
   </script>
 </body>
 

@@ -29,6 +29,10 @@ public class Service {
     @Column(name = "billing_cycle")
     private String billingCycle;
 
+    @Column(name = "is_family_type", nullable = false)
+    @Builder.Default
+    private Boolean isFamilyType = false;
+
     @Column(name = "is_active", nullable = false)
     @Builder.Default
     private Boolean isActive = true;
