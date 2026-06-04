@@ -1,0 +1,15 @@
+<!-- Promo Users Management View -->
+<div id="promo-users-view" class="view" style="display:none;">
+  <div class="view-header">
+    <h1>Promo Users Management</h1>
+    <div class="view-actions">
+      <button class="btn btn-secondary" onclick="filterPromoUsers('PENDING')">Pending Review</button>
+      <button class="btn btn-secondary" onclick="filterPromoUsers('APPROVED')">Approved</button>
+      <button class="btn btn-secondary" onclick="filterPromoUsers('ALL')">All</button>
+    </div>
+  </div>
+  
+  <div id="promo-users-list" class="table-container">
+    <!-- Rendered by renderPromoUsers() -->
+  </div>
+</div>

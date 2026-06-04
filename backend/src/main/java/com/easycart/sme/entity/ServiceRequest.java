@@ -41,7 +41,6 @@ public class ServiceRequest {
 
 
     @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     @Builder.Default
     private RequestStatus status = RequestStatus.PENDING;

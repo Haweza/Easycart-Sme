@@ -72,12 +72,55 @@ public class AdminController {
         return ResponseEntity.ok(logs);
     }
 
+    /** DELETE /api/admin/activities/{id} — delete an activity log entry */
+    @DeleteMapping("/activities/{id}")
+    public ResponseEntity<Void> deleteActivityLog(@PathVariable UUID id) {
+        if (activityLogRepository.existsById(id)) {
+            activityLogRepository.deleteById(id);
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+    /** DELETE /api/admin/activities — delete all activity logs */
+    @DeleteMapping("/activities")
+    public ResponseEntity<Void> deleteAllActivityLogs() {
+        activityLogRepository.deleteAll();
+        return ResponseEntity.noContent().build();
+    }
+
     /** GET /api/admin/subscriptions — list all active individual subscriptions */
     @GetMapping("/subscriptions")
     public ResponseEntity<List<com.easycart.sme.dto.SubscriptionResponse>> getAllSubscriptions() {
         return ResponseEntity.ok(subscriptionRepository.findAll().stream()
                 .map(com.easycart.sme.dto.SubscriptionResponse::from)
                 .toList());
+    }
+
+    /** DELETE /api/admin/subscriptions/{id} — delete a subscription */
+    @DeleteMapping("/subscriptions/{id}")
+    public ResponseEntity<Void> deleteSubscription(
+            @PathVariable UUID id,
+            java.security.Principal principal) {
+        com.easycart.sme.entity.Subscription subscription = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Subscription not found"));
+
+        UUID adminId = UUID.fromString(principal.getName());
+        Profile admin = profileRepository.findById(adminId)
+                .orElseThrow(() -> new NotFoundException("Admin not found"));
+
+        // Log the deletion
+        activityLogRepository.save(ActivityLog.builder()
+                .actorId(adminId)
+                .actorName(admin.getFullName())
+                .action("SUBSCRIPTION_DELETED")
+                .description(String.format("Deleted subscription for %s - Service: %s, Plan: %s",
+                        subscription.getUser().getFullName(),
+                        subscription.getService().getName(),
+                        subscription.getPlan() != null ? subscription.getPlan().getName() : "N/A"))
+                .build());
+
+        subscriptionRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     // --- Users ---

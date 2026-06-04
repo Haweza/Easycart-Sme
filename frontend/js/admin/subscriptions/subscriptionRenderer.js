@@ -205,6 +205,11 @@ export function renderSubscriptions() {
                   </span>
                 </div>
               </div>
+              <div class="subscription-actions">
+                <button class="btn btn-sm btn-danger" onclick="deleteSubscriptionAction('${r.id}')" title="Delete subscription">
+                  🗑 Delete
+                </button>
+              </div>
             </div>
           `;
     }).join('')}

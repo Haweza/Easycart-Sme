@@ -31,6 +31,10 @@ public class ActivityLog {
     @Column(name = "family_id")
     private UUID familyId;
 
+    /** Generic reference to the subject entity (promo user id, subscription id, request id, etc.) */
+    @Column(name = "reference_id")
+    private UUID referenceId;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;

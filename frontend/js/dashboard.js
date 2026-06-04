@@ -4,6 +4,7 @@
 
 let myRequests = [];
 let myInvites = [];
+let mySubscriptions = [];
 let allServices = [];
 
 // ---- Boot -------------------------------------------------
@@ -31,7 +32,7 @@ let allServices = [];
   // Mobile Sidebar Header
   const mobileName = document.getElementById('mobile-nav-user-name');
   if (mobileName) mobileName.textContent = user.fullName || 'User';
-  
+
   const mobileRole = document.getElementById('mobile-nav-user-role');
   if (mobileRole) {
     mobileRole.textContent = user.role || 'CUSTOMER';
@@ -66,12 +67,14 @@ let allServices = [];
 
 async function loadMyData() {
   try {
-    const [reqs, invs] = await Promise.all([
+    const [reqs, invs, subs] = await Promise.all([
       ServiceRequests.getMy(),
-      Invites.getMy()
+      Invites.getMy(),
+      Subscriptions.getMy()
     ]);
     myRequests = reqs;
     myInvites = invs;
+    mySubscriptions = subs.data || subs || [];
   } catch (e) { console.error(e); }
 }
 
@@ -83,15 +86,79 @@ async function loadServices() {
 
 // ---- View Switching ---------------------------------------
 function showView(name, link) {
-  ['overview', 'services', 'requests', 'invites'].forEach(v => {
-    document.getElementById(`view-${v}`).style.display = v === name ? 'block' : 'none';
+  ['overview', 'services', 'subscriptions', 'requests', 'invites'].forEach(v => {
+    const el = document.getElementById(`view-${v}`);
+    if (el) el.style.display = v === name ? 'block' : 'none';
   });
   document.querySelectorAll('.sidebar-link').forEach(a => a.classList.remove('active'));
-  if (link) link.classList.add('active');
+  if (link) {
+    link.classList.add('active');
+  } else {
+    const m = document.querySelector(`[data-view="${name}"]`);
+    if (m) m.classList.add('active');
+  }
 
   if (name === 'services') renderServices();
+  if (name === 'subscriptions') renderMySubscriptions();
   if (name === 'requests') renderRequests();
   if (name === 'invites') renderInvites();
+}
+
+// ---- Subscriptions ----------------------------------------
+function renderMySubscriptions() {
+  const container = document.getElementById('subscription-content');
+  if (!container) return;
+
+  if (!mySubscriptions || mySubscriptions.length === 0) {
+    container.innerHTML = `
+      <div class="empty-state" style="grid-column: 1/-1;">
+        <div class="empty-state-icon">📋</div>
+        <h3 class="empty-state-text">No Active Subscriptions</h3>
+        <p class="empty-state-hint" style="margin-bottom: 20px;">You currently have no active subscriptions. Browse available services to get started.</p>
+        <button class="btn btn-primary" onclick="showView('services')">View Services</button>
+      </div>
+    `;
+    return;
+  }
+
+  const html = mySubscriptions.map(sub => `
+    <div class="subscription-card active" style="margin: 0; display: flex; flex-direction: column; width: 100%;">
+      <div class="subscription-card-header" style="width: 100%;">
+        <h3 class="subscription-card-title">${escapeHtml(sub.serviceName)}</h3>
+        <span class="status-badge status-${(sub.status || 'ACTIVE').toLowerCase()}">${sub.status || 'ACTIVE'}</span>
+      </div>
+      
+      <div class="subscription-card-body" style="width: 100%;">
+        <div class="subscription-detail">
+          <span class="subscription-detail-label">Subscription Type</span>
+          <span class="subscription-detail-value">${escapeHtml(sub.planName || 'N/A')}</span>
+        </div>
+        
+        <div class="subscription-detail">
+          <span class="subscription-detail-label">Start Date</span>
+          <span class="subscription-detail-value">${fmtDate(sub.startDate)}</span>
+        </div>
+        
+        <div class="subscription-detail">
+          <span class="subscription-detail-label">Expiry Date</span>
+          <span class="subscription-detail-value">${fmtDate(sub.expiresAt)}</span>
+        </div>
+        
+        <div class="subscription-detail">
+          <span class="subscription-detail-label">Family Group</span>
+          <span class="subscription-detail-value">${escapeHtml(sub.familyName || 'Direct Access')}</span>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  container.innerHTML = html;
+}
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' };
+  return text.replace(/[&<>"']/g, m => map[m]);
 }
 
 // ---- Overview ---------------------------------------------
@@ -235,7 +302,7 @@ function openRequestModal(serviceId) {
 function renderRequests() {
   const tbody = document.getElementById('requests-table-body');
   if (!myRequests.length) {
-    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:40px;">You haven\'t made any requests yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:40px;">You haven\'t made any requests yet.</td></tr>';
     return;
   }
   tbody.innerHTML = myRequests.map(r => `
@@ -244,6 +311,7 @@ function renderRequests() {
       <td>${r.planName || '—'}</td>
       <td>${statusBadge(r.status)}</td>
       <td class="text-sm text-muted">${fmtDate(r.createdAt)}</td>
+      <td class="text-sm" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${escapeHtml(r.adminNote || '')}">${escapeHtml(r.adminNote || '—')}</td>
     </tr>
   `).join('');
 }
@@ -300,7 +368,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const burger = document.getElementById('burger-btn');
   const sidebar = document.getElementById('sidebar');
   const overlay = document.getElementById('sidebar-overlay');
-  
+
   if (burger && sidebar) {
     burger.addEventListener('click', () => {
       sidebar.classList.toggle('open');

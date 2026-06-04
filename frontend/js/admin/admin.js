@@ -4,8 +4,8 @@
  */
 
 import { adminState } from './state/adminState.js';
-import { loadUsers, loadFamilies, loadRequests, loadInvites, loadServices, loadSubscriptions } from './loaders/dataLoaders.js';
-import { loadActivities } from './overview/activityFeed.js';
+import { loadUsers, loadFamilies, loadRequests, loadInvites, loadServices, loadSubscriptions, loadActivities, loadPromoUsers, loadPendingPromoUsers, loadMySubscriptions } from './loaders/dataLoaders.js';
+import { navigateToPromoUser, navigateToServiceRequest, deleteActivityAction, clearAllActivitiesAction } from './overview/activityFeed.js';
 import { initEventBindings } from './events/eventBindings.js';
 
 // Import all actions and view switchers to expose on window
@@ -22,6 +22,11 @@ import { openCreateFamilyModal, updatePlansDropdown } from './families/familyMod
 import { setSubFilter } from './subscriptions/subscriptionRenderer.js';
 import { openCreateInviteModal, updateInvitePlanInfo } from './invites/inviteModal.js';
 import { previewPromoImage, publishPromo, bringDownPromo } from './promos/promoManager.js';
+
+// NEW: Import promo and subscription actions
+import { openPromoReviewModal, closePromoModal, approvePromoUser, rejectPromoUser, filterPromoUsers, deleteSubscriptionAction } from './promos/promoActions.js';
+import { renderPromoUsers } from './promos/promoRenderer.js';
+import { renderMySubscriptions } from './subscriptions/mySubscriptionRenderer.js';
 
 // ---- Handle Logout -----------------------------------------
 function handleLogout() {
@@ -57,6 +62,25 @@ window.publishPromo = publishPromo;
 window.bringDownPromo = bringDownPromo;
 window.loadActivities = loadActivities;
 
+// NEW: Expose promo and subscription functions to window
+window.openPromoReviewModal = openPromoReviewModal;
+window.closePromoModal = closePromoModal;
+window.approvePromoUser = approvePromoUser;
+window.rejectPromoUser = rejectPromoUser;
+window.filterPromoUsers = filterPromoUsers;
+window.renderPromoUsers = renderPromoUsers;
+window.renderMySubscriptions = renderMySubscriptions;
+window.loadPromoUsers = loadPromoUsers;
+window.loadPendingPromoUsers = loadPendingPromoUsers;
+window.loadMySubscriptions = loadMySubscriptions;
+window.deleteSubscriptionAction = deleteSubscriptionAction;
+
+// Activity feed deep-link helpers
+window.navigateToPromoUser = navigateToPromoUser;
+window.navigateToServiceRequest = navigateToServiceRequest;
+window.deleteActivityAction = deleteActivityAction;
+window.clearAllActivitiesAction = clearAllActivitiesAction;
+
 // ---- Boot / Initialization ---------------------------------
 async function init() {
   if (!requireRole('ADMIN')) return;
@@ -79,7 +103,10 @@ async function init() {
       loadInvites(),
       loadServices(),
       loadActivities(),
-      loadSubscriptions()
+      loadSubscriptions(),
+      loadPromoUsers(),        // NEW
+      loadPendingPromoUsers(), // NEW
+      loadMySubscriptions()    // NEW
     ]);
   } catch (err) {
     console.error('Error during data initialization:', err);

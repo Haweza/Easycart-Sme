@@ -16,6 +16,15 @@ export const adminState = {
   allActivities: [],
   allSubscriptions: [],
 
+  // NEW: Promo users system
+  allPromoUsers: [],
+  pendingPromoUsers: [],
+  promoFilterApprovalStatus: 'PENDING',
+  currentPromoReviewId: null,
+
+  // NEW: Customer subscription view
+  customerSubscriptions: [],
+
   // User filter state
   userFilterRole: 'ALL',
   userFilterStatus: 'ALL',

@@ -59,16 +59,19 @@
           style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 0 1.25rem 1rem;">
           Menu</div>
         <a href="#" class="sidebar-link active" data-view="overview" onclick="showView('overview',this)">
-          🏠 Overview
+          Overview
         </a>
         <a href="#" class="sidebar-link" data-view="services" onclick="showView('services',this)">
-          💼 Browse Services
+          Browse Services
+        </a>
+        <a href="#" class="sidebar-link" data-view="subscriptions" onclick="showView('subscriptions',this)">
+          My Subscriptions
         </a>
         <a href="#" class="sidebar-link" data-view="requests" onclick="showView('requests',this)">
-          📋 My Requests
+          My Requests
         </a>
         <a href="#" class="sidebar-link" data-view="invites" onclick="showView('invites',this)">
-          📬 My Invites
+          My Invites
           <span class="badge badge-pending" id="invite-badge" style="display:none;margin-left:auto"></span>
         </a>
         <a href="index.html" class="sidebar-link">
@@ -137,6 +140,17 @@
         </div>
       </div>
 
+      <!-- ======= SUBSCRIPTIONS VIEW ======= -->
+      <div id="view-subscriptions" class="fade-in" style="display:none">
+        <div class="page-header">
+          <h2 class="page-title">My Subscriptions</h2>
+        </div>
+        <div id="subscription-content"
+          style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+          <!-- JS populated -->
+        </div>
+      </div>
+
       <!-- ======= REQUESTS VIEW ======= -->
       <div id="view-requests" class="fade-in" style="display:none">
         <div class="page-header">
@@ -150,6 +164,7 @@
                 <th>Plan</th>
                 <th>Status</th>
                 <th>Submitted</th>
+                <th>Admin Note</th>
               </tr>
             </thead>
             <tbody id="requests-table-body"></tbody>

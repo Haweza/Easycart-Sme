@@ -45,7 +45,6 @@ public class Invite {
 
 
     @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     @Builder.Default
     private InviteStatus status = InviteStatus.PENDING;

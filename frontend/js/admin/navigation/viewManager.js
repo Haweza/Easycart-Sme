@@ -11,9 +11,11 @@ import { renderFamilies } from '../families/familyRenderer.js';
 import { renderSubscriptions } from '../subscriptions/subscriptionRenderer.js';
 import { renderInvites } from '../invites/inviteRenderer.js';
 import { loadAndRenderPromos } from '../promos/promoManager.js';
+import { renderPromoUsers } from '../promos/promoRenderer.js';
+import { renderMySubscriptions } from '../subscriptions/mySubscriptionRenderer.js';
 
 export function showView(name, link) {
-  ['overview', 'users', 'requests', 'families', 'subscriptions', 'invites', 'add-member', 'promos'].forEach(v => {
+  ['overview', 'users', 'requests', 'families', 'subscriptions', 'invites', 'add-member', 'promos', 'promo-users-view', 'my-subscription-view'].forEach(v => {
     const el = document.getElementById(`view-${v}`);
     if (el) el.style.display = v === name ? 'block' : 'none';
   });
@@ -36,7 +38,9 @@ export function showView(name, link) {
     families: renderFamilies,
     subscriptions: renderSubscriptions,
     invites: renderInvites,
-    promos: loadAndRenderPromos
+    promos: loadAndRenderPromos,
+    'promo-users-view': renderPromoUsers,
+    'my-subscription-view': renderMySubscriptions
   };
 
   if (renderers[name]) renderers[name]();

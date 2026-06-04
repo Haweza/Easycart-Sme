@@ -59,13 +59,13 @@
           style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; padding: 0 1.25rem 1rem;">
           Organizer Menu</div>
         <a href="#" class="sidebar-link active" data-view="overview" onclick="showView('overview',this)">
-          🏠 Overview
+          Overview
         </a>
         <a href="#" class="sidebar-link" data-view="families" onclick="showView('families',this)">
-          👨‍👩‍👧‍👦 My Families
+          My Families
         </a>
         <a href="#" class="sidebar-link" data-view="members" onclick="showView('members',this)">
-          👤 Members
+          Members
         </a>
         <a href="index.html" class="sidebar-link">
           ↩️ Back to Homepage
@@ -99,15 +99,18 @@
 
         <!-- Recent Activities / Notifications Notice Feed for Organizer -->
         <div class="card mt-6">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+          <div
+            style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.25rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
             <h3 style="margin:0; font-size:1.15rem; display:flex; align-items:center; gap:8px; font-weight:700;">
               🔔 Notice & Activity Feed
             </h3>
-            <button class="btn btn-outline btn-sm" onclick="loadOrganizerActivities()" style="padding: 4px 8px; font-size: 0.75rem; border-radius:var(--radius-sm);">
+            <button class="btn btn-outline btn-sm" onclick="loadOrganizerActivities()"
+              style="padding: 4px 8px; font-size: 0.75rem; border-radius:var(--radius-sm);">
               🔄 Refresh Feed
             </button>
           </div>
-          <div id="organizer-activities-feed" style="display:flex; flex-direction:column; gap:12px; max-height: 400px; overflow-y: auto; padding-right:4px;">
+          <div id="organizer-activities-feed"
+            style="display:flex; flex-direction:column; gap:12px; max-height: 400px; overflow-y: auto; padding-right:4px;">
             <div class="empty-state" style="padding: 20px;">
               <div class="spinner"></div>
             </div>

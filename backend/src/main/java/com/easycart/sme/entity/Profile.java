@@ -29,7 +29,6 @@ public class Profile {
 
 
     @Enumerated(EnumType.STRING)
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(nullable = false)
     @Builder.Default
     private UserRole role = UserRole.CUSTOMER;

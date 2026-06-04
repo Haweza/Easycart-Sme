@@ -96,6 +96,28 @@ const Admin = {
   removeFamilyMember: (familyId, userId) => apiFetch(`/families/${familyId}/members/${userId}`, { method: 'DELETE' }),
   getActivities: () => apiFetch('/admin/activities'),
   getSubscriptions: () => apiFetch('/admin/subscriptions'),
+  deleteSubscription: (subscriptionId) => apiFetch(`/admin/subscriptions/${subscriptionId}`, { method: 'DELETE' }),
+  deleteActivity: (id) => apiFetch(`/admin/activities/${id}`, { method: 'DELETE' }),
+  clearActivities: () => apiFetch('/admin/activities', { method: 'DELETE' }),
+};
+
+// ---- Promo Users (NEW) ------------------------------------
+const PromoUsers = {
+  create: (payload) => apiFetch('/promo-users', { method: 'POST', body: payload }),
+  getPending: () => apiFetch('/promo-users/pending'),
+  getAll: (params = {}) => {
+    const query = new URLSearchParams(params).toString();
+    return apiFetch(`/promo-users/admin/all?${query}`);
+  },
+  getMy: () => apiFetch('/promo-users/my'),
+  approve: (id) => apiFetch(`/promo-users/${id}/approve`, { method: 'PUT' }),
+  reject: (id, reason) => apiFetch(`/promo-users/${id}/reject`, { method: 'PUT', body: { reason } }),
+  getExpiringSoon: () => apiFetch('/promo-users/expiring-soon'),
+};
+
+// ---- Subscriptions (NEW) ----------------------------------
+const Subscriptions = {
+  getMy: () => apiFetch('/subscriptions/my'),
 };
 
 // ---- Organizer --------------------------------------------

@@ -338,6 +338,28 @@ button {
   transform: translateY(-1px);
 }
 
+.btn-success {
+  background: #059669;
+  color: #fff;
+}
+
+.btn-success:hover {
+  background: #047857;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.btn-danger {
+  background: #DC2626;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background: #B91C1C;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
 [data-theme="dark"] .btn-primary:not([href*="wa.me"]):not(#nav-login):not(#login-btn),
 [data-theme="dark"] .btn-outline:not([href*="wa.me"]):not(#nav-login):not(#login-btn) {
   background: var(--accent);
@@ -1776,6 +1798,7 @@ tr:hover td {
 .fade-in {
   animation: fadeInUp 0.3s ease forwards;
 }
+
 /* User Selection List */
 .user-select-item {
   display: flex;
@@ -1832,8 +1855,244 @@ tr:hover td {
     transform: scale(1);
     opacity: 0.6;
   }
+
   100% {
     transform: scale(3);
     opacity: 0;
+  }
+}
+
+/* ===== SUBSCRIPTION & PROMO CARDS ============================== */
+
+/* Subscription Card - Dashboard View */
+.subscription-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.subscription-card-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.subscription-card-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.subscription-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subscription-detail-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.subscription-detail-value {
+  font-size: 0.95rem;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.subscription-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* Badges for Status */
+.status-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-active {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.status-pending {
+  background: #FEF9C3;
+  color: #713F12;
+}
+
+.status-expired {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+.status-suspended {
+  background: #F3E8FF;
+  color: #5B21B6;
+}
+
+.approval-badge {
+  display: inline-block;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.approval-pending {
+  background: #FEF9C3;
+  color: #713F12;
+}
+
+.approval-approved {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.approval-rejected {
+  background: #FEE2E2;
+  color: #991B1B;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--text-muted);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.6;
+}
+
+.empty-state-text {
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state-hint {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.empty-state a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.empty-state a:hover {
+  text-decoration: underline;
+}
+
+/* Promo Management Table */
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.admin-table thead {
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+}
+
+.admin-table th {
+  padding: 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.admin-table tbody tr {
+  border-bottom: 1px solid var(--border);
+  transition: background 0.2s ease;
+}
+
+.admin-table tbody tr:hover {
+  background: var(--surface-hover);
+}
+
+.admin-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.admin-table td {
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
+
+.user-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.user-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.action-cell {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Responsive Tables */
+@media (max-width: 768px) {
+  .admin-table {
+    font-size: 0.85rem;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 0.75rem 0.5rem;
+  }
+
+  .subscription-card-body {
+    grid-template-columns: 1fr;
+  }
+
+  .subscription-actions {
+    width: 100%;
+  }
+
+  .empty-state {
+    padding: 2rem 1rem;
+  }
+
+  .empty-state-icon {
+    font-size: 2rem;
   }
 }

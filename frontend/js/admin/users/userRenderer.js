@@ -23,8 +23,8 @@ export function renderUsersTableData(users) {
       <td class="text-sm text-muted">${fmtDate(u.createdAt)}</td>
       <td>
         ${u.isApproved
-          ? `<span class="badge badge-accepted">Approved</span>`
-          : `<button class="btn btn-primary btn-sm" onclick="approveUser('${u.id}')">Approve</button>`}
+      ? `<span class="badge badge-accepted">Approved</span>`
+      : `<button class="btn btn-primary btn-sm" onclick="approveUser('${u.id}')">Approve</button>`}
       </td>
       <td>
         <div style="display:flex;gap:6px;">

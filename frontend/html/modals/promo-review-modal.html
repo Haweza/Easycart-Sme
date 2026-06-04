@@ -1,0 +1,58 @@
+<!-- Promo Review Approval Modal -->
+<div id="promo-review-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Review Promo User Access</h2>
+      <button class="modal-close" onclick="closePromoModal()">×</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="detail-section">
+        <h3>User Information</h3>
+        <div class="detail-row">
+          <label>User Name:</label>
+          <span id="promo-review-user-name">-</span>
+        </div>
+        <div class="detail-row">
+          <label>Email:</label>
+          <span id="promo-review-user-email">-</span>
+        </div>
+      </div>
+      
+      <div class="detail-section">
+        <h3>Access Details</h3>
+        <div class="detail-row">
+          <label>Service:</label>
+          <span id="promo-review-service">-</span>
+        </div>
+        <div class="detail-row">
+          <label>Plan:</label>
+          <span id="promo-review-plan">-</span>
+        </div>
+        <div class="detail-row">
+          <label>Start Date:</label>
+          <span id="promo-review-start-date">-</span>
+        </div>
+        <div class="detail-row">
+          <label>Expiry Date:</label>
+          <span id="promo-review-expiry-date">-</span>
+        </div>
+        <div class="detail-row">
+          <label>Notes:</label>
+          <span id="promo-review-notes">-</span>
+        </div>
+      </div>
+      
+      <div class="detail-section">
+        <h3>Rejection Reason (if applicable)</h3>
+        <textarea id="promo-rejection-reason" placeholder="Provide a reason for rejection..." class="form-input" rows="3"></textarea>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn btn-success" onclick="approvePromoUser()">✓ Approve</button>
+      <button class="btn btn-danger" onclick="rejectPromoUser()">✗ Reject</button>
+      <button class="btn btn-outline" onclick="closePromoModal()">Cancel</button>
+    </div>
+  </div>
+</div>

@@ -28,3 +28,41 @@ export async function loadServices() {
 export async function loadSubscriptions() {
   try { adminState.allSubscriptions = await Admin.getSubscriptions(); } catch (e) { adminState.allSubscriptions = []; }
 }
+
+export async function loadActivities() {
+  try { adminState.allActivities = await Admin.getActivities(); } catch (e) { adminState.allActivities = []; }
+}
+
+// NEW: Load promo users (for admin)
+export async function loadPromoUsers() {
+  try {
+    const response = await PromoUsers.getAll();
+    // Handle both page and non-page responses
+    adminState.allPromoUsers = response.content || response.data || response || [];
+  } catch (error) {
+    console.error('Error loading promo users:', error);
+    adminState.allPromoUsers = [];
+  }
+}
+
+// NEW: Load pending promo users (for review)
+export async function loadPendingPromoUsers() {
+  try {
+    const response = await PromoUsers.getPending();
+    adminState.pendingPromoUsers = response.data || response || [];
+  } catch (error) {
+    console.error('Error loading pending promo users:', error);
+    adminState.pendingPromoUsers = [];
+  }
+}
+
+// NEW: Load customer's own subscriptions
+export async function loadMySubscriptions() {
+  try {
+    const response = await Subscriptions.getMy();
+    adminState.customerSubscriptions = response.data || response || [];
+  } catch (error) {
+    console.error('Error loading my subscriptions:', error);
+    adminState.customerSubscriptions = [];
+  }
+}

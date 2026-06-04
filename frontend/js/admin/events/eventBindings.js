@@ -10,6 +10,10 @@ import { renderOverview } from '../overview/overviewRenderer.js';
 import { renderInvites } from '../invites/inviteRenderer.js';
 import { closeModal } from '../utils/modal.js';
 import { showAddMemberView } from '../families/addMemberView.js';
+import { renderPromoUsers } from '../promos/promoRenderer.js';
+import { renderMySubscriptions } from '../subscriptions/mySubscriptionRenderer.js';
+import { closePromoModal } from '../promos/promoActions.js';
+import { openUserDetails } from '../users/userDetails.js';
 
 export function initEventBindings() {
   document.addEventListener('DOMContentLoaded', () => {
@@ -100,5 +104,32 @@ export function initEventBindings() {
 
     // Add Member trigger
     document.getElementById('btn-add-member-trigger')?.addEventListener('click', showAddMemberView);
+
+    // NEW: Promo modal close listener
+    document.getElementById('promo-review-modal')?.addEventListener('click', function(e) {
+      if (e.target === this) {
+        closePromoModal();
+      }
+    });
+
+    // NEW: Subscription render on load
+    renderSubscriptions();
+
+    // NEW: Promo users render on load
+    renderPromoUsers();
+
+    // NEW: My subscriptions render on load
+    renderMySubscriptions();
+  });
+
+  // NEW: User name click handler for user details
+  document.addEventListener('click', function(e) {
+    if (e.target.classList.contains('user-link')) {
+      e.preventDefault();
+      const userId = e.target.dataset.userId;
+      if (userId) {
+        openUserDetails(userId);
+      }
+    }
   });
 }
