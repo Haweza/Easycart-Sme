@@ -1,6 +1,7 @@
 package com.easycart.sme.controller;
 
 import com.easycart.sme.dto.*;
+import com.easycart.sme.entity.Notification;
 import com.easycart.sme.entity.Profile;
 import com.easycart.sme.entity.ActivityLog;
 import com.easycart.sme.exception.ConflictException;
@@ -10,6 +11,7 @@ import com.easycart.sme.repository.ProfileRepository;
 import com.easycart.sme.repository.FamilyRepository;
 import com.easycart.sme.repository.ActivityLogRepository;
 import com.easycart.sme.entity.Family;
+import com.easycart.sme.service.NotificationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ public class AdminController {
     private final com.easycart.sme.repository.ServiceRequestRepository serviceRequestRepository;
     private final com.easycart.sme.repository.SubscriptionRepository subscriptionRepository;
     private final com.easycart.sme.repository.ServiceRepository serviceRepository;
+    private final NotificationService notificationService;
 
     /** GET /api/admin/activities — list all activity logs for the notice feed */
     @GetMapping("/activities")
@@ -152,17 +155,33 @@ public class AdminController {
         Profile user = profileRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("User not found"));
         user.setIsApproved(true);
-        return ResponseEntity.ok(ProfileResponse.from(profileRepository.save(user)));
+        Profile saved = profileRepository.save(user);
+
+        // Notify the user their account has been approved
+        notificationService.createNotification(
+                saved.getId(),
+                "Account Approved ✅",
+                "Your EasyCart SME account has been approved. You can now browse and request services.",
+                Notification.NotificationType.ACCOUNT_APPROVED
+        );
+
+        return ResponseEntity.ok(ProfileResponse.from(saved));
     }
 
     // --- Families ---
 
     /** POST /api/admin/families — create a new family */
     @PostMapping("/families")
-    public ResponseEntity<FamilyResponse> createFamily(@Valid @RequestBody CreateFamilyDto dto) {
+    public ResponseEntity<FamilyResponse> createFamily(
+            @Valid @RequestBody CreateFamilyDto dto,
+            java.security.Principal principal) {
         if (familyRepository.existsByName(dto.getName())) {
             throw new ConflictException("A family with this name already exists");
         }
+
+        UUID adminId = UUID.fromString(principal.getName());
+        Profile admin = profileRepository.findById(adminId)
+                .orElseThrow(() -> new NotFoundException("Admin not found"));
         
         com.easycart.sme.entity.Service service = serviceRepository.findById(dto.getServiceId())
                 .orElseThrow(() -> new NotFoundException("Service not found"));
@@ -200,7 +219,19 @@ public class AdminController {
                 .startDate(dto.getStartDate())
                 .expiresAt(dto.getExpiresAt())
                 .build();
-        return ResponseEntity.ok(FamilyResponse.from(familyRepository.save(family)));
+
+        Family savedFamily = familyRepository.save(family);
+
+        // Save activity log for family creation
+        activityLogRepository.save(ActivityLog.builder()
+                .actorId(adminId)
+                .actorName(admin.getFullName())
+                .action("FAMILY_CREATED")
+                .description(String.format("Created family %s for service %s", savedFamily.getName(), service.getName()))
+                .familyId(savedFamily.getId())
+                .build());
+
+        return ResponseEntity.ok(FamilyResponse.from(savedFamily));
     }
 
     /** GET /api/admin/families — list all families */

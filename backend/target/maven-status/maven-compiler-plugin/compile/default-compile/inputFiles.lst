@@ -24,10 +24,13 @@ C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\PromoUserRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\entity\ActivityLog.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\dto\SubscriptionResponse.java
+C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\controller\NotificationController.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\controller\ServiceController.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\PromoRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\controller\SubscriptionController.java
+C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\dto\NotificationDTO.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\security\JwtAuthenticationFilter.java
+C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\entity\Notification.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\ProfileRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\config\DatabaseSeeder.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\controller\AdminController.java
@@ -39,11 +42,13 @@ C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\service\InviteService.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\dto\PromoUserResponseDTO.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\service\ActivityLogService.java
+C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\service\NotificationService.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\controller\AuthController.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\FamilyMemberRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\dto\InviteCreateRequest.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\EasyCartSmeApplication.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\ServiceRepository.java
+C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\NotificationRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\InviteRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\PlanRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\dto\CreateFamilyDto.java

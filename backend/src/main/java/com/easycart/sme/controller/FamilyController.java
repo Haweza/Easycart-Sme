@@ -29,7 +29,6 @@ public class FamilyController {
     private final FamilyMemberRepository familyMemberRepository;
     private final ProfileRepository profileRepository;
     private final ActivityLogRepository activityLogRepository;
-    private final com.easycart.sme.repository.SubscriptionRepository subscriptionRepository;
 
     /**
      * GET /api/families
@@ -47,16 +46,7 @@ public class FamilyController {
         if (profile.getRole().name().equals("ADMIN")) {
             families = familyRepository.findAll();
         } else {
-            List<Family> organizerFamilies = familyRepository.findByOrganizerId(userId);
-            List<com.easycart.sme.entity.Subscription> organizerSubs = subscriptionRepository.findByUserId(userId);
-            java.util.Set<UUID> organizerServiceIds = organizerSubs.stream()
-                    .filter(s -> s.getStatus() == com.easycart.sme.entity.Subscription.SubscriptionStatus.ACTIVE)
-                    .map(s -> s.getService().getId())
-                    .collect(java.util.stream.Collectors.toSet());
-            
-            families = organizerFamilies.stream()
-                    .filter(f -> f.getService() != null && organizerServiceIds.contains(f.getService().getId()))
-                    .toList();
+            families = familyRepository.findByOrganizerId(userId);
         }
         return ResponseEntity.ok(families.stream().map(FamilyResponse::from).toList());
     }

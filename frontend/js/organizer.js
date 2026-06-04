@@ -213,6 +213,9 @@ async function loadOrganizerActivities() {
       } else if (act.action === 'ADD_MEMBER') {
         icon = '👤';
         badgeClass = 'badge-accepted';
+      } else if (act.action === 'FAMILY_CREATED') {
+        icon = '🏠';
+        badgeClass = 'badge-accepted';
       }
 
       const timeAgoStr = formatTimeAgo(new Date(act.createdAt));

@@ -25,6 +25,7 @@ const ACTION_CONFIG = {
   // Family
   ADD_MEMBER:          { icon: '👤', border: 'var(--accent)',   badge: 'badge-accepted' },
   REMOVE_MEMBER:       { icon: '🗑️', border: 'var(--danger)',   badge: 'badge-declined' },
+  FAMILY_CREATED:      { icon: '🏠', border: 'var(--accent)',   badge: 'badge-accepted' },
   // Promo
   PROMO_USER_CREATED:  { icon: '🎁', border: 'var(--accent)',   badge: 'badge-pending'  },
   PROMO_USER_APPROVED: { icon: '✅', border: 'var(--success)',  badge: 'badge-accepted' },
