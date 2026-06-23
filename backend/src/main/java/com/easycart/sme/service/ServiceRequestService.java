@@ -169,7 +169,7 @@ public class ServiceRequestService {
                     .plan(req.getPlan())
                     .startDate(start)
                     .expiresAt(expiry)
-                    .status(com.easycart.sme.entity.Subscription.SubscriptionStatus.ACTIVE)
+                    .status(com.easycart.sme.entity.Subscription.SubscriptionStatus.PENDING)
                     .family(family)
                     .build();
             subscriptionRepository.save(subscription);

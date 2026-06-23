@@ -126,6 +126,69 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    /** PUT /api/admin/subscriptions/{id}/activate — activate a pending subscription */
+    @PutMapping("/subscriptions/{id}/activate")
+    public ResponseEntity<com.easycart.sme.dto.SubscriptionResponse> activateSubscription(
+            @PathVariable UUID id,
+            java.security.Principal principal) {
+        com.easycart.sme.entity.Subscription subscription = subscriptionRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Subscription not found"));
+
+        if (subscription.getStatus() != com.easycart.sme.entity.Subscription.SubscriptionStatus.PENDING) {
+            throw new com.easycart.sme.exception.BadRequestException("Only PENDING subscriptions can be activated");
+        }
+
+        UUID adminId = UUID.fromString(principal.getName());
+        Profile admin = profileRepository.findById(adminId)
+                .orElseThrow(() -> new NotFoundException("Admin not found"));
+
+        java.time.Instant start = java.time.Instant.now();
+        java.time.Instant expiry = null;
+
+        if (subscription.getPlan() != null) {
+            String planName = subscription.getPlan().getName().toLowerCase();
+            if (planName.contains("month")) {
+                String digits = planName.replaceAll("[^\\d]", "");
+                int months = digits.isEmpty() ? 1 : Integer.parseInt(digits);
+                expiry = java.time.ZonedDateTime.ofInstant(start, java.time.ZoneId.systemDefault()).plusMonths(months).toInstant();
+            } else if (planName.contains("annual") || planName.contains("year")) {
+                expiry = java.time.ZonedDateTime.ofInstant(start, java.time.ZoneId.systemDefault()).plusYears(1).toInstant();
+            }
+        }
+
+        if (expiry == null && subscription.getService() != null && subscription.getService().getBillingCycle() != null) {
+            String cycle = subscription.getService().getBillingCycle().toLowerCase();
+            if (cycle.contains("annual") || cycle.contains("year")) {
+                expiry = java.time.ZonedDateTime.ofInstant(start, java.time.ZoneId.systemDefault()).plusYears(1).toInstant();
+            } else {
+                expiry = java.time.ZonedDateTime.ofInstant(start, java.time.ZoneId.systemDefault()).plusMonths(1).toInstant();
+            }
+        }
+
+        if (expiry == null) {
+            expiry = start.plus(java.time.Duration.ofDays(30)); // fallback
+        }
+
+        subscription.setStatus(com.easycart.sme.entity.Subscription.SubscriptionStatus.ACTIVE);
+        subscription.setStartDate(start);
+        subscription.setExpiresAt(expiry);
+
+        com.easycart.sme.entity.Subscription saved = subscriptionRepository.save(subscription);
+
+        // Log the activation
+        activityLogRepository.save(ActivityLog.builder()
+                .actorId(adminId)
+                .actorName(admin.getFullName())
+                .action("SUBSCRIPTION_ACTIVATED")
+                .description(String.format("Activated subscription for %s - Service: %s, Plan: %s",
+                        subscription.getUser().getFullName(),
+                        subscription.getService().getName(),
+                        subscription.getPlan() != null ? subscription.getPlan().getName() : "N/A"))
+                .build());
+
+        return ResponseEntity.ok(com.easycart.sme.dto.SubscriptionResponse.from(saved));
+    }
+
     // --- Users ---
 
     /** GET /api/admin/users — list all users */

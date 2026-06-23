@@ -1,0 +1,30 @@
+Easycart notes
+Backend inspection
+Comparing current situation to original scope. Discussion with ChatGPT(Notes worth taking note of)
+
+
+ME:	Hold on to this one to. bullet these types of responses respectively to the first going to the last. We're going to go through each one in iterative discussions. 	Do not make a huge response just now. Just Hold on to this thought and acknowledge my instruction. It will be structurely important for the both of us to use 	this format.
+
+CHAT:	Current review queue:
+	Do we really need ORGANIZER today?
+	Too Many Statuses
+	Deep Entity Graphs / JPA Relationship Complexity
+	Notifications
+	Capacity Tracking
+	Future Features vs Current Scope
+	Payment Verification
+	Audit Logs
+	Revenue Reporting
+	Expiry Management
+	Architecture vs Complexity Drift
+	Is the architecture still aligned with the original MVP?
+	Are performance issues coming from unnecessary entity relationships and query complexity rather than feature scope?
+	Has the code become heavier than the business requirements?
+	We'll use this order unless we deliberately decide to reorder later. This will be our review roadmap.
+	We'll treat these as separate review topics and evaluate each against:
+
+	Original Scope
+	Current Implementation
+	Business Value
+	Technical Cost
+	Keep / Modify / Remove

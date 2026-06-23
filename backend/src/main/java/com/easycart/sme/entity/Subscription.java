@@ -57,6 +57,6 @@ public class Subscription {
     private Instant updatedAt;
 
     public enum SubscriptionStatus {
-        ACTIVE, EXPIRED
+        PENDING,ACTIVE, EXPIRED
     }
 }
