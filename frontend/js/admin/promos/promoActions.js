@@ -14,15 +14,15 @@ export async function approvePromoUser() {
     showToast('No promo user selected', 'error');
     return;
   }
-  
+
   try {
     await PromoUsers.approve(promoUserId);
     showToast('Promo access approved', 'success');
-    
+
     // Reload promo data
     await loadPromoUsers();
     await loadPendingPromoUsers();
-    
+
     // Re-render
     renderPromoUsers();
     closePromoModal();
@@ -35,19 +35,19 @@ export async function approvePromoUser() {
 export async function rejectPromoUser() {
   const promoUserId = adminState.currentPromoReviewId;
   const reason = document.getElementById('promo-rejection-reason')?.value || '';
-  
+
   if (!promoUserId) {
     showToast('No promo user selected', 'error');
     return;
   }
-  
+
   try {
     await PromoUsers.reject(promoUserId, reason);
     showToast('Promo access rejected', 'success');
-    
+
     await loadPromoUsers();
     await loadPendingPromoUsers();
-    
+
     renderPromoUsers();
     closePromoModal();
   } catch (error) {
@@ -58,26 +58,51 @@ export async function rejectPromoUser() {
 // Delete subscription
 export async function deleteSubscriptionAction(subscriptionId) {
   const subscription = adminState.allSubscriptions.find(s => s.id === subscriptionId);
-  
+
   if (!subscription) {
     showToast('Subscription not found', 'error');
     return;
   }
-  
+
   const confirmed = confirm(
     `Delete subscription for ${subscription.planName}?\n\nThis action cannot be undone.`
   );
-  
+
   if (!confirmed) return;
-  
+
   try {
     await Admin.deleteSubscription(subscriptionId);
     showToast('Subscription deleted', 'success');
-    
+
     await loadSubscriptions();
     renderSubscriptions();
   } catch (error) {
     showToast('Error deleting subscription: ' + error.message, 'error');
+  }
+}
+// Activate subscription
+export async function activateSubscriptionAction(subscriptionId) {
+  const subscription = adminState.allSubscriptions.find(s => s.id === subscriptionId);
+
+  if (!subscription) {
+    showToast('Subscription not found', 'error');
+    return;
+  }
+
+  const confirmed = confirm(
+    `Activate subscription for ${subscription.userName} (${subscription.serviceName})?\n\nThis will set the start date to now and calculate the expiry date based on the plan.`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    await Admin.activateSubscription(subscriptionId);
+    showToast('Subscription activated successfully!', 'success');
+
+    await loadSubscriptions();
+    renderSubscriptions();
+  } catch (error) {
+    showToast('Error activating subscription: ' + error.message, 'error');
   }
 }
 
@@ -88,9 +113,9 @@ export function openPromoReviewModal(promoUserId) {
     showToast('Promo user not found', 'error');
     return;
   }
-  
+
   adminState.currentPromoReviewId = promoUserId;
-  
+
   // Populate modal with promo details
   document.getElementById('promo-review-user-name').textContent = promo.profileName;
   document.getElementById('promo-review-user-email').textContent = promo.profileEmail || 'N/A';
@@ -100,16 +125,16 @@ export function openPromoReviewModal(promoUserId) {
   document.getElementById('promo-review-expiry-date').textContent = formatDate(promo.expiryDate);
   document.getElementById('promo-review-notes').textContent = promo.notes || 'No notes';
   document.getElementById('promo-rejection-reason').value = '';
-  
+
   // Update status display
   const statusDisplay = document.getElementById('promo-review-status');
   statusDisplay.innerHTML = `<span class="approval-badge approval-${(promo.approvalStatus || 'pending').toLowerCase()}">${promo.approvalStatus || 'PENDING'}</span>`;
-  
+
   // Show/hide buttons based on status
   const approveBtn = document.getElementById('promo-approve-btn');
   const rejectBtn = document.getElementById('promo-reject-btn');
   const rejectionGroup = document.getElementById('promo-rejection-reason-group');
-  
+
   if (promo.approvalStatus === 'PENDING') {
     approveBtn.style.display = 'block';
     rejectBtn.style.display = 'block';
@@ -130,7 +155,7 @@ export function openPromoReviewModal(promoUserId) {
     rejectBtn.style.display = 'none';
     rejectionGroup.style.display = 'none';
   }
-  
+
   document.getElementById('promo-review-modal').classList.add('open');
 }
 

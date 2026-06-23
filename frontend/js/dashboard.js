@@ -122,7 +122,7 @@ function renderMySubscriptions() {
   }
 
   const html = mySubscriptions.map(sub => `
-    <div class="subscription-card active" style="margin: 0; display: flex; flex-direction: column; width: 100%;">
+    <div class="subscription-card ${(sub.status || 'ACTIVE').toLowerCase()}" style="margin: 0; display: flex; flex-direction: column; width: 100%;">
       <div class="subscription-card-header" style="width: 100%;">
         <h3 class="subscription-card-title">${escapeHtml(sub.serviceName)}</h3>
         <span class="status-badge status-${(sub.status || 'ACTIVE').toLowerCase()}">${sub.status || 'ACTIVE'}</span>

@@ -1564,6 +1564,12 @@ tr:hover td {
   color: #991B1B;
 }
 
+.badge-status-pending,
+.status-pending {
+  background: #FEF9C3;
+  color: #713F12;
+}
+
 /* --- User Details Modal --- */
 .user-details-grid {
   display: grid;
@@ -1674,6 +1680,10 @@ tr:hover td {
 
 .subscription-card.active {
   border-left: 4px solid #10B981;
+}
+
+.subscription-card.pending {
+  border-left: 4px solid var(--accent);
 }
 
 /* --- Empty State --- */

@@ -24,7 +24,7 @@ import { openCreateInviteModal, updateInvitePlanInfo } from './invites/inviteMod
 import { previewPromoImage, publishPromo, bringDownPromo } from './promos/promoManager.js';
 
 // NEW: Import promo and subscription actions
-import { openPromoReviewModal, closePromoModal, approvePromoUser, rejectPromoUser, filterPromoUsers, deleteSubscriptionAction } from './promos/promoActions.js';
+import { openPromoReviewModal, closePromoModal, approvePromoUser, rejectPromoUser, filterPromoUsers, deleteSubscriptionAction, activateSubscriptionAction } from './promos/promoActions.js';
 import { renderPromoUsers } from './promos/promoRenderer.js';
 import { renderMySubscriptions } from './subscriptions/mySubscriptionRenderer.js';
 
@@ -74,6 +74,7 @@ window.loadPromoUsers = loadPromoUsers;
 window.loadPendingPromoUsers = loadPendingPromoUsers;
 window.loadMySubscriptions = loadMySubscriptions;
 window.deleteSubscriptionAction = deleteSubscriptionAction;
+window.activateSubscriptionAction = activateSubscriptionAction;
 
 // Activity feed deep-link helpers
 window.navigateToPromoUser = navigateToPromoUser;

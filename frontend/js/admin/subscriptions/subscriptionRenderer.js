@@ -64,15 +64,17 @@ export function renderSubscriptions() {
   const enrichedRequests = allSubscriptions
     .filter(s => !(s.familyId || s.isFamilyMember || (s.scope && s.scope.includes('family'))))
     .map(s => {
-      let subStatus = s.status === 'ACTIVE' ? 'ACTIVE' : 'EXPIRED';
+      let subStatus = s.status || 'ACTIVE'; // 'ACTIVE', 'PENDING', or 'EXPIRED'
       let isExpiringSoon = false;
       let isExpired = s.status === 'EXPIRED';
+      let isPending = s.status === 'PENDING';
 
       if (s.expiresAt) {
         const exp = new Date(s.expiresAt);
         if (exp < now) {
           subStatus = 'EXPIRED';
           isExpired = true;
+          isPending = false;
         } else if (exp <= next7Days && s.status === 'ACTIVE') {
           subStatus = 'EXPIRING';
           isExpiringSoon = true;
@@ -80,7 +82,7 @@ export function renderSubscriptions() {
         }
       }
 
-      return { ...s, subStatus, isExpiringSoon, isExpired };
+      return { ...s, subStatus, isExpiringSoon, isExpired, isPending };
     });
 
   // Update Alert Banner
@@ -179,6 +181,11 @@ export function renderSubscriptions() {
         ${groupedIndividuals[service].map(r => {
       let cardClass = 'active';
       let badgeHtml = '<span class="badge badge-status-active">Active</span>';
+      let actionButtons = `
+        <button class="btn btn-sm btn-danger" onclick="deleteSubscriptionAction('${r.id}')" title="Delete subscription">
+          🗑 Delete
+        </button>
+      `;
 
       if (r.isExpired) {
         cardClass = 'expired';
@@ -186,6 +193,17 @@ export function renderSubscriptions() {
       } else if (r.isExpiringSoon) {
         cardClass = 'expiring-soon';
         badgeHtml = '<span class="badge badge-status-expiring">Expiring Soon</span>';
+      } else if (r.isPending) {
+        cardClass = 'pending';
+        badgeHtml = '<span class="badge badge-status-pending">Pending Activation</span>';
+        actionButtons = `
+          <button class="btn btn-sm btn-success" onclick="activateSubscriptionAction('${r.id}')" title="Activate subscription" style="margin-right: 6px;">
+            ⚡ Activate
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="deleteSubscriptionAction('${r.id}')" title="Delete subscription">
+            🗑 Delete
+          </button>
+        `;
       }
 
       return `
@@ -206,9 +224,7 @@ export function renderSubscriptions() {
                 </div>
               </div>
               <div class="subscription-actions">
-                <button class="btn btn-sm btn-danger" onclick="deleteSubscriptionAction('${r.id}')" title="Delete subscription">
-                  🗑 Delete
-                </button>
+                ${actionButtons}
               </div>
             </div>
           `;

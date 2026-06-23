@@ -180,6 +180,14 @@
       try {
         const res = await Auth.register({ fullName: name, email, password, phone });
         setAuth(res.token, res.user);
+         // Redirect to dashboard (or handle service request if one was pre-selected)
+        const selectedService = localStorage.getItem('ec_selected_service');
+        if (selectedService) {
+          const service = JSON.parse(selectedService);
+          window.location.replace(`dashboard.html?openRequest=${service.id}`);
+        } else {
+          window.location.replace('dashboard.html');
+        }
 
       } catch (err) {
         const alert = document.getElementById('auth-alert');

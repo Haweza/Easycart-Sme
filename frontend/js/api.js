@@ -99,6 +99,7 @@ const Admin = {
   deleteSubscription: (subscriptionId) => apiFetch(`/admin/subscriptions/${subscriptionId}`, { method: 'DELETE' }),
   deleteActivity: (id) => apiFetch(`/admin/activities/${id}`, { method: 'DELETE' }),
   clearActivities: () => apiFetch('/admin/activities', { method: 'DELETE' }),
+  activateSubscription: (id) => apiFetch(`/admin/subscriptions/${id}/activate`, { method: 'PUT' }),
 };
 
 // ---- Promo Users (NEW) ------------------------------------
