@@ -4,7 +4,7 @@
  */
 
 import { adminState } from '../state/adminState.js';
-import { renderUsersTableData } from './userRenderer.js';
+import { renderUsersTableData, renderGroupedUsers } from './userRenderer.js';
 
 export function toggleFilterPanel() {
   const panel = document.getElementById('filter-panel');

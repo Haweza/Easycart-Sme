@@ -1,0 +1,122 @@
+# Card-Based User Management System — Implementation Plan
+
+## Summary
+Replace the flat users table in the Admin Users view with a card-grid of expandable grouped lists. The table is removed entirely; all existing JS logic (filters, approveUser, changeRole, openUserDetails) is preserved and reused.
+
+---
+
+## Proposed Changes
+
+### Component 1 — HTML (`admin.html`, lines 187–248)
+
+#### [MODIFY] admin.html — Replace Users View HTML
+
+Remove the current table + filter panel structure and replace with:
+
+1. **Page header** (unchanged): title + search + filter button remain.
+2. **Filter panel** (unchanged): role & status chips still live here.
+3. **Group Cards Grid**: a `<div class="user-group-grid">` containing 4 static group cards:
+   - ✅ Approved Users
+   - ⏳ Pending Approval
+   - 🔧 Organizers
+   - 👥 Customers
+4. **Service Subscriber Groups**: a `<div id="service-groups-grid">` populated dynamically by JS.
+5. **Hidden `#users-tbody` `<table>`**: kept as a zero-size element so `renderUsersTableData` still writes to it without errors (backward compatibility).
+
+Each group card:
+```html
+<div class="user-group-card" data-group="approved">
+  <div class="user-group-card-header">
+    <span class="group-icon">✅</span>
+    <div class="group-info">
+      <div class="group-title">Approved Users</div>
+      <div class="group-subtitle" id="count-approved">— users</div>
+    </div>
+    <span class="group-arrow">▶</span>
+  </div>
+  <div class="user-group-list" id="list-approved"><!-- JS renders rows here --></div>
+</div>
+```
+
+#### Scoped CSS added in `<style>` block
+
+```css
+.user-group-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.user-group-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; transition: box-shadow .2s; }
+.user-group-card:hover { box-shadow: var(--shadow); }
+.user-group-card-header { display: flex; align-items: center; gap: 12px; padding: 1.1rem 1.25rem; cursor: pointer; }
+.user-group-list { display: none; border-top: 1px solid var(--border); padding: 0; }
+.user-group-card.open .user-group-list { display: block; }
+.user-group-card.open .group-arrow { transform: rotate(90deg); }
+.group-arrow { transition: transform .2s; margin-left: auto; color: var(--text-muted); font-size: .9rem; }
+.user-row-card { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: .85rem 1.25rem; border-bottom: 1px solid var(--border); }
+.user-row-card:last-child { border-bottom: none; }
+@media (max-width: 600px) { .user-group-grid { grid-template-columns: 1fr; } .user-row-card { flex-direction: column; align-items: flex-start; } }
+```
+
+---
+
+### Component 2 — JS (`userRenderer.js`)
+
+#### [MODIFY] userRenderer.js — Add `renderGroupedUsers()` + update `renderUsersTableData`
+
+- **`renderUsersTableData(users)`** — keep writing to `#users-tbody` (hidden table, no visual change). Additionally call `renderGroupedUsers(adminState.allUsers)` so cards always show the full breakdown.
+- **`renderGroupedUsers(allUsers)`** — new function:
+  - Computes 4 groups from `allUsers`
+  - Updates count badges
+  - Renders user row cards into each list container
+  - Each row card includes: name, email, role badge, approval badge, `[Approve]` or `[Approved]` button, role select, `[Details]` button — **same logic as existing table rows**
+
+- **`renderServiceSubscriberGroups(allSubscriptions, allUsers)`** — new function:
+  - Groups active subscriptions by `serviceName`
+  - For each service with ≥ 1 active subscriber, creates/updates a service card in `#service-groups-grid`
+  - Each subscriber row shows: name, email, status badge, start date, `[Details]` button
+
+---
+
+### Component 3 — JS (`dataLoaders.js`)
+
+No changes needed — existing loaders already populate `adminState.allUsers` and `adminState.allSubscriptions`.
+
+---
+
+### Component 4 — JS (`userFilters.js`)
+
+No logic changes. `applyUserFilters()` still calls `renderUsersTableData(filtered)`. The grouped cards always show the **full unfiltered** breakdown; the filter panel only affects the hidden table (existing behavior) and a new optional search highlight.
+
+> **Design decision**: The filter panel + search bar is kept in the UI but will now also update group card results via an additional call to `renderGroupedUsers(filtered)` so the search/filter still feels connected.
+
+---
+
+### Component 5 — JS (`subscriptionRenderer.js`)
+
+After `renderSubscriptions()` completes, call `renderServiceSubscriberGroups()` to refresh the service groups on the Users view.
+
+---
+
+### CSS (`styles.css`)
+
+No changes to the shared stylesheet. All new styles are scoped in the `<style>` block in `admin.html`.
+
+---
+
+## Verification Plan
+
+### Manual Verification
+1. Open the Admin Panel → Users view
+2. Confirm 4 group cards appear (Approved, Pending, Organizers, Customers) with correct counts
+3. Click each card → list expands, only one at a time
+4. Each user row has working: Approve button, Role select, Details button
+5. Use search/filter → cards update to match results
+6. Open Subscriptions view → active services appear as dynamic groups on Users view
+7. Resize window to mobile → cards stack, rows go vertical, no horizontal scroll
+
+---
+
+## Open Questions
+
+> [!NOTE]
+> The filter panel still works as before — it now additionally narrows the card groups. If you prefer the filter panel to be hidden and replaced by the cards themselves as the only navigation, say so.
+
+> [!IMPORTANT]
+> The hidden `#users-tbody` table is kept in the DOM (with `display:none`) so no existing JS breaks. It can be fully removed in a future cleanup if desired.

@@ -8,6 +8,155 @@
   <title>Admin Panel — EasyCart SME</title>
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    /* ================================================================
+       CARD-BASED USER MANAGEMENT — Scoped to #view-users
+       ================================================================ */
+
+    /* Grid of group cards */
+    .user-group-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    /* Each group card */
+    .user-group-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      transition: box-shadow .2s, transform .15s;
+    }
+    .user-group-card:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    /* Card clickable header */
+    .user-group-card-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 1.1rem 1.25rem;
+      cursor: pointer;
+      user-select: none;
+      background: var(--surface);
+      transition: background .15s;
+    }
+    .user-group-card-header:hover {
+      background: var(--surface-hover);
+    }
+
+    /* Icon circle */
+    .group-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--bg-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .group-info { flex: 1; min-width: 0; }
+    .group-title { font-weight: 700; font-size: .95rem; color: var(--text); }
+    .group-subtitle { font-size: .78rem; color: var(--text-muted); margin-top: 2px; }
+
+    /* Count badge on card */
+    .group-count-badge {
+      background: var(--primary);
+      color: var(--text-inv);
+      border-radius: 999px;
+      padding: 2px 9px;
+      font-size: .75rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .group-count-badge.warning { background: var(--warning); }
+    .group-count-badge.success { background: var(--success); }
+    .group-count-badge.muted   { background: var(--text-muted); }
+
+    /* Expand arrow */
+    .group-arrow {
+      transition: transform .2s;
+      color: var(--text-muted);
+      font-size: .8rem;
+      margin-left: 4px;
+      flex-shrink: 0;
+    }
+    .user-group-card.open .group-arrow { transform: rotate(90deg); }
+
+    /* Collapsible list panel */
+    .user-group-list {
+      display: none;
+      border-top: 1px solid var(--border);
+      max-height: 480px;
+      overflow-y: auto;
+    }
+    .user-group-card.open .user-group-list { display: block; }
+
+    /* Empty state inside a group */
+    .group-empty {
+      padding: 1.25rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: .85rem;
+    }
+
+    /* Individual user row inside a group */
+    .user-row-card {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: .8rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      transition: background .12s;
+    }
+    .user-row-card:last-child { border-bottom: none; }
+    .user-row-card:hover { background: var(--surface-hover); }
+
+    .user-row-info { flex: 1; min-width: 0; }
+    .user-row-name { font-weight: 600; font-size: .9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .user-row-email { font-size: .78rem; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    .user-row-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-shrink: 0;
+      flex-wrap: wrap;
+    }
+
+    /* Service subscriber groups section */
+    .service-groups-section-title {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin: 24px 0 12px;
+    }
+
+    /* Compact role select in card rows */
+    .role-select-compact {
+      font-size: .78rem;
+      padding: 3px 6px;
+      width: 110px;
+    }
+
+    /* Mobile: single column + vertical rows */
+    @media (max-width: 640px) {
+      .user-group-grid { grid-template-columns: 1fr; }
+      .user-row-card   { flex-direction: column; align-items: flex-start; }
+      .user-row-actions { width: 100%; justify-content: flex-start; }
+      .role-select-compact { width: 100%; }
+    }
+  </style>
 </head>
 
 <body>
@@ -90,7 +239,8 @@
         <a href="#" class="sidebar-link" data-view="promo-users-view" onclick="showView('promo-users-view',this)">
           🎁 Promo Users
         </a>
-        <a href="#" class="sidebar-link" data-view="my-subscription-view" onclick="showView('my-subscription-view',this)">
+        <a href="#" class="sidebar-link" data-view="my-subscription-view"
+          onclick="showView('my-subscription-view',this)">
           💳 My Subscriptions
         </a>
         <a href="index.html" class="sidebar-link">
@@ -216,22 +366,79 @@
           </div>
         </div>
 
-        <div class="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Joined</th>
-                <th>Approved</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody id="users-tbody"></tbody>
-          </table>
+        <!-- ===== STATIC GROUP CARDS ===== -->
+        <div class="user-group-grid" id="user-group-grid">
+
+          <!-- Approved Users -->
+          <div class="user-group-card" id="card-approved">
+            <div class="user-group-card-header" onclick="toggleUserGroup('card-approved')" role="button" aria-expanded="false">
+              <div class="group-icon">✅</div>
+              <div class="group-info">
+                <div class="group-title">Approved Users</div>
+                <div class="group-subtitle" id="subtitle-approved">Loading…</div>
+              </div>
+              <span class="group-count-badge success" id="badge-approved">—</span>
+              <span class="group-arrow">▶</span>
+            </div>
+            <div class="user-group-list" id="list-approved"></div>
+          </div>
+
+          <!-- Pending Approval -->
+          <div class="user-group-card" id="card-pending">
+            <div class="user-group-card-header" onclick="toggleUserGroup('card-pending')" role="button" aria-expanded="false">
+              <div class="group-icon">⏳</div>
+              <div class="group-info">
+                <div class="group-title">Pending Approval</div>
+                <div class="group-subtitle" id="subtitle-pending">Loading…</div>
+              </div>
+              <span class="group-count-badge warning" id="badge-pending-users">—</span>
+              <span class="group-arrow">▶</span>
+            </div>
+            <div class="user-group-list" id="list-pending"></div>
+          </div>
+
+          <!-- Organizers -->
+          <div class="user-group-card" id="card-organizers">
+            <div class="user-group-card-header" onclick="toggleUserGroup('card-organizers')" role="button" aria-expanded="false">
+              <div class="group-icon">🔧</div>
+              <div class="group-info">
+                <div class="group-title">Organizers</div>
+                <div class="group-subtitle" id="subtitle-organizers">Loading…</div>
+              </div>
+              <span class="group-count-badge" id="badge-organizers">—</span>
+              <span class="group-arrow">▶</span>
+            </div>
+            <div class="user-group-list" id="list-organizers"></div>
+          </div>
+
+          <!-- Customers -->
+          <div class="user-group-card" id="card-customers">
+            <div class="user-group-card-header" onclick="toggleUserGroup('card-customers')" role="button" aria-expanded="false">
+              <div class="group-icon">👥</div>
+              <div class="group-info">
+                <div class="group-title">Customers</div>
+                <div class="group-subtitle" id="subtitle-customers">Loading…</div>
+              </div>
+              <span class="group-count-badge muted" id="badge-customers">—</span>
+              <span class="group-arrow">▶</span>
+            </div>
+            <div class="user-group-list" id="list-customers"></div>
+          </div>
+
+        </div><!-- /.user-group-grid -->
+
+        <!-- ===== DYNAMIC SERVICE SUBSCRIBER GROUPS ===== -->
+        <div id="service-groups-section" style="display:none;">
+          <div class="service-groups-section-title">📦 Active Service Subscribers</div>
+          <div class="user-group-grid" id="service-groups-grid"></div>
         </div>
-      </div>
+
+        <!-- Backward-compat hidden table — kept so existing JS modules write without errors -->
+        <div style="display:none;" aria-hidden="true">
+          <table><tbody id="users-tbody"></tbody></table>
+        </div>
+
+      </div><!-- /#view-users -->
 
       <!-- ======= SERVICE REQUESTS VIEW ======= -->
       <div id="view-requests" style="display:none" class="fade-in">
@@ -436,7 +643,7 @@
         <div class="page-header">
           <h1>🎁 Promo Users Management</h1>
         </div>
-        
+
         <div class="filter-panel">
           <div class="filter-group">
             <label>Approval Status</label>
@@ -694,7 +901,9 @@
       <div class="modal-body" style="padding: 1.5rem;">
         <!-- User Information Section -->
         <div style="margin-bottom: 1.5rem;">
-          <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">User Information</h4>
+          <h4
+            style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+            User Information</h4>
           <div style="display: flex; flex-direction: column; gap: 0.5rem;">
             <div>
               <span style="font-size: 0.8rem; color: var(--text-muted);">Name:</span>
@@ -709,7 +918,9 @@
 
         <!-- Access Details Section -->
         <div style="margin-bottom: 1.5rem;">
-          <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Access Details</h4>
+          <h4
+            style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+            Access Details</h4>
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
             <div>
               <span style="font-size: 0.8rem; color: var(--text-muted);">Service:</span>
@@ -732,19 +943,28 @@
 
         <!-- Notes Section -->
         <div style="margin-bottom: 1.5rem;">
-          <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Admin Notes</h4>
-          <div id="promo-review-notes" style="background: var(--bg); padding: 0.75rem; border-radius: var(--radius); font-size: 0.9rem; color: var(--text);">-</div>
+          <h4
+            style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+            Admin Notes</h4>
+          <div id="promo-review-notes"
+            style="background: var(--bg); padding: 0.75rem; border-radius: var(--radius); font-size: 0.9rem; color: var(--text);">
+            -</div>
         </div>
 
         <!-- Rejection Reason (shown only when rejecting) -->
         <div style="display: none; margin-bottom: 1.5rem;" id="promo-rejection-reason-group">
-          <label style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Rejection Reason (required)</label>
-          <textarea id="promo-rejection-reason" class="form-control" rows="3" placeholder="Explain why this promo access is being rejected..."></textarea>
+          <label
+            style="font-size: 0.8rem; font-weight: 600; display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Rejection
+            Reason (required)</label>
+          <textarea id="promo-rejection-reason" class="form-control" rows="3"
+            placeholder="Explain why this promo access is being rejected..."></textarea>
         </div>
 
         <!-- Current Status Display -->
         <div style="margin-bottom: 1.5rem;">
-          <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Status</h4>
+          <h4
+            style="font-size: 0.9rem; font-weight: 600; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">
+            Status</h4>
           <div id="promo-review-status" style="display: flex; gap: 0.5rem;">
             <span class="approval-badge approval-pending">PENDING REVIEW</span>
           </div>
@@ -752,10 +972,13 @@
       </div>
 
       <!-- Footer with Action Buttons -->
-      <div style="display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1rem 1.5rem; border-top: 1px solid var(--border);">
+      <div
+        style="display: flex; gap: 0.75rem; justify-content: flex-end; padding: 1rem 1.5rem; border-top: 1px solid var(--border);">
         <button type="button" class="btn btn-outline btn-sm" onclick="closePromoModal()">Cancel</button>
-        <button type="button" class="btn btn-danger btn-sm" id="promo-reject-btn" onclick="rejectPromoUser()" style="display: none;">✗ Reject</button>
-        <button type="button" class="btn btn-success btn-sm" id="promo-approve-btn" onclick="approvePromoUser()">✓ Approve</button>
+        <button type="button" class="btn btn-danger btn-sm" id="promo-reject-btn" onclick="rejectPromoUser()"
+          style="display: none;">✗ Reject</button>
+        <button type="button" class="btn btn-success btn-sm" id="promo-approve-btn" onclick="approvePromoUser()">✓
+          Approve</button>
       </div>
     </div>
   </div>
@@ -784,6 +1007,31 @@
         themeToggles.forEach(t => t.textContent = newTheme === 'light' ? '🌙' : '☀️');
       });
     });
+
+    /**
+     * toggleUserGroup — expand/collapse a user group card.
+     * Only one card can be open at a time (accordion behaviour).
+     */
+    function toggleUserGroup(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      const isOpen = card.classList.contains('open');
+
+      // Close all cards first
+      document.querySelectorAll('.user-group-card').forEach(c => {
+        c.classList.remove('open');
+        const hdr = c.querySelector('.user-group-card-header');
+        if (hdr) hdr.setAttribute('aria-expanded', 'false');
+      });
+
+      // Toggle the clicked one open if it was closed
+      if (!isOpen) {
+        card.classList.add('open');
+        const hdr = card.querySelector('.user-group-card-header');
+        if (hdr) hdr.setAttribute('aria-expanded', 'true');
+      }
+    }
+    window.toggleUserGroup = toggleUserGroup;
   </script>
 </body>
 

@@ -76,7 +76,7 @@
         <input type="email" id="reg-email" class="form-control" placeholder="you@email.com" required />
       </div>
       <div class="form-group">
-        <label class="form-label">Phone</label>
+        <label class="form-label">Phone(WhatsApp)</label>
         <input type="tel" id="reg-phone" class="form-control" placeholder="+260 977 123 456" required inputmode="tel"
           autocomplete="tel" pattern="^\+?[0-9\s]{9,15}$" title="Enter a valid phone number" />
       </div>
@@ -180,7 +180,7 @@
       try {
         const res = await Auth.register({ fullName: name, email, password, phone });
         setAuth(res.token, res.user);
-         // Redirect to dashboard (or handle service request if one was pre-selected)
+        // Redirect to dashboard (or handle service request if one was pre-selected)
         const selectedService = localStorage.getItem('ec_selected_service');
         if (selectedService) {
           const service = JSON.parse(selectedService);

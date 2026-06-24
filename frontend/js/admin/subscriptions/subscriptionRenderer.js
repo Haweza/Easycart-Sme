@@ -4,6 +4,7 @@
  */
 
 import { adminState } from '../state/adminState.js';
+import { renderServiceSubscriberGroups } from '../users/userRenderer.js';
 
 export function setSubFilter(filter, btnEl) {
   adminState.subFilter = filter;
@@ -233,4 +234,7 @@ export function renderSubscriptions() {
     </div>
   `).join('');
   }
+
+  // Refresh the service subscriber groups on the Users view
+  renderServiceSubscriberGroups();
 }

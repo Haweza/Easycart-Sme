@@ -6,6 +6,8 @@ import com.easycart.sme.exception.ConflictException;
 import com.easycart.sme.exception.NotFoundException;
 import com.easycart.sme.repository.ProfileRepository;
 import com.easycart.sme.security.JwtService;
+import com.easycart.sme.entity.ActivityLog;
+import com.easycart.sme.repository.ActivityLogRepository;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,6 +28,7 @@ import java.util.UUID;
 public class AuthController {
 
     private final ProfileRepository profileRepository;
+    private final ActivityLogRepository activityLogRepository;
     private final JwtService jwtService;
 
     // ---- Register ----------------------------------------
@@ -52,11 +55,19 @@ public class AuthController {
 
         profileRepository.save(profile);
 
+        // Log registration activity
+        activityLogRepository.save(ActivityLog.builder()
+                .actorId(newId)
+                .actorName(profile.getFullName())
+                .action("NEW_USER")
+                .description("New user " + profile.getFullName() + " Has been added. Waiting for Approval.")
+                .referenceId(newId)
+                .build());
+
         String token = jwtService.generateToken(newId, profile.getRole().name());
         return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                 "token", token,
-                "user",  ProfileResponse.from(profile)
-        ));
+                "user", ProfileResponse.from(profile)));
     }
 
     // ---- Login -------------------------------------------
@@ -72,8 +83,7 @@ public class AuthController {
         String token = jwtService.generateToken(profile.getId(), profile.getRole().name());
         return ResponseEntity.ok(Map.of(
                 "token", token,
-                "user",  ProfileResponse.from(profile)
-        ));
+                "user", ProfileResponse.from(profile)));
     }
 
     // ---- Me ----------------------------------------------
@@ -88,17 +98,25 @@ public class AuthController {
     // ---- DTOs (inner classes for brevity) ----------------
     @Data
     public static class RegisterRequest {
-        @NotBlank private String fullName;
-        @Email @NotBlank private String email;
+        @NotBlank
+        private String fullName;
+        @Email
+        @NotBlank
+        private String email;
         @NotBlank(message = "Phone number is required")
-@Size(min = 9, max = 15, message = "Invalid phone number length")
-private String phone;
-        @Size(min = 8) @NotBlank private String password;
+        @Size(min = 9, max = 15, message = "Invalid phone number length")
+        private String phone;
+        @Size(min = 8)
+        @NotBlank
+        private String password;
     }
 
     @Data
     public static class LoginRequest {
-        @Email @NotBlank private String email;
-        @NotBlank private String password;
+        @Email
+        @NotBlank
+        private String email;
+        @NotBlank
+        private String password;
     }
 }
