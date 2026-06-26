@@ -6,6 +6,7 @@ import com.easycart.sme.exception.ConflictException;
 import com.easycart.sme.exception.NotFoundException;
 import com.easycart.sme.repository.ProfileRepository;
 import com.easycart.sme.security.JwtService;
+import com.easycart.sme.service.SupabaseAuthService;
 import com.easycart.sme.entity.ActivityLog;
 import com.easycart.sme.repository.ActivityLogRepository;
 import jakarta.validation.Valid;
@@ -30,6 +31,7 @@ public class AuthController {
     private final ProfileRepository profileRepository;
     private final ActivityLogRepository activityLogRepository;
     private final JwtService jwtService;
+    private final SupabaseAuthService supabaseAuthService;
 
     // ---- Register ----------------------------------------
     @PostMapping("/register")
@@ -95,6 +97,24 @@ public class AuthController {
         return ResponseEntity.ok(ProfileResponse.from(profile));
     }
 
+    // ---- Forgot Password ---------------------------------
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest req) {
+        if (!profileRepository.existsByEmail(req.getEmail())) {
+            // Return 200 OK anyway to prevent user enumeration
+            return ResponseEntity.ok(Map.of("message", "Recovery instructions sent."));
+        }
+        supabaseAuthService.sendResetPasswordEmail(req.getEmail());
+        return ResponseEntity.ok(Map.of("message", "Recovery instructions sent."));
+    }
+
+    // ---- Reset Password ----------------------------------
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody ResetPasswordRequest req) {
+        supabaseAuthService.updateUserPassword(req.getToken(), req.getPassword());
+        return ResponseEntity.ok(Map.of("message", "Password has been successfully reset."));
+    }
+
     // ---- DTOs (inner classes for brevity) ----------------
     @Data
     public static class RegisterRequest {
@@ -116,6 +136,22 @@ public class AuthController {
         @Email
         @NotBlank
         private String email;
+        @NotBlank
+        private String password;
+    }
+
+    @Data
+    public static class ForgotPasswordRequest {
+        @Email
+        @NotBlank
+        private String email;
+    }
+
+    @Data
+    public static class ResetPasswordRequest {
+        @NotBlank
+        private String token;
+        @Size(min = 8)
         @NotBlank
         private String password;
     }

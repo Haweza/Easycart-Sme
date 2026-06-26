@@ -186,7 +186,7 @@ function renderOverview() {
 }
 
 const serviceMeta = {
-  "Prime Video": { icon: "assets/prime.png", category: "🎬 Video / OTT Streaming Services" },
+  "Prime Video": { icon: "assets/prime video.png", category: "🎬 Video / OTT Streaming Services" },
   "Netflix": { icon: "assets/netflix.png", category: "🎬 Video / OTT Streaming Services" },
   "Disney+": { icon: "assets/disney.png", category: "🎬 Video / OTT Streaming Services" },
   "Showmax": { icon: "assets/showmax.png", category: "🎬 Video / OTT Streaming Services" },

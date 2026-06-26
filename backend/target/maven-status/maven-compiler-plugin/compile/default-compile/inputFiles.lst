@@ -34,6 +34,7 @@ C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\repository\ProfileRepository.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\config\DatabaseSeeder.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\controller\AdminController.java
+C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\service\SupabaseAuthService.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\dto\PlanResponse.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\controller\PromoController.java
 C:\Users\hp\Documents\My service\Easycart 2.1\backend\src\main\java\com\easycart\sme\entity\ServiceRequest.java
