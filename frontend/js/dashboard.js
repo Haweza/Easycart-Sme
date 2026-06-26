@@ -194,7 +194,7 @@ const serviceMeta = {
   "Hulu": { icon: "assets/hulu.png", category: "🎬 Video / OTT Streaming Services" },
   "HBO Max": { icon: "assets/hbo.png", category: "🎬 Video / OTT Streaming Services" },
   "DStv Now": { icon: "assets/dstv.png", category: "📡 Hybrid / Live TV + Streaming" },
-  "Apple Music": { icon: "assets/apple_music.png", category: "🎧 Music Streaming Services" },
+  "Apple Music": { icon: "assets/Apple Music.png", category: "🎧 Music Streaming Services" },
   "Spotify Premium": { icon: "assets/spotify.png", category: "🎧 Music Streaming Services" },
   "iCloud": { icon: "assets/icloud.png", category: "☁️ Cloud Services" },
   "iCloud + Snapchat+": { icon: "assets/icloud_snap.png", category: "☁️ Cloud Services" }
