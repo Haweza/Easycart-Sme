@@ -121,6 +121,16 @@ const Subscriptions = {
   getMy: () => apiFetch('/subscriptions/my'),
 };
 
+// ---- Electronics ------------------------------------------
+const Electronics = {
+  getActive: () => fetch(`${API_BASE}/electronics/active`).then(r => r.ok ? r.json() : null),
+  getAll:    () => apiFetch('/admin/electronics'),
+  create:    (payload) => apiFetch('/admin/electronics', { method: 'POST', body: payload }),
+  delete:    (id) => apiFetch(`/admin/electronics/${id}`, { method: 'DELETE' }),
+};
+
+
+
 // ---- Organizer --------------------------------------------
 const Organizer = {
   getMyFamilies: () => apiFetch('/families'),

@@ -34,4 +34,9 @@ export const adminState = {
 
   // Promo image upload state
   uploadedPromoImageBase64: '',
+
+  // Electronic products system
+  allElectronics: [],
+  uploadedElectronicImageBase64: '',
 };
+

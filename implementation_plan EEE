@@ -1,0 +1,171 @@
+# Add Electronic Product Displays Section (3-day Expiry) and Admin Management Panel
+
+This plan outlines the design and implementation steps for adding a new electronic products section on the public homepage. Admins can create and delete these posts via a new dashboard sub-panel. Each post is set to be active for 3 days and displays a product image, name, and cost. When a customer clicks on the product, they are redirected to the admin's WhatsApp with a pre-filled message indicating interest in that specific product.
+
+## User Review Required
+
+> [!IMPORTANT]
+> - **Product Images**: Admins will upload images directly from the dashboard. To prevent performance and database bloat issues, images will be restricted to a maximum size of **2MB** and stored as Base64 text in the PostgreSQL database (consistent with the existing promotion deals implementation).
+> - **Expirations**: The active products will only display on the public landing page if they were created within the last 3 days. An automated badge will show the remaining time (e.g., "Expires in 2d 12h") on both the homepage cards and the admin management panel.
+> - **Layout Placement**: The section is configured to display on the landing page (`index.html`) directly below the Services section and above the Footer. If there are no active listings, the section is hidden completely to keep the landing page clean.
+
+---
+
+## Proposed Changes
+
+### Database
+
+#### [NEW] [003_create_electronic_products_table.sql](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/database/migrations/003_create_electronic_products_table.sql)
+Create a migration script to set up the `electronic_products` table:
+```sql
+CREATE TABLE electronic_products (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name          TEXT NOT NULL,
+    price         TEXT NOT NULL, -- Flexible formatting (e.g., "15,500" or "ZMW 15,500")
+    image_content TEXT NOT NULL, -- Base64 Data URL representation of uploaded image
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- Index to optimize querying active products
+CREATE INDEX idx_electronic_products_created_at ON electronic_products(created_at DESC);
+```
+
+#### [MODIFY] [schema.sql](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/database/schema.sql)
+Add the `electronic_products` table definition and index at the end of the schema file to keep schema documentation complete.
+
+---
+
+### Backend (Spring Boot)
+
+#### [NEW] [ElectronicProduct.java](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/backend/src/main/java/com/easycart/sme/entity/ElectronicProduct.java)
+Define the JPA Entity representing the database table:
+- Map primary key `id` as `UUID`.
+- Fields: `name`, `price`, `imageContent` (annotated with `@Column(name = "image_content", columnDefinition = "TEXT")`), and `createdAt` (annotated with `@CreationTimestamp`).
+
+#### [NEW] [ElectronicProductRepository.java](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/backend/src/main/java/com/easycart/sme/repository/ElectronicProductRepository.java)
+Define the JPA Repository interface:
+- Extend `JpaRepository<ElectronicProduct, UUID>`.
+- Add a custom query method to fetch the top 3 latest active products:
+  `List<ElectronicProduct> findTop3ByCreatedAtAfterOrderByCreatedAtDesc(Instant threshold);`
+
+#### [NEW] [ElectronicProductController.java](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/backend/src/main/java/com/easycart/sme/controller/ElectronicProductController.java)
+Define REST endpoints:
+- `GET /api/electronics/active`: Public endpoint. Fetches active products created within the last 3 days (`Instant.now().minus(3, ChronoUnit.DAYS)`), returning up to 3 products.
+- `GET /api/admin/electronics`: Admin-only endpoint. Fetches all electronic products so admins can view past/expired entries.
+- `POST /api/admin/electronics`: Admin-only endpoint. Creates a new electronic product post.
+- `DELETE /api/admin/electronics/{id}`: Admin-only endpoint. Deletes a product post by ID.
+
+#### [MODIFY] [SecurityConfig.java](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/backend/src/main/java/com/easycart/sme/config/SecurityConfig.java)
+Add authorization rule to permit all requests to the public electronics endpoint:
+```java
+.requestMatchers("/api/electronics/**").permitAll()
+```
+
+---
+
+### Frontend
+
+#### [MODIFY] [index.html](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/index.html)
+- Add a new HTML `<section>` with `id="electronics"` and container `id="electronics-container"` directly below the services section and above the footer. Set `style="display:none;"` initially.
+- Inside `<script>`, add a function `loadActiveElectronics()` that:
+  - Fetches `${API_BASE}/electronics/active`.
+  - Computes time remaining for the 3-day window.
+  - Dynamically builds and inserts cards into `#electronics-container` and changes section display to `block`.
+  - Links card click/button to WhatsApp: `https://wa.me/260972334928?text=Hi%2C%20I'm%20interested%20in%20purchasing%20the%20[Encoded%20Product%20Name]`.
+  - Injects style updates if needed (or adds standard classes).
+- Invoke `loadActiveElectronics()` on `DOMContentLoaded`.
+
+#### [MODIFY] [styles.css](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/css/styles.css)
+Add design tokens and classes for the electronics section and cards:
+- `.electronic-card`: Custom height/min-height, relative position for badges.
+- `.electronic-badge`: Sleek, absolute-positioned badge in the top-left of the card showing "Hot Deal" or similar.
+- `.electronic-img-wrap`: Image container with flex layout, clean background, and padding.
+- `.electronic-icon`: Image responsive fit.
+- `.electronic-content`: Padding, vertical flex distribution.
+- `.electronic-title`, `.electronic-cost`: High-contrast typography.
+- `.electronic-expiry`: Small secondary layout showing remaining time.
+
+#### [MODIFY] [api.js](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/js/api.js)
+Register API wrappers for easy AJAX requests:
+```javascript
+const Electronics = {
+  getActive: () => apiFetch('/electronics/active'),
+  getAll: () => apiFetch('/admin/electronics'),
+  create: (payload) => apiFetch('/admin/electronics', { method: 'POST', body: payload }),
+  delete: (id) => apiFetch(`/admin/electronics/${id}`, { method: 'DELETE' }),
+};
+```
+
+#### [MODIFY] [adminState.js](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/js/admin/state/adminState.js)
+Add states:
+- `allElectronics: []`
+- `uploadedElectronicImageBase64: ''`
+
+#### [MODIFY] [dataLoaders.js](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/js/admin/loaders/dataLoaders.js)
+Export `loadElectronics()` function:
+```javascript
+export async function loadElectronics() {
+  try {
+    adminState.allElectronics = await Electronics.getAll();
+  } catch (e) {
+    adminState.allElectronics = [];
+    console.error(e);
+  }
+}
+```
+
+#### [MODIFY] [viewManager.js](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/js/admin/navigation/viewManager.js)
+- Add `'electronics'` to the array of view IDs.
+- Import `loadAndRenderElectronics` from `../electronics/electronicsManager.js` and register it in the `renderers` mapping.
+
+#### [MODIFY] [admin.js](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/js/admin/admin.js)
+- Import `previewElectronicImage`, `publishElectronic`, and `deleteElectronicAction` from `./electronics/electronicsManager.js`.
+- Expose these functions to the global `window` scope.
+- Call `loadElectronics()` in the `init()` boot sequence.
+
+#### [MODIFY] [admin.html](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/admin.html)
+- Add a new sidebar menu item:
+  ```html
+  <a href="#" class="sidebar-link" data-view="electronics" onclick="showView('electronics',this)">
+    📱 Electronics Displays
+  </a>
+  ```
+- Add the `<div id="view-electronics" style="display:none;" class="fade-in">` container under the main content, containing:
+  - Form with inputs for Product Name, Cost/Price, and a File Input (images).
+  - Preview slot showing the parsed upload.
+  - List displaying all current listings (Active vs. Expired status) and "Delete" actions.
+
+#### [NEW] [electronicsManager.js](file:///c:/Users/hp/Documents/My%20service/Easycart%202.1/frontend/js/admin/electronics/electronicsManager.js)
+Implement core management logic:
+- `previewElectronicImage(input)`: Validates 2MB limit, parses as DataURL via `FileReader`, updates `adminState.uploadedElectronicImageBase64` and the preview UI element.
+- `publishElectronic(e)`: Submits the product data via `Electronics.create()`, resets form/state, and calls `loadAndRenderElectronics()`.
+- `deleteElectronicAction(id)`: Invokes `Electronics.delete()`, confirms deletion, and refreshes the display.
+- `loadAndRenderElectronics()`: Fetches listings, computes active state based on timestamp, and renders items in the management dashboard list.
+
+---
+
+## Verification Plan
+
+### Automated Tests
+- Build backend using maven to verify configuration, entities, database integration, and syntax:
+  `mvn clean compile`
+
+### Manual Verification
+1. **Admin Panel Management**:
+   - Log in as administrator, click **Electronics Displays** sidebar link.
+   - Fill in details: Name = "iPhone 15 Pro", Cost = "21,500".
+   - Select an image (validate that files > 2MB show error and clear input).
+   - Click **Publish Product** and verify it gets added to the table list on the right with an `Active` badge.
+2. **Homepage Displays**:
+   - Go to public landing page (`index.html`).
+   - Confirm that the new electronics section appears between the Services grid and the footer.
+   - Confirm that the card has correct image, title ("iPhone 15 Pro"), cost ("ZMW 21,500"), and shows time remaining (e.g. "⏱️ Expires in 2d 23h").
+3. **Inquiry Redirection**:
+   - Click the "Inquiry on WhatsApp" button on the card.
+   - Verify it redirects to:
+     `https://wa.me/260972334928?text=Hi%2C%20I'm%20interested%20in%20purchasing%20the%20iPhone%2015%20Pro`
+4. **Expiry Verification**:
+   - Add a temporary product with a manual past date in the database (older than 3 days) or wait/modify local clock if possible. Verify that the expired listing is not displayed on the landing page, and shows an `Expired` status badge on the Admin dashboard.
+5. **Deletion**:
+   - On the Admin dashboard, click **Delete** next to the listing.
+   - Confirm that the listing disappears from the admin list and is no longer displayed on the public landing page.

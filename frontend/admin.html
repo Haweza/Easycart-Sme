@@ -243,6 +243,9 @@
           onclick="showView('my-subscription-view',this)">
           💳 My Subscriptions
         </a>
+        <a href="#" class="sidebar-link" data-view="electronics" onclick="showView('electronics',this)">
+          📱 Electronics Displays
+        </a>
         <a href="index.html" class="sidebar-link">
           ↩️ Back to Homepage
         </a>
@@ -668,6 +671,71 @@
 
         <div id="subscription-content" style="margin-bottom: 2rem;">
           <!-- JS populated -->
+        </div>
+      </div>
+
+      <!-- ======= ELECTRONICS DISPLAYS VIEW ======= -->
+      <div id="view-electronics" style="display:none" class="fade-in">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">📱 Electronics Displays</h2>
+            <p class="page-subtitle">Post up to 3 electronic products on the public homepage. Each listing is active for 3 days.</p>
+          </div>
+        </div>
+
+        <div class="grid">
+          <!-- Column 1: Post New Product -->
+          <div class="card" style="grid-column: span 7;">
+            <h3 style="margin-bottom: 1.25rem; font-weight:700;">🛒 Post New Product</h3>
+            <form id="electronic-form" onsubmit="publishElectronic(event)">
+
+              <div class="form-group">
+                <label class="form-label">Product Name *</label>
+                <input type="text" id="electronic-name" class="form-control"
+                  placeholder="e.g. iPhone 15 Pro, Samsung 75&quot; TV" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Price / Cost *</label>
+                <input type="text" id="electronic-price" class="form-control"
+                  placeholder="e.g. ZMW 15,500 or K12,000" required />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Product Image *</label>
+                <div style="display:flex; gap:16px; align-items:center; margin-top:8px;">
+                  <!-- Image preview box -->
+                  <div id="electronic-image-preview-container"
+                    style="width:80px; height:80px; border-radius:var(--radius); border:2px dashed var(--border); display:flex; align-items:center; justify-content:center; background:var(--bg-subtle); overflow:hidden; flex-shrink:0;">
+                    <span style="font-size:1.5rem; color:var(--text-muted);">📷</span>
+                  </div>
+                  <div style="flex:1;">
+                    <input type="file" id="electronic-image" class="form-control" accept="image/*"
+                      onchange="previewElectronicImage(this)" required />
+                    <small class="text-muted" style="display:block; margin-top:4px;">Supports PNG, JPG, or JPEG. Maximum 2MB.</small>
+                  </div>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end; margin-top:1.5rem;">
+                <button type="submit" class="btn btn-primary" id="electronic-submit-btn">🚀 Publish Product</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Column 2: Active Listings -->
+          <div class="card" style="grid-column: span 5; display:flex; flex-direction:column;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.25rem;">
+              <h3 style="margin:0; font-weight:700;">📋 Current Listings</h3>
+              <span style="font-size:0.78rem; color:var(--text-muted);">Max 3 shown publicly</span>
+            </div>
+            <div id="electronics-list-container"
+              style="flex:1; border:1px solid var(--border); border-radius:var(--radius); overflow:hidden; min-height:180px;">
+              <div style="text-align:center; padding:40px; color:var(--text-muted);">
+                <div class="spinner"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

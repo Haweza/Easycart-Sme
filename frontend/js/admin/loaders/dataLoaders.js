@@ -66,3 +66,13 @@ export async function loadMySubscriptions() {
     adminState.customerSubscriptions = [];
   }
 }
+
+// Load electronic product listings (admin view — includes expired)
+export async function loadElectronics() {
+  try {
+    adminState.allElectronics = await Electronics.getAll();
+  } catch (error) {
+    console.error('Error loading electronics:', error);
+    adminState.allElectronics = [];
+  }
+}

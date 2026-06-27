@@ -4,7 +4,7 @@
  */
 
 import { adminState } from './state/adminState.js';
-import { loadUsers, loadFamilies, loadRequests, loadInvites, loadServices, loadSubscriptions, loadActivities, loadPromoUsers, loadPendingPromoUsers, loadMySubscriptions } from './loaders/dataLoaders.js';
+import { loadUsers, loadFamilies, loadRequests, loadInvites, loadServices, loadSubscriptions, loadActivities, loadPromoUsers, loadPendingPromoUsers, loadMySubscriptions, loadElectronics } from './loaders/dataLoaders.js';
 import { navigateToPromoUser, navigateToServiceRequest, deleteActivityAction, clearAllActivitiesAction } from './overview/activityFeed.js';
 import { initEventBindings } from './events/eventBindings.js';
 
@@ -22,6 +22,7 @@ import { openCreateFamilyModal, updatePlansDropdown } from './families/familyMod
 import { setSubFilter } from './subscriptions/subscriptionRenderer.js';
 import { openCreateInviteModal, updateInvitePlanInfo } from './invites/inviteModal.js';
 import { previewPromoImage, publishPromo, bringDownPromo } from './promos/promoManager.js';
+import { previewElectronicImage, publishElectronic, deleteElectronicAction, loadAndRenderElectronics } from './electronics/electronicsManager.js';
 
 // NEW: Import promo and subscription actions
 import { openPromoReviewModal, closePromoModal, approvePromoUser, rejectPromoUser, filterPromoUsers, deleteSubscriptionAction, activateSubscriptionAction } from './promos/promoActions.js';
@@ -61,6 +62,12 @@ window.previewPromoImage = previewPromoImage;
 window.publishPromo = publishPromo;
 window.bringDownPromo = bringDownPromo;
 window.loadActivities = loadActivities;
+
+// Electronics functions
+window.previewElectronicImage = previewElectronicImage;
+window.publishElectronic = publishElectronic;
+window.deleteElectronicAction = deleteElectronicAction;
+window.loadAndRenderElectronics = loadAndRenderElectronics;
 
 // NEW: Expose promo and subscription functions to window
 window.openPromoReviewModal = openPromoReviewModal;
@@ -105,9 +112,10 @@ async function init() {
       loadServices(),
       loadActivities(),
       loadSubscriptions(),
-      loadPromoUsers(),        // NEW
-      loadPendingPromoUsers(), // NEW
-      loadMySubscriptions()    // NEW
+      loadPromoUsers(),
+      loadPendingPromoUsers(),
+      loadMySubscriptions(),
+      loadElectronics(),
     ]);
   } catch (err) {
     console.error('Error during data initialization:', err);

@@ -52,6 +52,8 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/services/**").permitAll()
                 .requestMatchers("/api/promos/**").permitAll()
+                .requestMatchers("/api/electronics/**").permitAll()
+
                 .requestMatchers("/api/ping").permitAll()
 
                 // ---- Admin-only ---------------------------------------------

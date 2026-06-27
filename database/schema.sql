@@ -240,7 +240,19 @@ CREATE TABLE promos (
     created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
--- 9. INDEXES ------------------------------------------------
+-- 9. ELECTRONIC PRODUCTS -------------------------------------
+-- Admin-posted electronic product listings displayed on the
+-- public landing page. Posts are active for 3 days.
+
+CREATE TABLE electronic_products (
+    id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name          TEXT NOT NULL,
+    price         TEXT NOT NULL,          -- e.g. "ZMW 15,500"
+    image_content TEXT NOT NULL,          -- Base64 Data URL of uploaded image
+    created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+-- 10. INDEXES -----------------------------------------------
 
 CREATE INDEX idx_profiles_role ON profiles(role);
 CREATE INDEX idx_invites_recipient ON invites(recipient_id);
@@ -250,6 +262,8 @@ CREATE INDEX idx_family_members_user ON family_members(user_id);
 CREATE INDEX idx_family_members_family ON family_members(family_id);
 CREATE INDEX idx_service_requests_user ON service_requests(user_id);
 CREATE INDEX idx_service_requests_status ON service_requests(status);
+CREATE INDEX idx_electronic_products_created_at ON electronic_products(created_at DESC);
+
 
 -- ============================================================
 --  SEED DATA (Development Only)

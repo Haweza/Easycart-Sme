@@ -114,8 +114,25 @@
   </div>
 
   <!-- ========================================================
+     ELECTRONICS DISPLAYS SECTION
+     Shown only when admin has posted active product listings (3-day TTL)
+     ======================================================== -->
+  <section class="electronics-section" id="electronics" style="display:none; padding-top:0; padding-bottom:60px;">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title">📱 Electronics for Sale</h2>
+        <p class="section-desc">Premium gadgets and devices available now. Click to inquire via WhatsApp.</p>
+      </div>
+      <div id="electronics-container" class="electronics-grid">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================
      FOOTER
      ======================================================== -->
+
   <footer class="footer"
     style="background: var(--bg-subtle); border-top: 1px solid var(--border); padding: 60px 0 30px;">
     <div class="container">
@@ -424,6 +441,70 @@
 
     // Call the render function
     document.addEventListener('DOMContentLoaded', renderLandingServices);
+
+    // ---- Electronics Displays Section ---------------------------
+    const ADMIN_WHATSAPP = '260973276523';
+    const THREE_DAYS_MS = 3 * 24 * 60 * 60 * 1000;
+
+    async function loadActiveElectronics() {
+      try {
+        const res = await fetch(`${API_BASE}/electronics/active`);
+        if (!res.ok) return; // 204 No Content — nothing to show
+
+        const products = await res.json();
+        if (!products || products.length === 0) return;
+
+        const section = document.getElementById('electronics');
+        const container = document.getElementById('electronics-container');
+        if (!section || !container) return;
+
+        const now = Date.now();
+
+        container.innerHTML = products.map(p => {
+          const createdMs = new Date(p.createdAt).getTime();
+          const remainingMs = (createdMs + THREE_DAYS_MS) - now;
+          let expiryLabel = '';
+          if (remainingMs > 0) {
+            const d = Math.floor(remainingMs / (1000 * 60 * 60 * 24));
+            const h = Math.floor((remainingMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            expiryLabel = `⏱️ Expires in ${d}d ${h}h`;
+          }
+
+          const waMessage = encodeURIComponent(`Hi, I'm interested in purchasing the ${p.name}`);
+          const waLink = `https://wa.me/${ADMIN_WHATSAPP}?text=${waMessage}`;
+
+          return `
+            <div class="electronic-card">
+              <span class="electronic-badge">🔥 HOT</span>
+              <div class="electronic-img-wrap">
+                <img src="${p.imageContent}" alt="${p.name}"
+                     class="electronic-icon"
+                     onerror="this.src='assets/default_icon.png'" />
+              </div>
+              <div class="electronic-content">
+                <div class="electronic-title">${p.name}</div>
+                <div class="electronic-cost">${p.price}</div>
+                ${expiryLabel ? `<div class="electronic-expiry">${expiryLabel}</div>` : ''}
+                <a href="${waLink}" class="electronic-cta" target="_blank" rel="noopener noreferrer">
+                  💬 Inquire on WhatsApp
+                </a>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Reveal the section now that we have content
+        section.style.display = 'block';
+
+      } catch (err) {
+        console.error('Electronics section failed to load:', err);
+        // Section stays hidden — no disruption to the page
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadActiveElectronics);
+
+
 
   </script>
 
